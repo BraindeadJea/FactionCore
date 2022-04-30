@@ -35,6 +35,36 @@ public class SystemUtils {
         return timeformat.format(new Date(timedata));
     }
 
+    public static ArrayList string2list(String k) {
+        if(k.contains("<%&LISTSPLITTER&%>")) {
+            String[] parts = k.split("<%&LISTSPLITTER&%>");
+            ArrayList<String> memlist = new ArrayList<>();
+            for(String d : parts) {
+                memlist.add(d);
+            }
+            return memlist;
+        } else {
+            ArrayList<String> memlist = new ArrayList<>();
+            memlist.add(k);
+            return memlist;
+        }
+    }
+    public static String list2string(ArrayList<String> list) {
+        String k = "";
+        int i = 0;
+        for(String c : list) {
+            i = i + 1;
+            if(list.size() >= i) {
+                k = k + c;
+            } else {
+                k = k + c + "<%&LISTSPLITTER&%>";
+            }
+
+
+        }
+        return k;
+    }
+
     public static String Args2String(String[] args, int Start) {
         String FinalString = "";
         for(int k = Start; k < args.length; k++) {
@@ -51,6 +81,6 @@ public class SystemUtils {
     }
 
     public static void UUID_BASED_MSG_SENDER(String UUID, String Message) {
-        //
+        Storage.AddCommandToQueue("notify:=:" + UUID + ":=:" + UUID + ":=:" + Message + ":=:" + "false");
     }
 }

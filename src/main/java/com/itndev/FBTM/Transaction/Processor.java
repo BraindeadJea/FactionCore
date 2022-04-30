@@ -1,7 +1,9 @@
 package com.itndev.FBTM.Transaction;
 
+import com.itndev.FBTM.Discord.AuthStorage;
 import com.itndev.FBTM.Factions.Config;
 import com.itndev.FBTM.Transaction.TransactionUtils.*;
+import com.itndev.FBTM.Transaction.TransactionUtils.FactionCD.DeleteFactionUtils;
 import com.itndev.FBTM.Utils.Factions.FactionUtils;
 import com.itndev.FBTM.Utils.Factions.SystemUtils;
 import com.itndev.FBTM.Utils.Factions.UserInfoUtils;
@@ -11,7 +13,7 @@ import java.util.Locale;
 public class Processor {
 
     @Deprecated
-    private void Processor(String UUID, String[] args, String additionalinfo) {
+    public static void Processor(String UUID, String[] args, String additionalinfo, String ServerName) {
         if(args.length < 1) {
             FactionHelp.FactionHelp(UUID);
             return;
@@ -19,6 +21,17 @@ public class Processor {
             try {
                 if(args[0].equalsIgnoreCase("도움말")) {
                     FactionHelp.FactionHelp(UUID);
+                } else if(args[0].equalsIgnoreCase("인증")) {
+                    if (args[1].equalsIgnoreCase("확인")) {
+                        AuthStorage.AuthID(UUID, args[2]);
+                    } else if (args[1].equalsIgnoreCase("정보")) {
+                        AuthStorage.AskForHasAuth(UUID);
+                    } else if (args[1].equalsIgnoreCase("해제")) {
+                        AuthStorage.RemoveAuth(UUID);
+                    }
+                } else if(args[0].equalsIgnoreCase("국가멸망")){
+                    DeleteFactionUtils.DESTORYFaction(UUID, FactionUtils.getPlayerFactionUUID(UUID));
+                    FactionWar.NomoreinWar(args[1]);
                 } else if(args[0].equalsIgnoreCase("생성")) {
 
                     //=================생성=================
@@ -79,16 +92,16 @@ public class Processor {
 
                     //=================설정=================
 
-                    if(args.length < 2) {
+                    if (args.length < 2) {
                         SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f명령어 사용법 : &f/국가 설정 &7(설정)\n" +
                                 "&a&o&l[ &r&f국가 &a&o&l] &r&f설정으로는 &7등급&8, &7설명&8, &7공지&8, &7스폰&8, &f(&7동맹&8, &7적대&8, &7중립&f) 이 있습니다.");
                         return;
                     }
 
-                    if(FactionUtils.isInFaction(UUID)) {
-                        if(args[1].equalsIgnoreCase("등급")) {
+                    if (FactionUtils.isInFaction(UUID)) {
+                        if (args[1].equalsIgnoreCase("등급")) {
 
-                            if(args.length < 4) {
+                            if (args.length < 4) {
                                 SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f명령어 사용법 : &f/국가 설정 등급 &7(등급이름) &7(이름)\n" +
                                         "&a&o&l[ &r&f국가 &a&o&l] &r&등급으로는 &7" + Config.CoLeader_Lang + "&8, &7" + Config.VipMember_Lang + "&8, &7" + Config.Warrior_Lang + "&8, &7" + Config.Member_Lang + " &f이 있습니다.");
                                 return;
@@ -100,31 +113,31 @@ public class Processor {
 
                             //=================등급=================
 
-                            if(FactionUtils.HigherThenorSameRank(UUID, Config.VipMember)) {
-                                if(!RealRank) {
+                            if (FactionUtils.HigherThenorSameRank(UUID, Config.VipMember)) {
+                                if (!RealRank) {
                                     SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f해당 등급 " + args[2] + "(은)는 존재하지 않습니다");
                                     return;
                                 }
                                 String TheRank = FactionUtils.RankConvert(args[2]);
-                                if(TheRank.equalsIgnoreCase(Config.Leader)) {
+                                if (TheRank.equalsIgnoreCase(Config.Leader)) {
                                     SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f해당 등급 " + Config.Leader_Lang + "(은)는 다른 사람에게 부여할수 없습니다. /국가 양도 &7(이름) &r&f국가에 대한 소유권을 양도할수 있습니다");
                                     return;
                                 }
-                                if(!RealPlayer) {
+                                if (!RealPlayer) {
                                     SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f해당 유저 " + name + "(은)는 서버에 접속한 적이 없습니다");
                                     return;
                                 }
                                 String TargetUUID = UserInfoUtils.getPlayerUUID(name.toLowerCase(Locale.ROOT));
                                 String CasedTargetName = UserInfoUtils.getPlayerOrginName(name.toLowerCase(Locale.ROOT));
-                                if(TargetUUID.equals(UUID)) {
+                                if (TargetUUID.equals(UUID)) {
                                     SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f자신의 등급를 변경할 수 없습니다");
                                     return;
                                 }
-                                if(!FactionUtils.HigherThenRank(UUID, FactionUtils.getPlayerRank(TargetUUID))) {
+                                if (!FactionUtils.HigherThenRank(UUID, FactionUtils.getPlayerRank(TargetUUID))) {
                                     SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f해당 유저 " + CasedTargetName + "(은)는 당신보다 등급이 높은 &r&c" + FactionUtils.getPlayerRank(TargetUUID) + " &r&f입니다. 자신보다 높은 등급인 멤버의 등급를 바꿀 수 없습니다");
                                     return;
                                 }
-                                if(!FactionUtils.HigherThenRank(UUID, TheRank)) {
+                                if (!FactionUtils.HigherThenRank(UUID, TheRank)) {
                                     SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f해당 유저 " + CasedTargetName + " 에게 지급할 등급은 자신의 등급보다 높거나 같아서는 안됩니다");
                                     return;
                                 }
@@ -138,16 +151,16 @@ public class Processor {
 
                             //=================등급=================
 
-                        } else if(args[1].equalsIgnoreCase("설명")) {
+                        } else if (args[1].equalsIgnoreCase("설명")) {
 
                             //=================설명=================
 
-                            if(!FactionUtils.HigherThenorSameRank(UUID, Config.CoLeader)) {
+                            if (!FactionUtils.HigherThenorSameRank(UUID, Config.CoLeader)) {
                                 SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f권한이 없습니다. &r&c" + Config.CoLeader_Lang + " &r&f등급 이상부터 사용이 가능합니다");
                                 return;
                             }
 
-                            if(args.length < 3) {
+                            if (args.length < 3) {
                                 SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f명령어 사용법 : &f/국가 설정 설명 &7(설명)");
                                 return;
                             }
@@ -160,16 +173,16 @@ public class Processor {
 
                             //=================설명=================
 
-                        } else if(args[1].equalsIgnoreCase("공지")) {
+                        } else if (args[1].equalsIgnoreCase("공지")) {
 
                             //=================공지=================
 
-                            if(!FactionUtils.HigherThenorSameRank(UUID, Config.CoLeader)) {
+                            if (!FactionUtils.HigherThenorSameRank(UUID, Config.CoLeader)) {
                                 SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f권한이 없습니다. &r&c" + Config.CoLeader_Lang + " &r&f등급 이상부터 사용이 가능합니다");
                                 return;
                             }
 
-                            if(args.length < 3) {
+                            if (args.length < 3) {
                                 SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f명령어 사용법 : &f/국가 설정 공지 &7(공지)");
                                 return;
                             }
@@ -183,16 +196,16 @@ public class Processor {
 
                             //=================공지=================
 
-                        } else if(args[1].equalsIgnoreCase("동맹") || args[1].equalsIgnoreCase("적대") || args[1].equalsIgnoreCase("중립")) {
+                        } else if (args[1].equalsIgnoreCase("동맹") || args[1].equalsIgnoreCase("적대") || args[1].equalsIgnoreCase("중립")) {
 
                             //=================동맹/적대/중립=================
 
-                            if(args.length < 3) {
+                            if (args.length < 3) {
                                 SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f명령어 사용법 : &f/국가 설정 &7(동맹/적대/중립) &7(국가이름)\n");
                                 return;
                             }
 
-                            if(!FactionUtils.HigherThenorSameRank(UUID, Config.CoLeader)) {
+                            if (!FactionUtils.HigherThenorSameRank(UUID, Config.CoLeader)) {
                                 SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f권한이 없습니다. &r&c" + Config.CoLeader_Lang + " &r&f등급 이상부터 사용이 가능합니다");
                                 return;
                             }
@@ -209,6 +222,14 @@ public class Processor {
                     }
 
                     //=================설정=================
+
+                } else if (args[0].equalsIgnoreCase("전쟁")){
+
+                    //=================전쟁=================
+
+                    FactionWar.FactionWarCMD(UUID, args, additionalinfo);
+
+                    //=================전쟁=================
 
                 } else if(args[0].equalsIgnoreCase("금고")) {
 

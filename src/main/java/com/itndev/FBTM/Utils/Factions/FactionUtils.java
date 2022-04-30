@@ -6,10 +6,7 @@ import com.itndev.FBTM.Factions.FactionStorage;
 import com.itndev.FBTM.Factions.Lang;
 import com.itndev.FBTM.Server;
 
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -22,6 +19,7 @@ public class FactionUtils {
         return uuid;
     }
 
+    @Deprecated
     public static void SetPlayerRank(String UUID, String Rank) {
         if(Rank == null) {
             Storage.AddCommandToQueue("update:=:FactionRank:=:remove:=:" + UUID + ":=:add:=:" + Rank.toLowerCase(Locale.ROOT));
@@ -55,7 +53,8 @@ public class FactionUtils {
     }
 
     public static String getFactionLeader(String FactionUUID) {
-        for(String UUID : FactionUtils.getFactionMember(FactionUUID)) {
+        //ArrayList<String> members = FactionStorage.FactionMember.get(FactionUUID);
+        for(String UUID : FactionStorage.FactionMember.get(FactionUUID)) {
             if(FactionUtils.getPlayerRank(UUID).equalsIgnoreCase(Config.Leader)) {
                 return UUID;
             }
@@ -67,6 +66,8 @@ public class FactionUtils {
         return FactionStorage.FactionNameToFactionUUID.containsKey(FactionName.toLowerCase(Locale.ROOT));
     }
 
+
+    @Deprecated
     public static void SetPlayerFaction(String UUID, String FactionUUID) {
         if(FactionUUID == null) {
             Storage.AddCommandToQueue("update:=:PlayerFaction:=:remove:=:" + UUID + ":=:add:=:ddd");
@@ -83,6 +84,8 @@ public class FactionUtils {
         }
     }
 
+
+    @Deprecated
     public static void SetFactionMember(String UUID, String FactionUUID, Boolean Remove) {
         if(FactionUUID == null) {
             return;
@@ -102,6 +105,8 @@ public class FactionUtils {
         }
     }
 
+
+    @Deprecated
     public static void SetFactionName(String FactionUUID, String NewFactionName) {
         //Faction name update
         String oldFactionName = getFactionName(FactionUUID);
@@ -118,43 +123,63 @@ public class FactionUtils {
         }
     }
 
+
+    @Deprecated
     public static void CreateFaction(String LeaderUUID, String FactionUUID, String FactionOrginName) {
         String FactionName = FactionOrginName.toLowerCase(Locale.ROOT);
-        Storage.AddCommandToQueue("update:=:FactionMember:=:add:=:" + FactionUUID + ":=:add:=:" + LeaderUUID);
-        Storage.AddCommandToQueue("update:=:FactionNameToFactionUUID:=:add:=:" + FactionName + ":=:add:=:" + FactionUUID);
-        Storage.AddCommandToQueue("update:=:FactionNameToFactionName:=:add:=:" + FactionName + ":=:add:=:" + FactionOrginName);
-        Storage.AddCommandToQueue("update:=:FactionUUIDToFactionName:=:add:=:" + FactionUUID + ":=:add:=:" + FactionName);
-        Storage.AddCommandToQueue("update:=:FactionRank:=:add:=:" + LeaderUUID + ":=:add:=:" + Config.Leader);
-        Storage.AddCommandToQueue("update:=:PlayerFaction:=:add:=:" + LeaderUUID + ":=:add:=:" + FactionUUID);
+        List<String> BulkCMD = new ArrayList<>();
+        BulkCMD.add("update:=:FactionMember:=:add:=:" + FactionUUID + ":=:add:=:" + LeaderUUID);
+        BulkCMD.add("update:=:FactionNameToFactionUUID:=:add:=:" + FactionName + ":=:add:=:" + FactionUUID);
+        BulkCMD.add("update:=:FactionNameToFactionName:=:add:=:" + FactionName + ":=:add:=:" + FactionOrginName);
+        BulkCMD.add("update:=:FactionUUIDToFactionName:=:add:=:" + FactionUUID + ":=:add:=:" + FactionName);
+        BulkCMD.add("update:=:FactionRank:=:add:=:" + LeaderUUID + ":=:add:=:" + Config.Leader);
+        BulkCMD.add("update:=:PlayerFaction:=:add:=:" + LeaderUUID + ":=:add:=:" + FactionUUID);
+        Storage.AddBulkCommandToQueue(BulkCMD);
     }
 
     public static String Build_PERMLVLINFO(int PERMLVL, int FINALPERMLVL, String SUCCESSID) {
         return ":=:" + Config.PERM_LEVEL_INDICATOR + PERMLVL + ":=:" + Config.PERM_FINAL_LEVEL_INDICATOR + FINALPERMLVL + ":=:" + Config.SUCCESS_ID_INDICATOR + SUCCESSID;
     }
 
+
+    @Deprecated
     public static void DeleteFaction(String FactionUUID) {
         String FactionName = getFactionName(FactionUUID).toLowerCase(Locale.ROOT);
-        Storage.AddCommandToQueue("update:=:FactionMember:=:remove:=:" + FactionUUID + ":=:remove:=:" + "UUID");
-        Storage.AddCommandToQueue("update:=:FactionNameToFactionUUID:=:remove:=:" + FactionName + ":=:add:=:" + "nothing");
-        Storage.AddCommandToQueue("update:=:FactionNameToFactionName:=:remove:=:" + FactionName + ":=:add:=:" + "nothing");
-        Storage.AddCommandToQueue("update:=:FactionUUIDToFactionName:=:remove:=:" + FactionUUID + ":=:add:=:" + "nothing");
+        List<String> BulkCMD = new ArrayList<>();
+        BulkCMD.add("update:=:FactionMember:=:remove:=:" + FactionUUID + ":=:remove:=:" + "UUID");
+        BulkCMD.add("update:=:FactionNameToFactionUUID:=:remove:=:" + FactionName + ":=:add:=:" + "nothing");
+        BulkCMD.add("update:=:FactionNameToFactionName:=:remove:=:" + FactionName + ":=:add:=:" + "nothing");
+        BulkCMD.add("update:=:FactionUUIDToFactionName:=:remove:=:" + FactionUUID + ":=:add:=:" + "nothing");
         if(FactionStorage.FactionMember.containsKey(FactionUUID)) {
             for(String PlayerUUID : FactionStorage.FactionMember.get(FactionUUID)) {
-                Storage.AddCommandToQueue("update:=:FactionRank:=:add:=:" + PlayerUUID + ":=:add:=:" + Config.Nomad);
-                Storage.AddCommandToQueue("update:=:PlayerFaction:=:remove:=:" + PlayerUUID + ":=:add:=:ddd");
+                BulkCMD.add("update:=:FactionRank:=:add:=:" + PlayerUUID + ":=:add:=:" + Config.Nomad);
+                BulkCMD.add("update:=:PlayerFaction:=:remove:=:" + PlayerUUID + ":=:add:=:ddd");
             }
         }
-        for(String Chunkkey : FactionStorage.FactionToLand.keySet()) {
-            UnClaimLand(FactionUUID, Chunkkey);
+        if(FactionStorage.FactionToLand.containsKey(FactionUUID)) {
+            for(String Chunkkey : FactionStorage.FactionToLand.get(FactionUUID)) {
+                BulkCMD.add("update:=:LandToFaction:=:remove:=:" + Chunkkey + ":=:remove:=:" + FactionUUID);
+                BulkCMD.add("update:=:FactionToLand:=:add:=:" + FactionUUID + ":=:remove:=:" + Chunkkey);
+            }
         }
-        ClearFactionInfo(FactionUUID);
-        for(String Chunkkey : FactionStorage.FactionToOutPost.keySet()) {
-            UnClaimOutPost(FactionUUID, Chunkkey);
+        //ClearFactionInfo(FactionUUID);
+        if(FactionStorage.FactionInfoList.containsKey(FactionUUID)) {
+            BulkCMD.add("update:=:FactionInfoList:=:remove:=:" + FactionUUID + ":=:remove:=:" + "NULL");
+            for(String key : FactionStorage.FactionInfoList.get(FactionUUID)) {
+                BulkCMD.add("update:=:FactionInfo:=:remove:=:" + FactionUUID + "=" +  key + ":=:remove:=:" + "NULL");
+            }
         }
-        Storage.AddCommandToQueue("update:=:FactionToLand:=:remove:=:" + FactionUUID + ":=:remove:=:" + FactionUUID + ":=:bulk");
-        Storage.AddCommandToQueue("update:=:FactionToLand:=:remove:=:" + FactionUUID + ":=:add:=:" + "nothing");
-        Storage.AddCommandToQueue("update:=:FactionOutPost:=:remove:=:" + FactionUUID + ":=:add:=:" + "nothing");
-        Storage.AddCommandToQueue("update:=:FactionWarpLocations:=:remove:=:" + FactionUUID + ":=:add:=:" + "nothing");
+        if(FactionStorage.FactionToOutPost.containsKey(FactionUUID)) {
+            BulkCMD.add("update:=:FactionToOutPost:=:add:=:" + FactionUUID + ":=:remove:=:" + "Chunkkey");
+            for(String Chunkkey : FactionStorage.FactionToOutPost.get(FactionUUID)) {
+                BulkCMD.add("update:=:OutPostToFaction:=:remove:=:" + Chunkkey + ":=:remove:=:" + FactionUUID);
+            }
+        }
+        //Storage.AddCommandToQueue("update:=:FactionToLand:=:remove:=:" + FactionUUID + ":=:remove:=:" + FactionUUID + ":=:bulk");
+        BulkCMD.add("update:=:FactionToLand:=:remove:=:" + FactionUUID + ":=:add:=:" + "nothing");
+        BulkCMD.add("update:=:FactionOutPost:=:remove:=:" + FactionUUID + ":=:add:=:" + "nothing");
+        BulkCMD.add("update:=:FactionWarpLocations:=:remove:=:" + FactionUUID + ":=:add:=:" + "nothing");
+        Storage.AddBulkCommandToQueue(BulkCMD);
     }
 
     public static Boolean isExistingOutPost(String FactionUUID, String OutPostName) {
@@ -165,6 +190,8 @@ public class FactionUtils {
         }
     }
 
+
+
     public static void SendFactionMessage(String playeruuid, String targetuuid, String type, String message) {
         if(type.equalsIgnoreCase("single")) {
             //type : SIBAL, TeamChat, all
@@ -174,6 +201,8 @@ public class FactionUtils {
         }
     }
 
+
+    @Deprecated
     public static void SendFactionMessage_GETRAWCMD(String playeruuid, String targetuuid, String type, String message) {
         if(type.equalsIgnoreCase("single")) {
             //type : SIBAL, TeamChat, all
@@ -183,6 +212,7 @@ public class FactionUtils {
         }
     }
 
+    @Deprecated
     public static void ClaimLand(String FactionUUID, String Chunkkey) {
         FactionStorage.LandToFaction.put(Chunkkey, FactionUUID);
         Storage.AddCommandToQueue("update:=:LandToFaction:=:add:=:" + Chunkkey + ":=:add:=:" + FactionUUID + ":=:" + Server.getServerName());
@@ -195,6 +225,7 @@ public class FactionUtils {
         Storage.AddCommandToQueue("update:=:FactionToLand:=:add:=:" + FactionUUID + ":=:add:=:" + Chunkkey + ":=:" + Server.getServerName());
     }
 
+    @Deprecated
     public static void UnClaimLand(String FactionUUID, String Chunkkey) {
         FactionStorage.LandToFaction.remove(Chunkkey);
         Storage.AddCommandToQueue("update:=:LandToFaction:=:remove:=:" + Chunkkey + ":=:remove:=:" + FactionUUID + ":=:" + Server.getServerName());
@@ -208,6 +239,7 @@ public class FactionUtils {
         Storage.AddCommandToQueue("update:=:FactionToLand:=:add:=:" + FactionUUID + ":=:remove:=:" + Chunkkey + ":=:" + Server.getServerName());
     }
 
+    @Deprecated
     public static void ClaimOutPost(String FactionUUID, String Chunkkey) {
         FactionStorage.OutPostToFaction.put(Chunkkey, FactionUUID);
         Storage.AddCommandToQueue("update:=:OutPostToFaction:=:add:=:" + Chunkkey + ":=:add:=:" + FactionUUID + ":=:" + Server.getServerName());
@@ -220,6 +252,7 @@ public class FactionUtils {
         Storage.AddCommandToQueue("update:=:FactionToOutPost:=:add:=:" + FactionUUID + ":=:add:=:" + Chunkkey + ":=:" + Server.getServerName());
     }
 
+    @Deprecated
     public static void UnClaimOutPost(String FactionUUID, String Chunkkey) {
         FactionStorage.OutPostToFaction.remove(Chunkkey);
         Storage.AddCommandToQueue("update:=:OutPostToFaction:=:remove:=:" + Chunkkey + ":=:remove:=:" + FactionUUID + ":=:" + Server.getServerName());
@@ -289,12 +322,22 @@ public class FactionUtils {
         return null;
     }
 
-    public static ArrayList<String> getFactionMember(String FactionUUID) {
-        ArrayList<String> finallist = new ArrayList<>();
-        if(FactionStorage.FactionMember.containsKey(FactionUUID)) {
-            finallist = FactionStorage.FactionMember.get(FactionUUID);
+    public static String getCapFactionNameFromUUID(String FactionUUID) {
+        if(FactionStorage.FactionUUIDToFactionName.containsKey(FactionUUID)) {
+            String FactionTempName = FactionStorage.FactionUUIDToFactionName.get(FactionUUID);
+            if(FactionStorage.FactionNameToFactionName.containsKey(FactionTempName)) {
+                return FactionStorage.FactionNameToFactionName.get(FactionTempName);
+            }
         }
-        return finallist;
+        return null;
+    }
+
+    public static ArrayList<String> getFactionMember(String FactionUUID) {
+        //ArrayList<String> finallist = new ArrayList<>();
+        if(FactionStorage.FactionMember.containsKey(FactionUUID)) {
+            return (ArrayList<String>) FactionStorage.FactionMember.get(FactionUUID);
+        }
+        return new ArrayList<>();
     }
 
     public static String getPlayerRank(String UUID) {
@@ -394,7 +437,7 @@ public class FactionUtils {
 
     public static Boolean HigherThenorSameRank(String UUID, String Rank) {
         String PlayerRank = FactionUtils.getPlayerRank(UUID);
-        if(RankPrio(PlayerRank) > RankPrio(Rank)) {
+        if(RankPrio(PlayerRank) >= RankPrio(Rank)) {
             return true;
         } else {
             return false;
@@ -403,7 +446,7 @@ public class FactionUtils {
 
     public static Boolean HigherThenRank(String UUID, String Rank) {
         String PlayerRank = FactionUtils.getPlayerRank(UUID);
-        if(RankPrio(PlayerRank) >= RankPrio(Rank)) {
+        if(RankPrio(PlayerRank) > RankPrio(Rank)) {
             return true;
         } else {
             return false;
@@ -426,6 +469,8 @@ public class FactionUtils {
         }
     }
 
+
+    @Deprecated
     public static void SetFactionSpawn(String FactionUUID, String ConvertLoc) {
         Storage.AddCommandToQueue("update:=:FactionInfo:=:add:=:" + FactionUUID + "=spawn" + ":=:add:=:" + Server.getServerName() + "===" + ConvertLoc);
         RegisterFactionInfo(FactionUUID, "spawn");
@@ -439,20 +484,25 @@ public class FactionUtils {
         return FactionStorage.FactionInfo.get(FactionUUID + "=spawn");
     }
 
+
+    @Deprecated
     public static void ClearFactionInfo(String FactionUUID) {
-        if(FactionStorage.FactionInfo.containsKey(FactionUUID)) {
+        if(FactionStorage.FactionInfoList.containsKey(FactionUUID)) {
             for (String key : FactionStorage.FactionInfoList.get(FactionUUID)) {
-                Storage.AddCommandToQueue("update:=:FactionInfo:=:remove:=:" + FactionUUID + "=" + key + ":=:remove:=:");
+                Storage.AddCommandToQueue("update:=:FactionInfo:=:remove:=:" + FactionUUID + "=" + key + ":=:remove:=:YES");
             }
             Storage.AddCommandToQueue("update:=:FactionInfoList:=:remove:=:" + FactionUUID + ":=:remove:=:");
         }
     }
 
+
+    @Deprecated
     public static void RemoveFactionSpawn(String FactionUUID) {
         Storage.AddCommandToQueue("update:=:FactionInfo:=:remove:=:" + FactionUUID + "=spawn" + ":=:add:=:" + Server.getServerName());
         Storage.AddCommandToQueue("update:=:FactionInfoList:=:add:=:" + FactionUUID + "" + ":=:remove:=:" + "spawn");
     }
 
+    @Deprecated
     public static void SetFactionNotice(String FactionUUID, String factionnotice) {
         Storage.AddCommandToQueue("update:=:FactionInfo:=:add:=:" + FactionUUID + "=notice" + ":=:add:=:" + factionnotice);
         RegisterFactionInfo(FactionUUID, "notice");
@@ -530,5 +580,36 @@ public class FactionUtils {
 
     public static void RegisterFactionInfo(String FactionUUID, String type) {
         Storage.AddCommandToQueue("update:=:FactionInfoList:=:add:=:" + FactionUUID + ":=:add:=:" + type);
+    }
+    public static void UnregisterFactionInfo(String FactionUUID, String type) {
+        Storage.AddCommandToQueue("update:=:FactionInfoList:=:add:=:" + FactionUUID + ":=:remove:=:" + type);
+    }
+
+    public static Boolean isInWar(String FactionUUID) {
+        return FactionStorage.FactionInfo.containsKey(FactionUUID + "=war");
+    }
+
+    public static String getOPPWar(String FactionUUID) {
+        return FactionStorage.FactionInfo.get(FactionUUID + "=war");
+    }
+
+    public static void setOPPWar(String FactionUUID, String OPP_FactionUUID) {
+        Storage.AddCommandToQueue("update:=:FactionInfo:=:add:=:" + FactionUUID + "=war" + ":=:add:=:" + OPP_FactionUUID);
+        Storage.AddCommandToQueue("update:=:FactionInfo:=:add:=:" + OPP_FactionUUID + "=war" + ":=:add:=:" + FactionUUID);
+        RegisterFactionInfo(FactionUUID, "war");
+        RegisterFactionInfo(OPP_FactionUUID, "war");
+    }
+
+    public static void removeFromWar(String FactionUUID) {
+        Storage.AddCommandToQueue("update:=:FactionInfo:=:remove:=:" + FactionUUID + "=war" + ":=:add:=:" + "DEAD_FACTION");
+        UnregisterFactionInfo(FactionUUID, "war");
+    }
+
+    public static Boolean hasMainBeacon(String FactionUUID) {
+        return FactionStorage.FactionInfo.containsKey(FactionUUID + "=mainbeacon");
+    }
+
+    public static String getMainBeaconStringLocation(String FactionUUID) {
+        return FactionStorage.FactionInfo.get(FactionUUID + "=mainbeacon");
     }
 }

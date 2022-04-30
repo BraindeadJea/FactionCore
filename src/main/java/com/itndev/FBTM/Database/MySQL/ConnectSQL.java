@@ -26,6 +26,7 @@ public class ConnectSQL {
     //com.mysql.jdbc.jdbc2.optional.MysqlDataSource
 
     public void ConnectHikari() {
+        setupHikariInfo();
         dataSource = new HikariDataSource();
         dataSource.setMaximumPoolSize(10);
         dataSource.setDataSourceClassName("com.mysql.cj.jdbc.MysqlDataSource");
@@ -45,7 +46,7 @@ public class ConnectSQL {
         }
     }
 
-    @Deprecated
+
     public Connection getHikariConnection() {
         try {
             if(connection != null || !connection.isClosed()) {

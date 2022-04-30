@@ -18,6 +18,10 @@ public class FactionBank {
         new Thread( () -> {
             try {
                 if (FactionUtils.isInFaction(UUID)) {
+                    if(FactionUtils.isInWar(FactionUtils.getPlayerFactionUUID(UUID))) {
+                        SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f전쟁 도중에는 국가 금고를 사용할수 없습니다");
+                        return;
+                    }
                     Boolean Take = null;
                     if (args[1].equalsIgnoreCase("입금")) {
                         Take = false;

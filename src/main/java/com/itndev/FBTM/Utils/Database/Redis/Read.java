@@ -1,5 +1,7 @@
 package com.itndev.FBTM.Utils.Database.Redis;
 
+import com.itndev.FBTM.Database.Redis.CmdExecute;
+
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -11,6 +13,7 @@ public class Read {
         if (!map.isEmpty()) {
             for(int c = 1; c <= Integer.parseInt(map.get(StaticVal.getMaxAmount())); c++) {
                 //JedisManager.updatehashmap(map.get(String.valueOf(c)), clientname);
+                CmdExecute.CMD_READ(map.get(String.valueOf(c)));
             }
         }
     }
@@ -23,7 +26,7 @@ public class Read {
                 if (c == maxamount) {
                     finalbuildstring = finalbuildstring + map.get(String.valueOf(c)) + StaticVal.getsplitter() + StaticVal.getbuffer();
                 } else {
-                    finalbuildstring = finalbuildstring + map.get(String.valueOf(c)) + StaticVal.getbuffer();
+                    finalbuildstring = finalbuildstring + map.get(String.valueOf(c)) + StaticVal.getsplitter();
                 }
             }
         } else {

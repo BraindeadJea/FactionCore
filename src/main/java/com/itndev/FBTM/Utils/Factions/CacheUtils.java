@@ -9,11 +9,13 @@ import java.util.concurrent.CompletableFuture;
 
 public class CacheUtils {
 
+    @Deprecated
     public static void UpdateCachedDTR(String FactionUUID, Double DTR) {
         Storage.AddCommandToQueue("update:=:CachedDTR:=:add:=:" + FactionUUID + ":=:add:=:" + String.valueOf(DTR) + ":=:" + Server.getServerName());
         CachedStorage.CachedDTR.put(FactionUUID, DTR);
     }
 
+    @Deprecated
     public static void UpdateCachedBank(String FactionUUID, Double Bank) {
         Storage.AddCommandToQueue("update:=:CachedBank:=:add:=:" + FactionUUID + ":=:add:=:" + String.valueOf(Bank) + ":=:" + Server.getServerName());
         CachedStorage.CachedBank.put(FactionUUID, Bank);
@@ -24,11 +26,13 @@ public class CacheUtils {
         CachedStorage.CachedBank.put(FactionUUID, Bank);
     }
 
+    @Deprecated
     public static void removeCachedDTR(String FactionUUID) {
         Storage.AddCommandToQueue("update:=:CachedDTR:=:remove:=:" + FactionUUID + ":=:add:=:" + String.valueOf(0) + ":=:" + Server.getServerName());
         CachedStorage.CachedDTR.remove(FactionUUID);
     }
 
+    @Deprecated
     public static void removeCachedBank(String FactionUUID) {
         Storage.AddCommandToQueue("update:=:CachedBank:=:remove:=:" + FactionUUID + ":=:add:=:" + String.valueOf(0) + ":=:" + Server.getServerName());
         CachedStorage.CachedBank.remove(FactionUUID);

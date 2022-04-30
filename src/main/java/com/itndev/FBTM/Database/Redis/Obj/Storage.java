@@ -1,5 +1,7 @@
 package com.itndev.FBTM.Database.Redis.Obj;
 
+import com.itndev.FBTM.Database.Redis.CmdExecute;
+import com.itndev.FBTM.Utils.Database.Redis.Read;
 import com.itndev.FBTM.Utils.Database.Redis.StaticVal;
 
 import java.util.List;
@@ -8,7 +10,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Storage {
     public static final ConcurrentHashMap<String, String> TempCommandQueue = new ConcurrentHashMap<>();
 
+
     public static void AddCommandToQueue(String command) {
+        CmdExecute.updatehashmap(command);
         synchronized (TempCommandQueue) {
             if(!TempCommandQueue.containsKey(StaticVal.getMaxAmount())) {
                 TempCommandQueue.put(StaticVal.getMaxAmount(), "1");
@@ -22,6 +26,7 @@ public class Storage {
     }
 
     public static void AddCommandToQueueFix(String command, String nothing) {
+        CmdExecute.updatehashmap(command);
         synchronized (TempCommandQueue) {
             if (!TempCommandQueue.containsKey(StaticVal.getMaxAmount())) {
                 TempCommandQueue.put(StaticVal.getMaxAmount(), "1");
@@ -35,6 +40,9 @@ public class Storage {
     }
 
     public static void AddBulkCommandToQueue(List<String> BulkCMD) {
+        for(String k : BulkCMD) {
+            CmdExecute.updatehashmap(k);
+        }
         synchronized (TempCommandQueue) {
             for(String command : BulkCMD) {
                 if(!TempCommandQueue.containsKey(StaticVal.getMaxAmount())) {

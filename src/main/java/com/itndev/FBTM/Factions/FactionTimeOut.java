@@ -5,6 +5,7 @@ import com.itndev.FBTM.Utils.Factions.FactionUtils;
 import com.itndev.FBTM.Utils.Factions.SystemUtils;
 import com.itndev.FBTM.Utils.Factions.UserInfoUtils;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,9 @@ public class FactionTimeOut {
     public static HashMap<String, ArrayList<String>> Timeout2info = new HashMap<>();
     public static HashMap<String, Integer> Timeout2 = new HashMap<>();
 
+    public static HashMap<String, ArrayList<String>> Timeout3info = new HashMap<>();
+    public static HashMap<String, Integer> Timeout3 = new HashMap<>();
+
 
     @Deprecated
     public static void TimeoutManager() {
@@ -29,6 +33,7 @@ public class FactionTimeOut {
                     e.printStackTrace();
                 }
                 new Thread(() -> {
+
                     for(String k : Timeout1.keySet()) {
                         int temp = Timeout1.get(k) - 1;
                         Timeout1.put(k, temp);
@@ -43,7 +48,34 @@ public class FactionTimeOut {
 
                             String playeruuid = parts[1];
 
-                            FactionUtils.SendFactionMessage(playeruuid, playeruuid, "single", "&r&c" + FactionUtils.getCappedFactionName(FactionUtils.getFactionName(FactionUUID)) + "&r&f 에 대한 해체수락이 만료되었습니다");
+                            FactionUtils.SendFactionMessage(playeruuid, playeruuid, "single", "&r&c" + FactionUtils.getCapFactionNameFromUUID(FactionUUID) + "&r&f 에 대한 해체수락이 만료되었습니다");
+                        }
+                    }
+                    for(String k : Timeout3.keySet()) {
+                        int temp = Timeout3.get(k) - 1;
+                        Timeout3.put(k, temp);
+                        if(temp <= 0) {
+                            Timeout3.remove(k);
+
+                            String parts[] = k.split("%");
+
+                            String RECIEVE_FactionUUID = parts[0];
+                            String FactionUUID = parts[1];
+
+                            ArrayList<String> templist = Timeout3info.get(RECIEVE_FactionUUID);
+                            if(!templist.isEmpty()) {
+                                if(templist.contains(FactionUUID)) {
+                                    templist.remove(FactionUUID);
+                                    //FactionUtils.SendFactionMessage(PlayerUUID, PlayerUUID, "single", "&r&c" + FactionUtils.getCappedFactionName(FactionUtils.getFactionName(FactionUUID)) + "&r&f 에서 보낸 초대가 만료되었습니다");
+                                    SystemUtils.UUID_BASED_MSG_SENDER(FactionUtils.getFactionLeader(RECIEVE_FactionUUID.replace("=WAR", "")), "&r&c" + FactionUtils.getCappedFactionName(FactionUtils.getFactionName(FactionUUID)) + "&r&f 에서 보낸 &c&l전쟁 &r신청이 만료되었습니다");
+                                    if(templist.isEmpty()) {
+                                        Timeout3info.remove(RECIEVE_FactionUUID);
+                                    } else {
+                                        Timeout3info.put(RECIEVE_FactionUUID, templist);
+                                    }
+                                }
+
+                            }
                         }
                     }
                     for(String k : Timeout2.keySet()) {
@@ -78,6 +110,43 @@ public class FactionTimeOut {
         }).start();
     }
 
+    public static void FactionWarRequest(String LeaderUUID, String FactionUUID, String RECIEVE_FactionUUID) {
+
+        if(Timeout3info.containsKey(FactionUUID + "=WAR")) {
+            ArrayList<String> temp = Timeout3info.get(FactionUUID + "=WAR");
+            if(temp.contains(RECIEVE_FactionUUID)) {
+                SystemUtils.UUID_BASED_MSG_SENDER(LeaderUUID, "&r&f이미 해당국가 &c" + FactionUtils.getCapFactionNameFromUUID(RECIEVE_FactionUUID) + " &r에게 전쟁을 신청하였습니다");
+            } else {
+                temp.add(RECIEVE_FactionUUID);
+                Timeout3info.put(FactionUUID + "=WAR", temp);
+                Timeout3.put(FactionUUID + "=WAR%" + RECIEVE_FactionUUID, 60);
+                SystemUtils.UUID_BASED_MSG_SENDER(LeaderUUID, "&r&f해당국가 &c" + FactionUtils.getCapFactionNameFromUUID(RECIEVE_FactionUUID) + " &r에게 성공적으로 전쟁을 신청하였습니다");
+                SystemUtils.UUID_BASED_MSG_SENDER(FactionUtils.getFactionLeader(RECIEVE_FactionUUID), "&r&f해당국가 &c" + FactionUtils.getCapFactionNameFromUUID(FactionUUID) + " &r에서 전쟁을 신청하였습니다.\n&r수락하려면 &7(/국가 전쟁 수락 " + FactionUtils.getCapFactionNameFromUUID(FactionUUID) + ")");
+            }
+        } else {
+            ArrayList<String> temp = new ArrayList<>();
+            temp.add(RECIEVE_FactionUUID);
+            Timeout3info.put(FactionUUID + "=WAR", temp);
+            Timeout3.put(FactionUUID + "=WAR%" + RECIEVE_FactionUUID, 60);
+            SystemUtils.UUID_BASED_MSG_SENDER(LeaderUUID, "&r&f해당국가 &c" + FactionUtils.getCapFactionNameFromUUID(RECIEVE_FactionUUID) + " &r에게 성공적으로 전쟁을 신청하였습니다");
+            SystemUtils.UUID_BASED_MSG_SENDER(FactionUtils.getFactionLeader(RECIEVE_FactionUUID), "&r&f해당국가 &c" + FactionUtils.getCapFactionNameFromUUID(FactionUUID) + " &r에서 전쟁을 신청하였습니다.\n&r수락하려면 &7(/국가 전쟁 수락 " + FactionUtils.getCapFactionNameFromUUID(FactionUUID) + ")");
+        }
+
+    }
+
+    public static void FactionWarAccept(String LeaderUUID, String FactionUUID, String REQUEST_FactionUUID) {
+        if(Timeout3info.containsKey(REQUEST_FactionUUID + "=WAR") && Timeout3info.get(REQUEST_FactionUUID + "=WAR").contains(FactionUUID)) {
+            Timeout3info.remove(REQUEST_FactionUUID + "=WAR");
+            Timeout3.remove(REQUEST_FactionUUID + "=WAR%" + FactionUUID);
+            FactionUtils.setOPPWar(REQUEST_FactionUUID, FactionUUID);
+            String FactionName = FactionUtils.getCapFactionNameFromUUID(FactionUUID);
+            String REQUEST_FactionName = FactionUtils.getCapFactionNameFromUUID(REQUEST_FactionUUID);
+            //ANNOUNCE WAR
+            SystemUtils.UUID_BASED_MSG_SENDER(LeaderUUID, "&r&f해당 국가 " + REQUEST_FactionName + "&r(이)의 전쟁 신청을 수락했습니다");
+            Storage.AddCommandToQueue("notify:=:" + LeaderUUID + ":=:" + "all" + ":=:" + "&r&f" + "&c" + REQUEST_FactionName + " &r(이)와 &c" + FactionName + " &r이가 전쟁을 시작합니다:=:" + "true");
+        }
+    }
+
     public static void DeleteFactionTEMP(String FactionUUID, String UUID) {
 
         //메세지
@@ -87,8 +156,9 @@ public class FactionTimeOut {
         Timeout1info.put(FactionUUID, UUID);
     }
 
+    @Deprecated
     public static void InvitePlayer(String FactionUUID, String UUID) {
-        //SystemUtils.sendfactionmessage(sender, "&r&f해당 유저 " + UserInfoUtils.getPlayerOrginName(UserInfoUtils.getPlayerName(UUID)) + " 을 당신의 국가에 초대하였습니다");
+        SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f해당 유저 " + UserInfoUtils.getPlayerOrginName(UserInfoUtils.getPlayerName(UUID)) + " 을 당신의 국가에 초대하였습니다");
         Storage.AddCommandToQueue("update:=:Timeout2:=:add:=:" + UUID + "%" + FactionUUID + ":=:add:=:" + 30);
         Storage.AddCommandToQueue("update:=:Timeout2info:=:add:=:" + UUID + ":=:add:=:" + FactionUUID);
         String FactionName = FactionUtils.getCappedFactionName(FactionUtils.getFactionName(FactionUUID));
@@ -96,32 +166,30 @@ public class FactionTimeOut {
                 "&7(/국가 수락 " + FactionName + ")");
     }
 
+
+    @Deprecated
     public static void AcceptInvite(String UUID, String FactionUUID) {
         if(!FactionUtils.isInFaction(UUID)) {
-            if (Timeout2info.containsKey(UUID) && Timeout2info.get(UUID).contains(FactionUUID)) {
+            if (Timeout2.containsKey(UUID + "%" + FactionUUID) && Timeout2info.get(UUID).contains(FactionUUID)) {
                 Storage.AddCommandToQueue("update:=:Timeout2:=:remove:=:" + UUID + "%" + FactionUUID + ":=:add:=:" + 30);
                 Storage.AddCommandToQueue("update:=:Timeout2info:=:remove:=:" + UUID + ":=:add:=:" + 30);
-                //SystemUtils.sendfactionmessage(sender, "&r&f국가 " + FactionUtils.getCappedFactionName(FactionUtils.getFactionName(FactionUUID)) + " 에 성공적으로 가입했습니다");
-                //cmdonsucceed.add("notify:=:" + FactionUtils.getFactionLeader(FactionUUID) + ":=:" + "SIBAL" + ":=:" + "&r&f" + UserInfoUtils.getPlayerUUIDOriginName(UUID) + " 이가 당신의 국가에 가입했습니다" + ":=:" + "true");
+                SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f국가 " + FactionUtils.getCappedFactionName(FactionUtils.getFactionName(FactionUUID)) + " 에 성공적으로 가입했습니다");
+                Storage.AddCommandToQueue("notify:=:" + FactionUtils.getFactionLeader(FactionUUID) + ":=:" + "SIBAL" + ":=:" + "&r&f" + UserInfoUtils.getPlayerUUIDOriginName(UUID) + " 이가 당신의 국가에 가입했습니다" + ":=:" + "true");
                 //FactionUtils.FactionUUIDNotify();
                 FactionUtils.SetPlayerFaction(UUID, FactionUUID);
                 FactionUtils.SetFactionMember(UUID, FactionUUID, false);
                 FactionUtils.SetPlayerRank(UUID, Config.Member);
-                List<String> BulkCMD = new ArrayList<>();
-                BulkCMD.add(FactionUtils.SetPlayerFaction_GETRAWCMD(UUID, FactionUUID));
-                BulkCMD.add(FactionUtils.SetFactionMember_GETRAWCMD(UUID, FactionUUID, false));
-                BulkCMD.add(FactionUtils.SetPlayerRank_GETRAWCMD(UUID, Config.Member));
-                Storage.AddBulkCommandToQueue(BulkCMD);
             } else {
-                //SystemUtils.sendfactionmessage(sender, "&r&f해당 국가"
-                //        + FactionUtils.getCappedFactionName(FactionUtils.getFactionName(FactionUUID))
-                //        + " 에서 보낸 초대장이 만료되었거나 존재하지 않습니다");
+                SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f해당 국가"
+                        + FactionUtils.getCappedFactionName(FactionUtils.getFactionName(FactionUUID))
+                        + " 에서 보낸 초대장이 만료되었거나 존재하지 않습니다");
             }
         } else {
-            //SystemUtils.sendfactionmessage(sender, "&r&f당신은 이미 " + FactionUtils.getCappedFactionName(FactionUtils.getFactionName(FactionUtils.getPlayerFactionUUID(UUID))) + " 에 소속되어 있습니다");
+            SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f당신은 이미 " + FactionUtils.getCappedFactionName(FactionUtils.getFactionName(FactionUtils.getPlayerFactionUUID(UUID))) + " 에 소속되어 있습니다");
         }
     }
 
+    @Deprecated
     public static void cancelInvite(String FactionUUID, String UUID) {
         if (Timeout2info.containsKey(UUID) && Timeout2info.get(UUID).contains(FactionUUID)) {
             SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f해당 유저 " + UserInfoUtils.getPlayerOrginName(UserInfoUtils.getPlayerName(UUID)) + " 에게 보낸 초대장을 취소하였습니다");

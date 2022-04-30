@@ -12,6 +12,10 @@ public class FactionStorage {
 
     public static HashMap<String, String> LandToFaction = new HashMap<>();
 
+    public static HashMap<String, ArrayList<String>> DESTORYED_FactionToLand = new HashMap<>();
+
+    public static HashMap<String, String> DESTORYED_LandToFaction = new HashMap<>();
+
     public static ConcurrentHashMap<String, String> AsyncLandToFaction = new ConcurrentHashMap<>();
 
     public static ConcurrentHashMap<String, String> PlayerFaction = new ConcurrentHashMap<>();
@@ -747,6 +751,88 @@ public class FactionStorage {
                     FactionStorage.FactionOutPost.remove(key);
                 }
             }
+        }else if(args[1].equalsIgnoreCase("DESTORYED_FactionToLand")) {
+            if(args[2].equalsIgnoreCase("add")) {
+                String key = args[3];
+                String value = args[5];
+                if(args[4].equalsIgnoreCase("add")) {
+                    if (!FactionStorage.DESTORYED_FactionToLand.isEmpty()) { //비어있지 않으면
+                        if (FactionStorage.DESTORYED_FactionToLand.containsKey(key)) {
+
+                            //해당 키가 있으면
+                            ArrayList<String> updatelist = FactionStorage.DESTORYED_FactionToLand.get(key);
+                            if(!updatelist.contains(value)) {
+                                updatelist.add(value);
+                            }
+                            FactionStorage.DESTORYED_FactionToLand.put(key, updatelist);
+                        } else {
+
+                            //해당 키가 없으면
+                            ArrayList<String> updatelist2 = new ArrayList<>();
+                            updatelist2.add(value);
+                            FactionStorage.DESTORYED_FactionToLand.put(key, updatelist2);
+                        }
+                    } else { //만약 비어있으면
+                        ArrayList<String> updatelist3 = new ArrayList<>();
+                        updatelist3.add(value);
+                        FactionStorage.DESTORYED_FactionToLand.put(key, updatelist3);;
+                    }
+                } else if(args[4].equalsIgnoreCase("remove")) {
+                    if (!FactionStorage.DESTORYED_FactionToLand.isEmpty()) { //비어있지 않으면
+                        if (FactionStorage.DESTORYED_FactionToLand.containsKey(key)) {
+
+                            //해당 키가 있으면
+                            ArrayList<String> updatelist = FactionStorage.DESTORYED_FactionToLand.get(key);
+                            updatelist.remove(value);
+                            if(updatelist.isEmpty()) {
+                                FactionStorage.DESTORYED_FactionToLand.remove(key);
+                            } else {
+                                FactionStorage.DESTORYED_FactionToLand.put(key, updatelist);
+                            }
+                        } else {
+
+                            //해당 키가 없으면
+                            //없으니까 하지 말자
+                        }
+                    } else { //만약 비어있으면
+                        //시발 존재하지도 않는데 어떻게 없애냐 뭔시발 병신이냐
+                    }
+                }
+            } else if(args[2].equalsIgnoreCase("remove")) {
+                String key = args[3];
+                FactionStorage.DESTORYED_FactionToLand.remove(key);
+            }
+
+        } else if(args[1].equalsIgnoreCase("DESTORYED_LandToFaction")) {
+            if(args[2].equalsIgnoreCase("add")) {
+                String key = args[3]; //키
+                String value = args[5]; //추가하고 싶은 값
+
+                if(args[4].equalsIgnoreCase("add")) {
+
+                    if(FactionStorage.DESTORYED_LandToFaction.containsKey(key)) {
+                        FactionStorage.DESTORYED_LandToFaction.remove(key);
+                        FactionStorage.DESTORYED_LandToFaction.put(key, value);
+                    } else {
+                        FactionStorage.DESTORYED_LandToFaction.put(key, value);
+                    }
+                } else if(args[4].equalsIgnoreCase("remove")) {
+
+                    if(FactionStorage.DESTORYED_LandToFaction.containsKey(key)) {
+
+                        FactionStorage.DESTORYED_LandToFaction.remove(key);
+
+                        //할거 없다
+                    } else {
+                        //할거 없다
+                    }
+                }
+
+            } else if(args[2].equalsIgnoreCase("remove")) {
+                String key = args[3];
+                FactionStorage.DESTORYED_LandToFaction.remove(key);
+            }
+
         }
         /* else if(args[1].equalsIgnoreCase("LandToFaction")) { //====================== Land To Faction
 

@@ -1,7 +1,7 @@
 package com.itndev.FBTM.Utils.Factions;
 
 import com.itndev.FBTM.Database.Redis.Obj.Storage;
-import com.itndev.FBTM.UUIDStorage.UserInfoStorage;
+import com.itndev.FBTM.Factions.UserInfoStorage;
 
 import java.util.Locale;
 
@@ -14,6 +14,7 @@ public class UserInfoUtils {
     public static void setPlayerName(String UUID, String newName) {
         Storage.AddCommandToQueue("update:=:uuidname:=:add:=:" + UUID + ":=:add:=:" + newName.toLowerCase(Locale.ROOT));
     }
+
     public static void setPlayerUUID(String newName, String UUID) {
 
         String oldname = UserInfoStorage.uuidname.get(UUID);
@@ -21,6 +22,7 @@ public class UserInfoUtils {
             Storage.AddCommandToQueue("update:=:nameuuid:=:add:=:" + newName.toLowerCase(Locale.ROOT) + ":=:add:=:" + UUID);
         }
     }
+
     public static void setPlayerOrginName(String newName, String UUID) {
         if(UserInfoStorage.uuidname.containsKey(UUID)) {
             String oldname = UserInfoStorage.uuidname.get(UUID);

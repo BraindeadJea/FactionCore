@@ -405,8 +405,8 @@ public class ValidChecker {
                     "힖힗힘힙힚힛힜힝힞힟힠힡힢힣";
             String k_temp = "ㅂㅈㄷㄱㅅㅁㄴㅇㄹㅎㅋㅌㅊ표ㅕㅑㅐㅔㅗㅓㅏㅣㅠㅜㅡㅒㅖㅃㅉㄸㄲㅆㄳㅄ";
             System.out.println("[TextValidChecker] loading all valid options...");
-            String k2 = "ABCDEFGHIJKLMOPQRSTUVWXYZ";
-            String k3 = "abcdefghijklmopqrstuvmxyz";
+            String k2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            String k3 = "abcdefghijklmnopqrstuvmxyz";
             String k4 = "1234567890";
             String[] words = k.split("");
             String[] words_temp = k_temp.split("");
