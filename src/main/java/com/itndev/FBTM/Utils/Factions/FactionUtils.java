@@ -55,9 +55,16 @@ public class FactionUtils {
     public static String getFactionLeader(String FactionUUID) {
         //ArrayList<String> members = FactionStorage.FactionMember.get(FactionUUID);
         for(String UUID : FactionStorage.FactionMember.get(FactionUUID)) {
-            if(FactionUtils.getPlayerRank(UUID).equalsIgnoreCase(Config.Leader)) {
+            if(FactionUtils.getPlayerRank(UUID).equals(Config.Leader)) {
                 return UUID;
             }
+        }
+        return null;
+    }
+
+    public static String getAnyOneInFaction(String FactionUUID) {
+        for(String UUID : FactionStorage.FactionMember.get(FactionUUID)) {
+            return UUID;
         }
         return null;
     }
@@ -139,6 +146,11 @@ public class FactionUtils {
 
     public static String Build_PERMLVLINFO(int PERMLVL, int FINALPERMLVL, String SUCCESSID) {
         return ":=:" + Config.PERM_LEVEL_INDICATOR + PERMLVL + ":=:" + Config.PERM_FINAL_LEVEL_INDICATOR + FINALPERMLVL + ":=:" + Config.SUCCESS_ID_INDICATOR + SUCCESSID;
+    }
+
+    public static void FactionAdmin() {
+
+
     }
 
 

@@ -28,6 +28,8 @@ public class Processor {
                         AuthStorage.AskForHasAuth(UUID);
                     } else if (args[1].equalsIgnoreCase("해제")) {
                         AuthStorage.RemoveAuth(UUID);
+                    } else if (args[1].equalsIgnoreCase("정보요청")) {
+                        AuthStorage.SendAuthInfo(UUID);
                     }
                 } else if(args[0].equalsIgnoreCase("국가멸망")){
                     DeleteFactionUtils.DESTORYFaction(UUID, FactionUtils.getPlayerFactionUUID(UUID));

@@ -2,8 +2,10 @@ package com.itndev.FBTM.Database.Redis;
 
 import com.itndev.FBTM.Database.Redis.Obj.Storage;
 import com.itndev.FBTM.Database.Redis.Obj.StreamConfig;
+import com.itndev.FBTM.Server;
 import com.itndev.FBTM.Utils.Database.Redis.Read;
 import com.itndev.FBTM.Utils.Database.Redis.StaticVal;
+import com.itndev.FBTM.Utils.Factions.SystemUtils;
 import io.lettuce.core.StreamMessage;
 import io.lettuce.core.XReadArgs;
 
@@ -16,6 +18,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class StreamIO {
 
     public void start_ReadStream() {
+        while(!Server.Streamable) {
+            try {
+                Thread.sleep(1000);
+                SystemUtils.logger("Waiting To execute Database Task Before Loading Storage...");
+            } catch (InterruptedException e) {
+                SystemUtils.logger(e.getMessage());
+            }
+        }
         StreamReader();
         StreamWriter();
     }
@@ -23,12 +33,17 @@ public class StreamIO {
     private void StreamReader() {
         new Thread(() -> {
             while (true) {
-                StreamReader_INNER();
-                StreamReader_INPUT();
+                try {
+                    StreamReader_INNER();
+                    StreamReader_INPUT();
+                } catch (Exception e) {
+                    //e.printStackTrace();
+                    SystemUtils.logger(e.getMessage());
+                }
                 try {
                     Thread.sleep(2);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    SystemUtils.logger(e.getMessage());
                 }
             }
         }).start();
@@ -41,7 +56,7 @@ public class StreamIO {
                 try {
                     Thread.sleep(2);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    SystemUtils.logger(e.getMessage());
                 }
             }
         }).start();

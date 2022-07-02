@@ -1,6 +1,7 @@
 package com.itndev.FBTM;
 
 import com.itndev.FBTM.Database.MySQL.SQL;
+import com.itndev.FBTM.Database.Redis.BungeeAPI.BungeeStreamReader;
 import com.itndev.FBTM.Database.Redis.Connect;
 import com.itndev.FBTM.Database.Redis.StreamIO;
 import com.itndev.FBTM.Discord.BotConnect;
@@ -22,6 +23,8 @@ public class Server {
 
     public static Boolean Close = false;
 
+    public static Boolean Streamable = false;
+
     private final static String ServerName = "BACKEND_TRANSACTION";
     public static String getServerName() {
         return ServerName;
@@ -35,6 +38,15 @@ public class Server {
             Connect.RedisConnect();
             streamIO = new StreamIO();
             streamIO.start_ReadStream();
+            BungeeStreamReader.RedisStreamReader();
+            try {
+                if(!RedisDump.has_Verification()) {
+                    RedisDump.ReloadStorageFromRemoteServer("DUMP");
+                }
+            } catch (Exception e) {
+                RedisDump.ReloadStorageFromRemoteServer("DUMP");
+            }
+
             //Connect.ReloadStorageFromRemoteServer("DUMP");
         }).start();
         ValidChecker.setvalid();
@@ -45,12 +57,29 @@ public class Server {
         System.out.println("[TASK] RUNNING TASK MANAGER");
         YamlDump.LoadConnectionInfo();
         TryLoadYaml();
-
+        System.out.println("[SYSTEM/" + SystemUtils.getDate(System.currentTimeMillis()) + "] Loading FlatFile...");
+        Streamable = true;
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("[SYSTEM/" + SystemUtils.getDate(System.currentTimeMillis()) + "] Starting up Process");
         while (true) {
             try {
                 Thread.sleep(10000);
+                try {
+                    new Thread(() -> {
+                        RedisDump.deleteandupload("DUMP");
+                    }).start();
+                } catch (Exception ex) {
+                    System.out.println("[SYSTEM/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + ex.getMessage());
+                    Connect.RedisConnect();
+                }
+                System.out.println("[SYSTEM/" + SystemUtils.getDate(System.currentTimeMillis()) + "] BACKUP DONE TO REDIS");
                 if(Close) {
                     RedisDump.deleteandupload("DUMP");
+                    RedisDump.set_Verification();
                     YamlDump.SaveConnectionInfo();
                     TryDumpYaml();
                    break;
@@ -58,14 +87,15 @@ public class Server {
                 //System.out.println("[LOG] (EVERY 10 SECONDS) TIME ->" + SystemUtils.getDate(System.currentTimeMillis()));
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                Connect.RedisConnect();
             }
         }
         try {
             Thread.sleep(3000);
-            System.out.println("STOPPING SERVICE");
+            System.out.println("[SYSTEM/" + SystemUtils.getDate(System.currentTimeMillis()) + "] STOPPING SERVICE");
             System.exit(0);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (InterruptedException e2) {
+            e2.printStackTrace();
         }
 
     }

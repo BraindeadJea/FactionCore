@@ -10,6 +10,7 @@ com\itndev\FBTM\Utils\Cache\CachedStorage.class
 com\itndev\FBTM\Database\MySQL\ConnectSQL.class
 com\itndev\FBTM\Database\Redis\Obj\StreamConfig.class
 com\itndev\FBTM\Transaction\TransactionUtils\FactionHelp.class
+com\itndev\FBTM\Database\Redis\BungeeAPI\BungeeStreamReader.class
 com\itndev\FBTM\Dump\RedisDump.class
 com\itndev\FBTM\Factions\FactionTimeOut.class
 com\itndev\FBTM\Server.class
@@ -17,6 +18,7 @@ com\itndev\FBTM\Transaction\TransactionUtils\FactionWar.class
 com\itndev\FBTM\Transaction\TransactionUtils\DeleteFaction.class
 com\itndev\FBTM\Database\MySQL\wtfDatabase.class
 com\itndev\FBTM\Discord\DiscordListener.class
+com\itndev\FBTM\Database\Redis\BungeeAPI\BungeeStorage.class
 com\itndev\FBTM\Transaction\TransactionUtils\FactionBank.class
 com\itndev\FBTM\Transaction\TransactionUtils\FactionInvite.class
 com\itndev\FBTM\Database\Redis\CmdExecute.class

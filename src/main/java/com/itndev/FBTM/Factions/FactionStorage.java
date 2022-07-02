@@ -16,6 +16,8 @@ public class FactionStorage {
 
     public static HashMap<String, String> DESTORYED_LandToFaction = new HashMap<>();
 
+    public static HashMap<String, String> DESTROYED_FactionUUIDToFactionName = new HashMap<>();
+
     public static ConcurrentHashMap<String, String> AsyncLandToFaction = new ConcurrentHashMap<>();
 
     public static ConcurrentHashMap<String, String> PlayerFaction = new ConcurrentHashMap<>();
@@ -831,6 +833,36 @@ public class FactionStorage {
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 FactionStorage.DESTORYED_LandToFaction.remove(key);
+            }
+
+        } else if(args[1].equalsIgnoreCase("DESTROYED_FactionUUIDToFactionName")) {
+            if(args[2].equalsIgnoreCase("add")) {
+                String key = args[3]; //키
+                String value = args[5]; //추가하고 싶은 값
+
+                if(args[4].equalsIgnoreCase("add")) {
+
+                    if(FactionStorage.DESTROYED_FactionUUIDToFactionName.containsKey(key)) {
+                        FactionStorage.DESTROYED_FactionUUIDToFactionName.remove(key);
+                        FactionStorage.DESTROYED_FactionUUIDToFactionName.put(key, value);
+                    } else {
+                        FactionStorage.DESTROYED_FactionUUIDToFactionName.put(key, value);
+                    }
+                } else if(args[4].equalsIgnoreCase("remove")) {
+
+                    if(FactionStorage.DESTROYED_FactionUUIDToFactionName.containsKey(key)) {
+
+                        FactionStorage.DESTROYED_FactionUUIDToFactionName.remove(key);
+
+                        //할거 없다
+                    } else {
+                        //할거 없다
+                    }
+                }
+
+            } else if(args[2].equalsIgnoreCase("remove")) {
+                String key = args[3];
+                FactionStorage.DESTROYED_FactionUUIDToFactionName.remove(key);
             }
 
         }

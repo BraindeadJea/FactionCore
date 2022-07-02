@@ -1,10 +1,13 @@
 package com.itndev.FBTM.Database.Redis;
 
+import com.itndev.FBTM.Database.Redis.Obj.Storage;
+import com.itndev.FBTM.Dump.RedisDump;
 import com.itndev.FBTM.Factions.FactionStorage;
 import com.itndev.FBTM.Server;
 import com.itndev.FBTM.Transaction.Processor;
 import com.itndev.FBTM.Factions.UserInfoStorage;
 import com.itndev.FBTM.Utils.Cache.CachedStorage;
+import com.itndev.FBTM.Utils.Factions.SystemUtils;
 
 public class CmdExecute {
 
@@ -82,7 +85,8 @@ public class CmdExecute {
                         || args[1].equalsIgnoreCase("FactionToOutPost")
                         || args[1].equalsIgnoreCase("OutPostToFaction")
                         || args[1].equalsIgnoreCase("DESTORYED_FactionToLand")
-                        || args[1].equalsIgnoreCase("DESTORYED_LandToFaction")) {
+                        || args[1].equalsIgnoreCase("DESTORYED_LandToFaction")
+                        || args[1].equalsIgnoreCase("DESTROYED_FactionUUIDToFactionName")) {
                     FactionStorage.FactionStorageUpdateHandler(args, "");
                 } else if (args[1].equalsIgnoreCase("namename")
                         || args[1].equalsIgnoreCase("nameuuid")
@@ -98,6 +102,22 @@ public class CmdExecute {
 
             } else if(args[0].equalsIgnoreCase("discord")) {
 
+            } else if(args[0].equalsIgnoreCase("reloadstorage")) {
+                if(args.length == 2) {
+                    RedisDump.ReloadStorageFromRemoteServer(args[1]);
+                    SystemUtils.logger("Reloaded Storage From Redis With The Key \"" + args[1] + "\"");
+                } else if(args.length == 1) {
+                    RedisDump.ReloadStorageFromRemoteServer(null);
+                    SystemUtils.logger("Reloaded Storage From Redis Without A Key");
+                }
+            } else if(args[0].equalsIgnoreCase("uploadstorage")) {
+                if(args.length == 2) {
+                    RedisDump.UploadStorageToRedis(args[1]);
+                    SystemUtils.logger("Uploaded Storage To Redis With The Key \"" + args[1] + "\"");
+                } else if(args.length == 1) {
+                    RedisDump.UploadStorageToRedis(null);
+                    SystemUtils.logger("Uploaded Storage To Redis Without A Key");
+                }
             } else if(args[0].equalsIgnoreCase("syncandclose")) {
                 Server.Close = true;
             } else {

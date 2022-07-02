@@ -2,6 +2,7 @@ package com.itndev.FBTM.Discord;
 
 import com.itndev.FBTM.Database.Redis.Obj.Storage;
 import com.itndev.FBTM.Utils.Factions.FactionUtils;
+import com.itndev.FBTM.Utils.Factions.SystemUtils;
 import com.itndev.FBTM.Utils.Factions.UserInfoUtils;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -37,10 +38,25 @@ public class AuthStorage {
             FactionUtils.SendFactionMessage(UUID, "puremessagesendoptiontrue", "single", "[디스코드]" + " 계정 인증이 풀렸습니다");
             Storage.AddCommandToQueue("discord:=:auth:=:" + UUID + ":=:" + "NULL");
             BotConnect.mainguild.removeRoleFromMember(DiscordID, BotConnect.mainguild.getRolesByName("USER", false).get(0)).queue();
-
+            Member m = BotConnect.mainguild.retrieveMemberById(DiscordID).complete();
+            m.modifyNickname(m.getUser().getName()).queue();
         } else {
             FactionUtils.SendFactionMessage(UUID, "puremessagesendoptiontrue", "single", "[디스코드]" + " 연동되어있는 계정이 없습니다");
         }
+    }
+
+    public static void SendAuthInfo(String UUID) {
+        String finalmsg = "";
+        finalmsg = finalmsg + "&3&m-------------------------------------\n";
+        finalmsg = finalmsg + "&9&l연동정보\n";
+        if(UUID_TO_DISCORDID.containsKey(UUID)) {
+            String DiscordTag = BotConnect.bot.retrieveUserById(UUID_TO_DISCORDID.get(UUID)).complete().getAsTag();
+            finalmsg = finalmsg + "&7현재 당신의 계정은 " + DiscordTag + "&r&7 와 연동되어 있습니다\n";
+        } else {
+            finalmsg = finalmsg + "&7현재 당신의 계정은 연동되어 있지 않습니다\n";
+        }
+        finalmsg = finalmsg + "&3&m-------------------------------------";
+        SystemUtils.UUID_BASED_PURE_MSG_SENDER(UUID, finalmsg);
     }
 
     public static String getID_FROM_UUID(String UUID) {
@@ -71,7 +87,8 @@ public class AuthStorage {
         list.add(ID);
         TEMP_AUTH_CACHE.put(UUID, list);
         TEMP_UUID_ID_CACHE_TO_DISCORDID.put(UUID + ID, DiscordID);
-        BotConnect.mainguild.getMemberById(DiscordID).modifyNickname(UserInfoUtils.getPlayerUUIDOriginName(UUID)).queue();
+
+        //
     }
 
     public static void AuthID(String UUID, String ID) {
@@ -90,6 +107,7 @@ public class AuthStorage {
                     FactionUtils.SendFactionMessage(UUID, "puremessagesendoptiontrue", "single", "[디스코드]" + " 해당 디스코드 계정 " + tag + " 와 성공적으로 연동되었습니다");
                     Storage.AddCommandToQueue("discord:=:auth:=:" + UUID + ":=:" + tag);
                     BotConnect.mainguild.addRoleToMember(DiscordID, BotConnect.mainguild.getRolesByName("USER", false).get(0)).queue();
+                    BotConnect.mainguild.retrieveMemberById(DiscordID).complete().modifyNickname("[USER] " + UserInfoUtils.getPlayerUUIDOriginName(UUID)).queue();
                 } else {
                     FactionUtils.SendFactionMessage(UUID, "puremessagesendoptiontrue", "single", "[디스코드]" + " 잘못된 아이디입니다");
                 }

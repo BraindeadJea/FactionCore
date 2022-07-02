@@ -157,8 +157,8 @@ public class FactionTimeOut {
     }
 
     @Deprecated
-    public static void InvitePlayer(String FactionUUID, String UUID) {
-        SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f해당 유저 " + UserInfoUtils.getPlayerOrginName(UserInfoUtils.getPlayerName(UUID)) + " 을 당신의 국가에 초대하였습니다");
+    public static void InvitePlayer(String InviteUUID, String FactionUUID, String UUID) {
+        SystemUtils.UUID_BASED_MSG_SENDER(InviteUUID, "&r&f해당 유저 " + UserInfoUtils.getPlayerOrginName(UserInfoUtils.getPlayerName(UUID)) + " 을 당신의 국가에 초대하였습니다");
         Storage.AddCommandToQueue("update:=:Timeout2:=:add:=:" + UUID + "%" + FactionUUID + ":=:add:=:" + 30);
         Storage.AddCommandToQueue("update:=:Timeout2info:=:add:=:" + UUID + ":=:add:=:" + FactionUUID);
         String FactionName = FactionUtils.getCappedFactionName(FactionUtils.getFactionName(FactionUUID));
@@ -174,7 +174,7 @@ public class FactionTimeOut {
                 Storage.AddCommandToQueue("update:=:Timeout2:=:remove:=:" + UUID + "%" + FactionUUID + ":=:add:=:" + 30);
                 Storage.AddCommandToQueue("update:=:Timeout2info:=:remove:=:" + UUID + ":=:add:=:" + 30);
                 SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f국가 " + FactionUtils.getCappedFactionName(FactionUtils.getFactionName(FactionUUID)) + " 에 성공적으로 가입했습니다");
-                Storage.AddCommandToQueue("notify:=:" + FactionUtils.getFactionLeader(FactionUUID) + ":=:" + "SIBAL" + ":=:" + "&r&f" + UserInfoUtils.getPlayerUUIDOriginName(UUID) + " 이가 당신의 국가에 가입했습니다" + ":=:" + "true");
+                Storage.AddCommandToQueue("notify:=:" + FactionUtils.getAnyOneInFaction(FactionUUID) + ":=:" + "SIBAL" + ":=:" + "&r&f" + UserInfoUtils.getPlayerUUIDOriginName(UUID) + " 이가 당신의 국가에 가입했습니다" + ":=:" + "true");
                 //FactionUtils.FactionUUIDNotify();
                 FactionUtils.SetPlayerFaction(UUID, FactionUUID);
                 FactionUtils.SetFactionMember(UUID, FactionUUID, false);
@@ -190,14 +190,14 @@ public class FactionTimeOut {
     }
 
     @Deprecated
-    public static void cancelInvite(String FactionUUID, String UUID) {
+    public static void cancelInvite(String InviteUUID, String FactionUUID, String UUID) {
         if (Timeout2info.containsKey(UUID) && Timeout2info.get(UUID).contains(FactionUUID)) {
-            SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f해당 유저 " + UserInfoUtils.getPlayerOrginName(UserInfoUtils.getPlayerName(UUID)) + " 에게 보낸 초대장을 취소하였습니다");
+            SystemUtils.UUID_BASED_MSG_SENDER(InviteUUID, "&r&f해당 유저 " + UserInfoUtils.getPlayerOrginName(UserInfoUtils.getPlayerName(UUID)) + " 에게 보낸 초대장을 취소하였습니다");
             FactionUtils.SendFactionMessage(UUID, UUID, "single", "&r&f국가" + FactionUtils.getCappedFactionName(FactionUtils.getFactionName(FactionUUID)) + " 에서 당신에게 보낸 초대장을 취소하였습니다");
             Storage.AddCommandToQueue("update:=:Timeout2:=:add:=:" + UUID + "%" + FactionUUID + ":=:add:=:" + 30);
             Storage.AddCommandToQueue("update:=:Timeout2info:=:add:=:" + UUID + ":=:add:=:" + FactionUUID);
         } else {
-            SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f해당 유저 " + UserInfoUtils.getPlayerOrginName(UserInfoUtils.getPlayerName(UUID)) + " 에게 보낸 초대장이 만료되었거나 존재하지 않습니다");
+            SystemUtils.UUID_BASED_MSG_SENDER(InviteUUID, "&r&f해당 유저 " + UserInfoUtils.getPlayerOrginName(UserInfoUtils.getPlayerName(UUID)) + " 에게 보낸 초대장이 만료되었거나 존재하지 않습니다");
         }
     }
 

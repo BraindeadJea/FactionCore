@@ -65,6 +65,10 @@ public class SystemUtils {
         return k;
     }
 
+    public static void logger(String message) {
+        System.out.println("[SYSTEM/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + message);
+    }
+
     public static String Args2String(String[] args, int Start) {
         String FinalString = "";
         for(int k = Start; k < args.length; k++) {
@@ -82,5 +86,10 @@ public class SystemUtils {
 
     public static void UUID_BASED_MSG_SENDER(String UUID, String Message) {
         Storage.AddCommandToQueue("notify:=:" + UUID + ":=:" + UUID + ":=:" + Message + ":=:" + "false");
+    }
+
+    public static void UUID_BASED_PURE_MSG_SENDER(String UUID, String Message) {
+        //FactionUtils.SendFactionMessage(UUID, "puremessagesendoptiontrue", "single", "");
+        Storage.AddCommandToQueue("notify:=:" + UUID + ":=:" + "puremessagesendoptiontrue" + ":=:" + Message + ":=:" + "false");
     }
 }

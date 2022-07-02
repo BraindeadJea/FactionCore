@@ -21,6 +21,7 @@ public class Connect {
     private static RedisCommands<String, String> setcommands = null;
     private static String LastID_INPUT = "0-0";
     private static String LastID_INNER = "0-0";
+    private static String LastID_BUNGEE = "0-0";
 
     private static String redis_address = "221.167.222.87";
     private static Integer redis_port = 6614;
@@ -48,8 +49,6 @@ public class Connect {
     public static void setLastID_INPUT(String new_LastID_INPUT) {
         LastID_INPUT = new_LastID_INPUT;
     }
-
-
     public static void setLastID_INNER(String new_LastID_INNER) {
         LastID_INNER = new_LastID_INNER;
     }
@@ -60,6 +59,14 @@ public class Connect {
 
     public static String get_LastID_INNER() {
         return LastID_INNER;
+    }
+
+    public static String get_LastID_BUNGEE() {
+        return LastID_BUNGEE;
+    }
+
+    public static void set_LastID_BUNGEE(String data) {
+        LastID_BUNGEE = data;
     }
 
     public static RedisCommands<String, String> getSetcommands() {

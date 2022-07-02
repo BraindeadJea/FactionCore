@@ -32,6 +32,7 @@ public class YamlDump {
         //CreateDirectory();
         DumpYaml(Connect.get_LastID_INNER(), "LastID_INNER");
         DumpYaml(Connect.get_LastID_INPUT(), "LastID_INPUT");
+        DumpYaml(Connect.get_LastID_BUNGEE(), "LastID_BUNGEE");
     }
 
     public static void LoadConnectionInfo() {
@@ -41,6 +42,9 @@ public class YamlDump {
         }
         if(LoadYaml("LastID_INPUT") != null) {
             Connect.setLastID_INPUT((String) LoadYaml("LastID_INPUT"));
+        }
+        if(LoadYaml("LastID_BUNGEE") != null) {
+            Connect.set_LastID_BUNGEE((String) LoadYaml("LastID_BUNGEE"));
         }
     }
 

@@ -3,10 +3,7 @@ package com.itndev.FBTM.Discord;
 import com.itndev.FBTM.Database.Redis.Obj.Storage;
 import com.itndev.FBTM.Utils.Factions.FactionUtils;
 import com.itndev.FBTM.Utils.Factions.UserInfoUtils;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Invite;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberLeaveEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -29,8 +26,10 @@ public class DiscordListener extends ListenerAdapter {
     @Override
     public void onGuildMemberLeave(GuildMemberLeaveEvent e) {
         try {
-            System.out.println("[DISCORD] " + e.getMember().getUser().getAsTag() + "/" + e.getMember().getId() + " has left the server");
-            RemoveUser(e.getMember().getId());
+            String tag = e.getUser().getAsTag();
+            String id = e.getUser().getId();
+            System.out.println("[DISCORD] " + tag + "/" + id + " has left the server");
+            RemoveUser(id);
         } catch (NullPointerException ex) {
             ex.printStackTrace();
         }
@@ -39,7 +38,10 @@ public class DiscordListener extends ListenerAdapter {
     @Override
     public void onGuildMemberRemove(GuildMemberRemoveEvent e) {
         try {
-            RemoveUser(e.getMember().getId());
+            String tag = e.getUser().getAsTag();
+            String id = e.getUser().getId();
+            System.out.println("[DISCORD] " + tag + "/" + id + " has left the server");
+            RemoveUser(id);
         } catch (NullPointerException ex) {
             ex.printStackTrace();
         }
@@ -75,7 +77,7 @@ public class DiscordListener extends ListenerAdapter {
             }
             String name = args[1].toLowerCase(Locale.ROOT);
             if(!UserInfoUtils.hasJoined(name)) {
-                BotConnect.mainchannel.sendMessage("[" + user.getAsMention() + "]\n 해당 유저는 서버에 접속한적이 없습니다").queue();
+                BotConnect.mainchannel.sendMessage("[" + user.getAsMention() + "]\n 해당 유저 `" + args[1] + "` 는 서버에 접속한적이 없습니다").queue();
                 return;
             }
             String UUID = UserInfoUtils.getPlayerUUID(name);
@@ -103,13 +105,15 @@ public class DiscordListener extends ListenerAdapter {
             BotConnect.mainchannel.sendMessage( "[" + user.getAsMention() + "]\n"
                     + "해당 계정 `" + UserInfoUtils.getPlayerUUIDOriginName(UUID) + "` 와의 연동을 해제했습니다").queue();
             BotConnect.mainguild.removeRoleFromMember(user.getId(), BotConnect.mainguild.getRolesByName("USER", false).get(0)).queue();
+            Member m = BotConnect.mainguild.retrieveMemberById(user.getId()).complete();
+            m.modifyNickname(user.getName()).queue();
         } else if(args[0].equalsIgnoreCase("연동정보")) {
             if(!channel.equals(BotConnect.mainchannel)) {
                 channel.sendMessage("[" + user.getAsMention() + "]\n 해당 명령어는 " + ((TextChannel)BotConnect.mainchannel).getAsMention() + " 에서만 사용 가능합니다").queue();
                 return;
             }
             if(args.length != 2) {
-                BotConnect.mainchannel.sendMessage("[" + user.getAsMention() + "]\n 잘못된 명령어. `!연동 <닉네임/유저태그>`").queue();
+                BotConnect.mainchannel.sendMessage("[" + user.getAsMention() + "]\n 잘못된 명령어. `!연동정보 <닉네임/유저태그>`").queue();
                 return;
             }
         }

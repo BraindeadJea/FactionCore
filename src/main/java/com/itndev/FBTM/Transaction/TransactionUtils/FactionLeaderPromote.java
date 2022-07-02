@@ -37,7 +37,7 @@ public class FactionLeaderPromote {
 
         String TargetUUID = UserInfoUtils.getPlayerUUID(name.toLowerCase(Locale.ROOT));
         String givername = UserInfoUtils.getPlayerUUIDOriginName(UUID);
-        String originname = UserInfoUtils.getPlayerOrginName(TargetUUID);
+        String originname = UserInfoUtils.getPlayerUUIDOriginName(TargetUUID);
         if(!FactionUtils.isSameFaction(UUID, TargetUUID)) {
             SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f해당 유저 " + originname + "(은)는 당신의 국가 소속이 아닙니다");
             return;

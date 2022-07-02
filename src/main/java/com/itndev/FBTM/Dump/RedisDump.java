@@ -13,9 +13,28 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class RedisDump {
 
+    private static String key = "%$75675";
+    private static String value = "45364";
+
     public static void deleteandupload(String key) {
         RemoveUploadedStorage(key);
         UploadStorageToRedis(key);
+    }
+
+    public static void remove_Verification() {
+        Connect.getSetcommands().del(key);
+    }
+
+    public static void set_Verification() {
+        Connect.getSetcommands().set(key, value);
+    }
+
+    public static Boolean has_Verification() {
+        if(Connect.getSetcommands().get(key).equalsIgnoreCase(value)) {
+            remove_Verification();
+            return true;
+        }
+        return false;
     }
 
     public static void UploadStorageToRedis(String key) {
@@ -219,6 +238,42 @@ public class RedisDump {
             Connect.getSetcommands().del(key + "-" + "nameuuid");
             Connect.getSetcommands().del(key + "-" + "uuidname");
         }
+    }
+
+    public static void ReloadStorageFromRemoteServer(String key) {
+        FactionStorage.FactionInfo = (ConcurrentHashMap<String, String>) Connect.getSetcommands().hmget(key + "-" + "FactionInfo");
+        //FactionStorage.AsyncLandToFaction = (ConcurrentHashMap<String, String>) setcommands.hmget("FactionInfo");
+        HashMap<String, String> tempmap = new HashMap<>();
+        tempmap = (HashMap<String, String>) Connect.getSetcommands().hmget(key + "-" + "FactionMember");
+        FactionStorage.FactionMember = ConcurrentMapListConvert(tempmap);
+        //
+        FactionStorage.FactionNameToFactionName = (ConcurrentHashMap<String, String>) Connect.getSetcommands().hmget(key + "-" + "FactionNameToFactionName");
+        //FactionStorage.AsyncOutPostToFaction;
+        tempmap = (HashMap<String, String>) Connect.getSetcommands().hmget(key + "-" + "FactionInfoList");
+        FactionStorage.FactionInfoList = ConcurrentMapListConvert(tempmap);
+        FactionStorage.FactionNameToFactionUUID = (ConcurrentHashMap<String, String>) Connect.getSetcommands().hmget(key + "-" + "FactionNameToFactionUUID");
+
+        FactionStorage.FactionOutPost = (ConcurrentHashMap<String, String>) Connect.getSetcommands().hmget(key + "-" + "FactionOutPost");
+
+        tempmap = (HashMap<String, String>) Connect.getSetcommands().hmget(key + "-" + "FactionOutPostList");
+        FactionStorage.FactionOutPostList = ConcurrentMapListConvert(tempmap);
+
+        FactionStorage.FactionRank = (ConcurrentHashMap<String, String>) Connect.getSetcommands().hmget(key + "-" + "FactionRank");
+
+        tempmap = (HashMap<String, String>) Connect.getSetcommands().hmget(key + "-" + "FactionToLand");
+        FactionStorage.FactionToLand = MapListConvert(tempmap);
+
+        tempmap = (HashMap<String, String>) Connect.getSetcommands().hmget(key + "-" + "FactionToOutPost");
+        FactionStorage.FactionToOutPost = MapListConvert(tempmap);
+
+        FactionStorage.FactionUUIDToFactionName = (ConcurrentHashMap<String, String>) Connect.getSetcommands().hmget(key + "-" + "FactionUUIDToFactionName");
+        FactionStorage.FactionWarpLocations = (ConcurrentHashMap<String, String>) Connect.getSetcommands().hmget(key + "-" + "FactionWarpLocations");
+        FactionStorage.OutPostToFaction = (HashMap<String, String>) Connect.getSetcommands().hmget(key + "-" + "OutPostToFaction");
+        FactionStorage.PlayerFaction = (ConcurrentHashMap<String, String>) Connect.getSetcommands().hmget(key + "-" + "PlayerFaction");
+
+        UserInfoStorage.namename = (ConcurrentHashMap<String, String>) Connect.getSetcommands().hmget(key + "-" + "namename");
+        UserInfoStorage.uuidname = (ConcurrentHashMap<String, String>) Connect.getSetcommands().hmget(key + "-" + "uuidname");
+        UserInfoStorage.nameuuid = (ConcurrentHashMap<String, String>) Connect.getSetcommands().hmget(key + "-" + "nameuuid");
     }
 
 
