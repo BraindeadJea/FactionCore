@@ -54,10 +54,10 @@ public class SystemUtils {
         int i = 0;
         for(String c : list) {
             i = i + 1;
-            if(list.size() >= i) {
-                k = k + c;
-            } else {
+            if(list.size() > i) {
                 k = k + c + "<%&LISTSPLITTER&%>";
+            } else {
+                k = k + c;
             }
 
 

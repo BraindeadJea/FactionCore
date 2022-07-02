@@ -54,12 +54,13 @@ public class FactionUtils {
 
     public static String getFactionLeader(String FactionUUID) {
         //ArrayList<String> members = FactionStorage.FactionMember.get(FactionUUID);
+        String finalUUID = null;
         for(String UUID : FactionStorage.FactionMember.get(FactionUUID)) {
             if(FactionUtils.getPlayerRank(UUID).equals(Config.Leader)) {
-                return UUID;
+                finalUUID = UUID;
             }
         }
-        return null;
+        return finalUUID;
     }
 
     public static String getAnyOneInFaction(String FactionUUID) {
