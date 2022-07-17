@@ -38,7 +38,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.itndev.FBTM.Server</mainClass>
+                            <mainClass>com.itndev.FactionCore.Server</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -47,7 +47,7 @@
     </build>
     <groupId>com.itndev.FBTM</groupId>
     <artifactId>FactionBackEnd</artifactId>
-    <version>BETA-0.1.5</version>
+    <version>BETA-0.1.7</version>
 
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
