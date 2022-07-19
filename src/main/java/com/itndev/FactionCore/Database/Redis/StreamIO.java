@@ -30,7 +30,7 @@ public class StreamIO {
 
     private void StreamReader() {
         new Thread(() -> {
-            while (true) {
+            while (Server.Streamable) {
                 try {
                     StreamReader_INNER();
                     StreamReader_INPUT();
@@ -49,7 +49,7 @@ public class StreamIO {
 
     private void StreamWriter() {
         new Thread(() -> {
-            while (true) {
+            while (Server.Streamable) {
                 StreamWriter_OUTPUT();
                 try {
                     Thread.sleep(2);

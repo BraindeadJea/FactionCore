@@ -5,6 +5,7 @@ import com.itndev.FactionCore.Database.Redis.BungeeAPI.BungeeStreamReader;
 import com.itndev.FactionCore.Database.Redis.Connect;
 import com.itndev.FactionCore.Database.Redis.StreamIO;
 import com.itndev.FactionCore.Discord.BotConnect;
+import com.itndev.FactionCore.Dump.MySQLDump;
 import com.itndev.FactionCore.Dump.RedisDump;
 import com.itndev.FactionCore.Dump.YamlDump;
 import com.itndev.FactionCore.Factions.FactionTimeOut;
@@ -40,10 +41,15 @@ public class Server {
             BungeeStreamReader.RedisStreamReader();
             try {
                 if(!RedisDump.has_Verification()) {
-                    RedisDump.ReloadStorageFromRemoteServer("DUMP");
+                    //RedisDump.ReloadStorageFromRemoteServer("DUMP");
+                    MySQLDump.LoadFromMySQL();
+                } else {
+                    TryLoadYaml();
                 }
             } catch (Exception e) {
-                RedisDump.ReloadStorageFromRemoteServer("DUMP");
+                //RedisDump.ReloadStorageFromRemoteServer("DUMP");
+                //TryLoadYaml();
+                SystemUtils.error_logger(e.getMessage());
             }
 
             //Connect.ReloadStorageFromRemoteServer("DUMP");
@@ -55,7 +61,7 @@ public class Server {
         BotConnect.ConnectBot("OTY3NDcyNzQ2OTU3MjYyODg4.YmQzNQ.IMfgHmqwJDfbRAk64k6b97giWUE");
         System.out.println("[TASK] RUNNING TASK MANAGER");
         YamlDump.LoadConnectionInfo();
-        TryLoadYaml();
+
         System.out.println("[SYSTEM/" + SystemUtils.getDate(System.currentTimeMillis()) + "] Loading FlatFile...");
         Streamable = true;
         try {
@@ -69,31 +75,46 @@ public class Server {
                 Thread.sleep(10000);
                 try {
                     new Thread(() -> {
-                        RedisDump.deleteandupload("DUMP");
+                        //RedisDump.deleteandupload("DUMP");
+                        try {
+                            MySQLDump.DumpToMySQL();
+                        } catch (Exception ex) {
+                            System.out.println("[ERROR/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + ex.getMessage());
+                            Connect.RedisConnect();
+                            SQL.connect();
+                        }
                     }).start();
                 } catch (Exception ex) {
-                    System.out.println("[SYSTEM/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + ex.getMessage());
-                    Connect.RedisConnect();
+                    System.out.println("[ERROR/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + ex.getMessage());
                 }
-                System.out.println("[SYSTEM/" + SystemUtils.getDate(System.currentTimeMillis()) + "] BACKUP DONE TO REDIS");
+                System.out.println("[SYSTEM/" + SystemUtils.getDate(System.currentTimeMillis()) + "] BACKUP DONE TO MYSQL");
                 if(Close) {
+
+                    //RedisDump.deleteandupload("DUMP");
+                    try {
+                        MySQLDump.DumpToMySQL();
+                    } catch (SQLException throwables) {
+                        System.out.println("[ERROR/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + throwables.getMessage());
+                    }
+                    RedisDump.set_Verification();
+                    Streamable = false;
+                    Thread.sleep(1000);
+                    Connect.getRedisConnection().close();
+                    YamlDump.SaveConnectionInfo();
+                    TryDumpYaml();
                     try {
                         SQL.getConnection().getHikariConnection().close();
                         System.out.println("[SYSTEM/" + SystemUtils.getDate(System.currentTimeMillis()) + "] CLOSED MYSQL CONNECTION");
                     } catch (SQLException throwables) {
-                        throwables.printStackTrace();
+                        //throwables.printStackTrace();
                         System.out.println("[ERROR/" + SystemUtils.getDate(System.currentTimeMillis()) + "] MYSQL CONNECTION FAILED TO CLOSE");
+                        System.out.println("[ERROR/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + throwables.getMessage());
                     }
-                    RedisDump.deleteandupload("DUMP");
-                    RedisDump.set_Verification();
-                    Connect.getRedisConnection().close();
-                    YamlDump.SaveConnectionInfo();
-                    TryDumpYaml();
                    break;
                 }
                 //System.out.println("[LOG] (EVERY 10 SECONDS) TIME ->" + SystemUtils.getDate(System.currentTimeMillis()));
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.out.println("[ERROR/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + e.getMessage());
                 Connect.RedisConnect();
             }
         }

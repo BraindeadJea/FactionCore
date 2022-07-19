@@ -143,8 +143,7 @@ public class ConnectSQL {
             PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("CREATE TABLE IF NOT EXISTS FactionBackup "
                     + "(MAP_NAME VARCHAR(100),"
                     + "MAP_KEY VARCHAR(100),"
-                    + "MAP_VALUE VARCHAR(100),"
-                    + "PRIMARY KEY (MAP_NAME))"); //%^G$%G$%D&*3#d^ %^U5jui34jhhy5i4$y7G54U^5ty
+                    + "MAP_VALUE VARCHAR(10000))"); //%^G$%G$%D&*3#d^ %^U5jui34jhhy5i4$y7G54U^5ty
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

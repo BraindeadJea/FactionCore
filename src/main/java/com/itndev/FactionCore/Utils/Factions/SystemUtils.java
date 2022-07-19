@@ -67,6 +67,10 @@ public class SystemUtils {
         System.out.println("[SYSTEM/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + message);
     }
 
+    public static void error_logger(String message) {
+        System.out.println("[ERROR/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + message);
+    }
+
     public static String Args2String(String[] args, int Start) {
         String FinalString = "";
         for(int k = Start; k < args.length; k++) {

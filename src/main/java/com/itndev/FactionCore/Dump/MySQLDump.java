@@ -19,7 +19,7 @@ public class MySQLDump {
 
     private static void TruncateBackup() {
         try {
-            SQL.getConnection().getHikariConnection().prepareStatement("TRUNCATE FactionBackup").execute();
+            SQL.getConnection().getHikariConnection().prepareStatement("TRUNCATE FactionBackup").executeUpdate();
         } catch (SQLException throwables) {
             SystemUtils.logger(throwables.getMessage());
         }
@@ -29,103 +29,115 @@ public class MySQLDump {
         try {
             FactionStorage.FactionInfo = MapFixer.Fixer_1_2(LoadHASHMAP("FactionInfo")); //(ConcurrentHashMap<String, String>) Connect.getSetcommands().hmget(key + "-" + "FactionInfo");
         } catch (Exception e) {
-            SystemUtils.logger(e.getMessage());
+            SystemUtils.error_logger(e.getMessage());
         }
 
         try {
             FactionStorage.FactionMember = MapFixer.Fixer_3_1(LoadHASHMAP("FactionMember"));
         } catch (Exception e) {
-            SystemUtils.logger(e.getMessage());
+            SystemUtils.error_logger(e.getMessage());
         }
 
         try {
             FactionStorage.FactionNameToFactionName = MapFixer.Fixer_1_2(LoadHASHMAP("FactionNameToFactionName"));
         } catch (Exception e) {
-            SystemUtils.logger(e.getMessage());
+            SystemUtils.error_logger(e.getMessage());
         }
 
         try {
             FactionStorage.FactionInfoList = MapFixer.Fixer_3_1(LoadHASHMAP("FactionInfoList"));
         } catch (Exception e) {
-            SystemUtils.logger(e.getMessage());
+            SystemUtils.error_logger(e.getMessage());
         }
 
         try {
             FactionStorage.FactionNameToFactionUUID = MapFixer.Fixer_1_2(LoadHASHMAP("FactionNameToFactionUUID"));
         } catch (Exception e) {
-            SystemUtils.logger(e.getMessage());
+            SystemUtils.error_logger(e.getMessage());
         }
 
         try {
             FactionStorage.FactionOutPost = MapFixer.Fixer_1_2(LoadHASHMAP("FactionOutPost"));
         } catch (Exception e) {
-            SystemUtils.logger(e.getMessage());
+            SystemUtils.error_logger(e.getMessage());
         }
 
         try {
             FactionStorage.FactionOutPostList = MapFixer.Fixer_3_1(LoadHASHMAP("FactionOutPostList"));
         } catch (Exception e) {
-            SystemUtils.logger(e.getMessage());
+            SystemUtils.error_logger(e.getMessage());
         }
 
         try {
             FactionStorage.FactionRank = MapFixer.Fixer_1_2(LoadHASHMAP("FactionRank"));
         } catch (Exception e) {
-            SystemUtils.logger(e.getMessage());
+            SystemUtils.error_logger(e.getMessage());
         }
 
         try {
             FactionStorage.FactionToLand = MapFixer.Fixer_2_1(LoadHASHMAP("FactionToLand"));
         } catch (Exception e) {
-            SystemUtils.logger(e.getMessage());
+            SystemUtils.error_logger(e.getMessage());
         }
 
         try {
             FactionStorage.FactionToOutPost = MapFixer.Fixer_2_1(LoadHASHMAP("FactionToLand"));
         } catch (Exception e) {
-            SystemUtils.logger(e.getMessage());
+            SystemUtils.error_logger(e.getMessage());
         }
 
         try {
             FactionStorage.FactionUUIDToFactionName = MapFixer.Fixer_1_2(LoadHASHMAP("FactionUUIDToFactionName"));
         } catch (Exception e) {
-            SystemUtils.logger(e.getMessage());
+            SystemUtils.error_logger(e.getMessage());
         }
 
         try {
             FactionStorage.FactionWarpLocations = MapFixer.Fixer_1_2(LoadHASHMAP("FactionWarpLocations"));
         } catch (Exception e) {
-            SystemUtils.logger(e.getMessage());
+            SystemUtils.error_logger(e.getMessage());
         }
 
         try {
             FactionStorage.OutPostToFaction = LoadHASHMAP("OutPostToFaction");
         } catch (Exception e) {
-            SystemUtils.logger(e.getMessage());
+            SystemUtils.error_logger(e.getMessage());
         }
 
         try {
             FactionStorage.PlayerFaction = MapFixer.Fixer_1_2(LoadHASHMAP("PlayerFaction"));
         } catch (Exception e) {
-            SystemUtils.logger(e.getMessage());
+            SystemUtils.error_logger(e.getMessage());
         }
 
         try {
             UserInfoStorage.namename = MapFixer.Fixer_1_2(LoadHASHMAP("namename"));
         } catch (Exception e) {
-            SystemUtils.logger(e.getMessage());
+            SystemUtils.error_logger(e.getMessage());
         }
 
         try {
             UserInfoStorage.uuidname = MapFixer.Fixer_1_2(LoadHASHMAP("uuidname"));
         } catch (Exception e) {
-            SystemUtils.logger(e.getMessage());
+            SystemUtils.error_logger(e.getMessage());
         }
 
         try {
             UserInfoStorage.nameuuid = MapFixer.Fixer_1_2(LoadHASHMAP("nameuuid"));
         } catch (Exception e) {
-            SystemUtils.logger(e.getMessage());
+            SystemUtils.error_logger(e.getMessage());
+        }
+
+        try {
+            AuthStorage.DISCORDID_TO_UUID = LoadHASHMAP("DISCORDID_TO_UUID");
+        } catch (Exception e) {
+            SystemUtils.error_logger(e.getMessage());
+        }
+
+        try {
+            AuthStorage.UUID_TO_DISCORDID = LoadHASHMAP("UUID_TO_DISCORDID");
+        } catch (Exception e) {
+            SystemUtils.error_logger(e.getMessage());
         }
     }
 
