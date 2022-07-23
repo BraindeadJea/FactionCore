@@ -46,8 +46,8 @@
         </plugins>
     </build>
     <groupId>com.itndev.FBTM</groupId>
-    <artifactId>FactionBackEnd</artifactId>
-    <version>BETA-0.2.1</version>
+    <artifactId>FactionCore</artifactId>
+    <version>BETA-0.2.5</version>
 
     <properties>
         <maven.compiler.source>16</maven.compiler.source>

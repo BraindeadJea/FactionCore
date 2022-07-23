@@ -40,7 +40,7 @@ public class Server {
             streamIO.start_ReadStream();
             BungeeStreamReader.RedisStreamReader();
             try {
-                if(!RedisDump.has_Verification()) {
+                if(RedisDump.has_Verification()) {
                     //RedisDump.ReloadStorageFromRemoteServer("DUMP");
                     MySQLDump.LoadFromMySQL();
                 } else {
@@ -50,6 +50,8 @@ public class Server {
                 //RedisDump.ReloadStorageFromRemoteServer("DUMP");
                 //TryLoadYaml();
                 SystemUtils.error_logger(e.getMessage());
+                e.printStackTrace();
+                TryLoadYaml();
             }
 
             //Connect.ReloadStorageFromRemoteServer("DUMP");
@@ -80,28 +82,30 @@ public class Server {
                             MySQLDump.DumpToMySQL();
                         } catch (Exception ex) {
                             System.out.println("[ERROR/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + ex.getMessage());
-                            Connect.RedisConnect();
+                            //Connect.RedisConnect();
                             SQL.connect();
                         }
                     }).start();
                 } catch (Exception ex) {
                     System.out.println("[ERROR/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + ex.getMessage());
                 }
+                RedisDump.set_Verification();
                 System.out.println("[SYSTEM/" + SystemUtils.getDate(System.currentTimeMillis()) + "] BACKUP DONE TO MYSQL");
                 if(Close) {
 
+                    TryDumpYaml();
                     //RedisDump.deleteandupload("DUMP");
                     try {
                         MySQLDump.DumpToMySQL();
                     } catch (SQLException throwables) {
                         System.out.println("[ERROR/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + throwables.getMessage());
                     }
-                    RedisDump.set_Verification();
+                    RedisDump.remove_Verification();
                     Streamable = false;
                     Thread.sleep(1000);
                     Connect.getRedisConnection().close();
                     YamlDump.SaveConnectionInfo();
-                    TryDumpYaml();
+
                     try {
                         SQL.getConnection().getHikariConnection().close();
                         System.out.println("[SYSTEM/" + SystemUtils.getDate(System.currentTimeMillis()) + "] CLOSED MYSQL CONNECTION");
