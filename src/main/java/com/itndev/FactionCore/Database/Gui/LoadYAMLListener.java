@@ -11,8 +11,5 @@ public class LoadYAMLListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Server.FromMYSQL = false;
         GuiPanel.isLoaded = true;
-        JButton ExitButton = new JButton("Exit");
-        ExitButton.addActionListener(new ExitListener());
-        GuiPanel.panel.add(ExitButton);
     }
 }

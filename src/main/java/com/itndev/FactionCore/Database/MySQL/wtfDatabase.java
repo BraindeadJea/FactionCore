@@ -3,6 +3,7 @@ package com.itndev.FactionCore.Database.MySQL;
 import com.itndev.FactionCore.Factions.FactionStorage;
 import com.itndev.FactionCore.Utils.Factions.CacheUtils;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,10 +24,12 @@ public class wtfDatabase {
                 Boolean isExistingNamed = isExistingNamefuture.get(40, TimeUnit.MILLISECONDS);
                 if(!isExistingNamed) {
                     try {
-                        PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("Call CREATENAME('" +
+                        Connection connection = SQL.getConnection().getHikariConnection();
+                        PreparedStatement ps = connection.prepareStatement("Call CREATENAME('" +
                                 FactionName + "','" + FactionUUID + "','" + FactionNameCapped + "')");
                         ps.executeQuery();
-                        ps = null;
+                        SQL.closeConnections(connection, ps, null);
+
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
@@ -47,7 +50,8 @@ public class wtfDatabase {
                 e.printStackTrace();
             }
             try {
-                PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("SELECT " +
+                Connection connection = SQL.getConnection().getHikariConnection();
+                PreparedStatement ps = connection.prepareStatement("SELECT " +
                         "FactionDTR FROM FactionDTR WHERE FactionUUID='" + FactionUUID + "'");
                 ResultSet rs = ps.executeQuery();
                 Double DTR = 0D;
@@ -55,9 +59,8 @@ public class wtfDatabase {
                     DTR = Double.parseDouble(rs.getString("FactionDTR"));
                     CacheUtils.UpdateCachedDTR(FactionUUID, DTR);
                 }
-                rs = null;
                 DTR = null;
-                ps = null;
+                SQL.closeConnections(connection, ps, rs);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -73,7 +76,8 @@ public class wtfDatabase {
                 e.printStackTrace();
             }
             try {
-                PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("SELECT " +
+                Connection connection = SQL.getConnection().getHikariConnection();
+                PreparedStatement ps = connection.prepareStatement("SELECT " +
                         "FactionBank FROM FactionBank WHERE FactionUUID='" + FactionUUID + "'");
                 ResultSet rs = ps.executeQuery();
                 Double Bank = 0D;
@@ -81,9 +85,8 @@ public class wtfDatabase {
                     Bank = Double.parseDouble(rs.getString("FactionBank"));
                     CacheUtils.UpdateCachedBank(FactionUUID, Bank);
                 }
-                rs = null;
                 Bank = null;
-                ps = null;
+                SQL.closeConnections(connection, ps, rs);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -95,7 +98,8 @@ public class wtfDatabase {
         CompletableFuture<Boolean> hasSucceed = new CompletableFuture<>();
         new Thread(() -> {
             try {
-                PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("Call TRYCLAIMNAME('" + FactionNameCapped.toLowerCase(Locale.ROOT) + "','" + FactionUUID + "','" + FactionNameCapped + "',0);");
+                Connection connection = SQL.getConnection().getHikariConnection();
+                PreparedStatement ps = connection.prepareStatement("Call TRYCLAIMNAME('" + FactionNameCapped.toLowerCase(Locale.ROOT) + "','" + FactionUUID + "','" + FactionNameCapped + "',0);");
                 //ps.setString(1, FactionUUID);
                 ResultSet rs = ps.executeQuery();
                 if(rs.next()) {
@@ -107,8 +111,7 @@ public class wtfDatabase {
                     }
                     temp = null;
                 }
-                rs = null;
-                ps = null;
+                SQL.closeConnections(connection, ps, rs);
             } catch (SQLException e) {
                 e.printStackTrace();
                 hasSucceed.complete(false);
@@ -121,10 +124,11 @@ public class wtfDatabase {
     public void DeleteFactionName(String FactionUUID) {
         new Thread(() -> {
             try {
-                PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("DELETE FROM FactionName WHERE FactionUUID=?");
+                Connection connection = SQL.getConnection().getHikariConnection();
+                PreparedStatement ps = connection.prepareStatement("DELETE FROM FactionName WHERE FactionUUID=?");
                 ps.setString(1, FactionUUID);
                 ps.executeUpdate();
-                ps = null;
+                SQL.closeConnections(connection, ps, null);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -144,11 +148,12 @@ public class wtfDatabase {
                         " SET FactionDTR=? WHERE FactionUUID=?");
                 ps2.setString(1, "100");
                 ps2.setString(2, FactionUUID);*/
-                PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("Call CREATEDTR('" +
+                Connection connection = SQL.getConnection().getHikariConnection();
+                PreparedStatement ps = connection.prepareStatement("Call CREATEDTR('" +
                         FactionUUID + "','" + FactionName + "','100')");
                 ps.executeQuery();
                 CacheUtils.UpdateCachedDTR(FactionUUID, 100.0);
-                ps = null;
+                SQL.closeConnections(connection, ps, null);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -159,11 +164,12 @@ public class wtfDatabase {
     public void CreateNewBank(String FactionUUID, String FactionName) {
         new Thread(() -> {
             try {
-                PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("Call CREATEBANK('" +
+                Connection connection = SQL.getConnection().getHikariConnection();
+                PreparedStatement ps = connection.prepareStatement("Call CREATEBANK('" +
                         FactionUUID + "','" + FactionName + "','0')");
                 ps.executeQuery();
                 CacheUtils.UpdateCachedBank(FactionUUID, 0.0);
-                ps = null;
+                SQL.closeConnections(connection, ps, null);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -178,7 +184,8 @@ public class wtfDatabase {
                 FutureBoolean.complete(true);
             } else {
                 try {
-                    PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("SELECT * FROM FactionName WHERE FactionName=?");
+                    Connection connection = SQL.getConnection().getHikariConnection();
+                    PreparedStatement ps = connection.prepareStatement("SELECT * FROM FactionName WHERE FactionName=?");
                     ps.setString(1, FactionName.toLowerCase(Locale.ROOT));
                     ResultSet rs = ps.executeQuery();
                     if(rs.next()) {
@@ -186,8 +193,8 @@ public class wtfDatabase {
                     } else {
                         FutureBoolean.complete(false);
                     }
-                    rs = null;
-                    ps = null;
+
+                    SQL.closeConnections(connection, ps, rs);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -202,11 +209,12 @@ public class wtfDatabase {
     public void DeleteFactionDTR(String FactionUUID) {
         new Thread(() -> {
             try {
-                PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("DELETE FROM FactionDTR WHERE FactionUUID=?");
+                Connection connection = SQL.getConnection().getHikariConnection();
+                PreparedStatement ps = connection.prepareStatement("DELETE FROM FactionDTR WHERE FactionUUID=?");
                 ps.setString(1, FactionUUID);
                 ps.executeUpdate();
                 CacheUtils.removeCachedDTR(FactionUUID);
-                ps = null;
+                SQL.closeConnections(connection, ps, null);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -217,11 +225,12 @@ public class wtfDatabase {
     public void DeleteFactionBank(String FactionUUID) {
         new Thread(() -> {
             try {
-                PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("DELETE FROM FactionBank WHERE FactionUUID=?");
+                Connection connection = SQL.getConnection().getHikariConnection();
+                PreparedStatement ps = connection.prepareStatement("DELETE FROM FactionBank WHERE FactionUUID=?");
                 ps.setString(1, FactionUUID);
                 ps.executeUpdate();
                 CacheUtils.removeCachedBank(FactionUUID);
-                ps = null;
+                SQL.closeConnections(connection, ps, null);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -233,7 +242,8 @@ public class wtfDatabase {
         CompletableFuture<Double> FutureDTR = new CompletableFuture();
         new Thread( () -> {
             try {
-                PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("SELECT " +
+                Connection connection = SQL.getConnection().getHikariConnection();
+                PreparedStatement ps = connection.prepareStatement("SELECT " +
                         "FactionDTR FROM FactionDTR WHERE FactionUUID='" + FactionUUID + "'");
                 ResultSet rs = ps.executeQuery();
                 Double DTR = 0D;
@@ -242,8 +252,7 @@ public class wtfDatabase {
                     FutureDTR.complete(DTR);
                     CacheUtils.UpdateCachedDTR(FactionUUID, DTR);
                 }
-                rs = null;
-                ps = null;
+                SQL.closeConnections(connection, ps, rs);
                 DTR = null;
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -257,7 +266,8 @@ public class wtfDatabase {
         CompletableFuture<Double> FutureBank = new CompletableFuture();
         new Thread( () -> {
             try {
-                PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("SELECT " +
+                Connection connection = SQL.getConnection().getHikariConnection();
+                PreparedStatement ps = connection.prepareStatement("SELECT " +
                         "FactionBank FROM FactionBank WHERE FactionUUID='" + FactionUUID + "'");
                 ResultSet rs = ps.executeQuery();
                 Double Bank = 0D;
@@ -266,8 +276,7 @@ public class wtfDatabase {
                     FutureBank.complete(Bank);
                     CacheUtils.UpdateCachedBank(FactionUUID, Bank);
                 }
-                rs = null;
-                ps = null;
+                SQL.closeConnections(connection, ps, null);
                 Bank = null;
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -289,7 +298,8 @@ public class wtfDatabase {
                 if(rs.next()) {
                     futureDTR.complete(rs.getDouble("FactionDTR"));
                 }*/
-                PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("Call " +
+                Connection connection = SQL.getConnection().getHikariConnection();
+                PreparedStatement ps = connection.prepareStatement("Call " +
                         "UPDATEDTR(0," + String.valueOf(DTR) + ",0,'" + FactionUUID + "')");
                 ResultSet rs = ps.executeQuery();
                 if(rs.next()) {
@@ -301,6 +311,7 @@ public class wtfDatabase {
                     futureDTR.complete(-420D);
                 }
                 CacheFactionDTR(FactionUUID);
+                SQL.closeConnections(connection, ps, rs);
                 /*PreparedStatement ps = Main.hikariCP.getHikariConnection().prepareStatement("SELECT " +
                         "FactionDTR FROM FactionDTR WHERE FactionUUID=?");
                 ps.setString(1, FactionUUID);
@@ -315,8 +326,6 @@ public class wtfDatabase {
                 PreparedStatement unlock = Main.hikariCP.getHikariConnection().prepareStatement("UNLOCK " +
                         "TABLE FactionDTR");
                 unlock.executeUpdate();*/
-                ps = null;
-                rs = null;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -329,9 +338,9 @@ public class wtfDatabase {
         CompletableFuture<Double> futureBank = new CompletableFuture<>();
         new Thread( () ->{
             try {
-
+                Connection connection = SQL.getConnection().getHikariConnection();
                 String cmd = "Call UPDATEBANK(0," + String.valueOf(Bank) + ",0,'" + FactionUUID + "')";
-                PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement(cmd);
+                PreparedStatement ps = connection.prepareStatement(cmd);
                 ResultSet rs = ps.executeQuery();
                 if(rs.next()) {
                     double Bankf = rs.getDouble("FINALBANK");
@@ -341,9 +350,8 @@ public class wtfDatabase {
                     futureBank.complete(-420D);
                 }
                 CacheFactionBank(FactionUUID);
-                ps = null;
                 cmd = null;
-                rs = null;
+                SQL.closeConnections(connection, ps, rs);
                 /*PreparedStatement DTRUPDATE = Main.hikariCP.getHikariConnection().prepareStatement("SELECT @ORIGINNAME := (SELECT FactionBank FROM FactionBank WHERE FactionUUID='"+ FactionUUID +"');" +
                         "UPDATE FactionBank SET FactionBank=CONVERT(CONVERT(@ORIGINNAME, DOUBLE) + " + String.valueOf(DTR) + ", CHAR) WHERE FactionUUID='"+ FactionUUID +"';" +
                         "SELECT FactionBank FROM FactionBank WHERE FactionUUID='"+ FactionUUID +"';");
@@ -378,11 +386,12 @@ public class wtfDatabase {
     public void ChangeFactionDatabaseName(String FactionUUID, String FactionNameCap) {
         new Thread( () ->{
             try {
+                Connection connection = SQL.getConnection().getHikariConnection();
                 String cmd = "Call UPDATENAME('" + FactionNameCap.toLowerCase(Locale.ROOT) + "','" + FactionUUID + "','" + FactionNameCap + "')";
-                PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement(cmd);
+                PreparedStatement ps = connection.prepareStatement(cmd);
                 ps.executeQuery();
                 cmd = null;
-                ps = null;
+                SQL.closeConnections(connection, ps, null);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

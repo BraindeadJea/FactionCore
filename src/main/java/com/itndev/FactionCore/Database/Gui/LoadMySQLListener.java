@@ -11,9 +11,5 @@ public class LoadMySQLListener implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Server.FromMYSQL = true;
         GuiPanel.isLoaded = true;
-        GuiPanel.panel.removeAll();
-        JButton ExitButton = new JButton("Exit");
-        ExitButton.addActionListener(new ExitListener());
-        GuiPanel.panel.add(ExitButton);
     }
 }

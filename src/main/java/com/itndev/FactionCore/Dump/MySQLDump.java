@@ -8,6 +8,7 @@ import com.itndev.FactionCore.Factions.FactionStorage;
 import com.itndev.FactionCore.Factions.UserInfoStorage;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -225,17 +226,21 @@ public class MySQLDump {
 
     private static void DumpHASHMAP(String MapName, HashMap<String, String> map) throws SQLException {
         for(Map.Entry<String, String> entry : map.entrySet()) {
-            PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("INSERT INTO FactionBackup (MAP_NAME, MAP_KEY, MAP_VALUE) VALUES (?, ?, ?)");
+            Connection connection = SQL.getConnection().getHikariConnection();
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO FactionBackup (MAP_NAME, MAP_KEY, MAP_VALUE) VALUES (?, ?, ?)");
             ps.setString(1, MapName);
             ps.setString(2, entry.getKey());
             ps.setString(3, entry.getValue());
             ps.execute();
+            SQL.closeConnections(connection, ps, null);
+            entry = null;
         }
     }
 
     private static HashMap<String, String> LoadHASHMAP(String MapName) throws SQLException {
         HashMap<String, String> finalmap = new HashMap<>();
-        PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("SELECT * FROM FactionBackup WHERE MAP_NAME=?");
+        Connection connection = SQL.getConnection().getHikariConnection();
+        PreparedStatement ps = connection.prepareStatement("SELECT * FROM FactionBackup WHERE MAP_NAME=?");
         ps.setString(1, MapName);
         ResultSet rs = ps.executeQuery();
         while(rs.next()) {
@@ -244,6 +249,7 @@ public class MySQLDump {
                     rs.getString("MAP_VALUE")
             );
         }
+        SQL.closeConnections(connection, ps, rs);
         return finalmap;
     }
 }

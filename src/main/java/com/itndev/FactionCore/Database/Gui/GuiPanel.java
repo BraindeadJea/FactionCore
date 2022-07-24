@@ -12,6 +12,8 @@ public class GuiPanel {
         JButton ExitButton = new JButton("Exit");
         JButton LoadButton = new JButton("Load From MySQL");
         JButton Load2Button = new JButton("Load From YAML");
+        JLabel label1 = new JLabel("");
+        JLabel label2 = new JLabel("");
 
         ExitButton.addActionListener(new ExitListener());
         LoadButton.addActionListener(new LoadMySQLListener());
@@ -22,8 +24,9 @@ public class GuiPanel {
         panel.setLayout(new GridLayout(0, 1));
         if(!isLoaded) {
             panel.add(LoadButton);
+            panel.add(label1);
             panel.add(Load2Button);
-        } else {
+            panel.add(label2);
             panel.add(ExitButton);
         }
         frame.add(panel, BorderLayout.CENTER);

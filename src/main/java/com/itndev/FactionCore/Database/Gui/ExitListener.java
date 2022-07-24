@@ -8,6 +8,10 @@ import java.awt.event.ActionListener;
 public class ExitListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-        Server.Close = true;
+        if(GuiPanel.isLoaded) {
+            Server.Close = true;
+        } else {
+            System.exit(0);
+        }
     }
 }
