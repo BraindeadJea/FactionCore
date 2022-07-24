@@ -45,7 +45,7 @@ public class ConnectSQL {
 
     public Connection getHikariConnection() throws SQLException {
         try {
-            if(connection != null || !connection.isClosed()) {
+            if(connection != null && !connection.isClosed()) {
                 return connection;
             } else {
                 try {
