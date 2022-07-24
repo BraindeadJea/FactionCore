@@ -1,5 +1,6 @@
 package com.itndev.FactionCore;
 
+import com.itndev.FactionCore.Database.Gui.GuiPanel;
 import com.itndev.FactionCore.Database.MySQL.SQL;
 import com.itndev.FactionCore.Database.Redis.BungeeAPI.BungeeStreamReader;
 import com.itndev.FactionCore.Database.Redis.Connect;
@@ -16,6 +17,8 @@ import java.sql.SQLException;
 
 public class Server {
 
+
+    public static GuiPanel GUI = null;
     private final static String MAIN_SPLITTER = ":=:";
     public static String getMainSplitter() {
         return MAIN_SPLITTER;
@@ -31,9 +34,20 @@ public class Server {
     }
     private static StreamIO streamIO = null;
 
+    public static Boolean FromMYSQL = false;
+
     @Deprecated
     public static void main(String[] args) {
         YamlDump.LoadConnectionInfo();
+        GUI = new GuiPanel();
+        while(!GuiPanel.isLoaded) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("[WAITING] SELECT WHICH METHOD TO LOAD THE DATABASE FROM");
+        }
         System.out.println("[STARTUP] STARTING UP DATABASE CONNECTION");
         SQL.connect();
         PingSQL();
@@ -48,17 +62,14 @@ public class Server {
             streamIO = new StreamIO();
             streamIO.start_ReadStream();
             BungeeStreamReader.RedisStreamReader();
-            try {
-                if(!RedisDump.has_Verification()) {
-                    //RedisDump.ReloadStorageFromRemoteServer("DUMP");
+            if(FromMYSQL) {
+                try {
                     MySQLDump.LoadFromMySQL();
-                } else {
-                    TryLoadYaml();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
                 }
-            } catch (Exception e) {
-                //RedisDump.ReloadStorageFromRemoteServer("DUMP");
-                //TryLoadYaml();
-                SystemUtils.error_logger(e.getMessage());
+            } else {
+                TryLoadYaml();
             }
         }).start();
 

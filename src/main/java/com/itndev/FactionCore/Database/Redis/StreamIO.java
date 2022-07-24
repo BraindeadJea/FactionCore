@@ -76,6 +76,7 @@ public class StreamIO {
             Connect.setLastID_INNER(message.getId());
             //String compressedhashmap = message.getBody().get(StaticVal.getCommand());
             Read.READ_COMPRESSEDMAP(message.getBody().get(StaticVal.getCommand()));
+            message = null;
         }
         messages = null;
     }
@@ -87,6 +88,7 @@ public class StreamIO {
         for (StreamMessage<String, String> message : messages) {
             Connect.setLastID_INPUT(message.getId());
             Read.READ_COMPRESSEDMAP(message.getBody().get(StaticVal.getCommand()));
+            message = null;
         }
         messages = null;
     }

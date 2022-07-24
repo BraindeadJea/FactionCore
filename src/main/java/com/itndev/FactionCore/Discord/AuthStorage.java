@@ -89,7 +89,7 @@ public class AuthStorage {
         list.add(ID);
         TEMP_AUTH_CACHE.put(UUID, list);
         TEMP_UUID_ID_CACHE_TO_DISCORDID.put(UUID + ID, DiscordID);
-
+        list = null;
     }
 
     public static void AuthID(String UUID, String ID) {
@@ -110,6 +110,8 @@ public class AuthStorage {
                     Storage.AddCommandToQueue("discord:=:auth:=:" + UUID + ":=:" + tag);
                     BotConnect.mainguild.addRoleToMember(DiscordID, BotConnect.mainguild.getRolesByName("USER", false).get(0)).queue();
                     BotConnect.mainguild.retrieveMemberById(DiscordID).complete().modifyNickname("[USER] " + UserInfoUtils.getPlayerUUIDOriginName(UUID)).queue();
+                    tag = null;
+                    DiscordID = null;
                 } else {
                     FactionUtils.SendFactionMessage(UUID, "puremessagesendoptiontrue", "single", "[디스코드]" + " 잘못된 아이디입니다");
                 }

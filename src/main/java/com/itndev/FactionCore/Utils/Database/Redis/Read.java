@@ -16,14 +16,14 @@ public class Read {
                 CmdExecute.CMD_READ(map.get(String.valueOf(c)));
             }
         }
+        map = null;
     }
 
     public static String HashMap2String(ConcurrentHashMap<String, String> map) {
         String finalbuildstring = StaticVal.getbuffer() + StaticVal.getsplitter();
         if(!map.isEmpty()) {
-            int maxamount = Integer.parseInt(map.get(StaticVal.getMaxAmount()));
-            for (int c = 1; c <= maxamount; c++) {
-                if (c == maxamount) {
+            for (int c = 1; c <= Integer.parseInt(map.get(StaticVal.getMaxAmount())); c++) {
+                if (c == Integer.parseInt(map.get(StaticVal.getMaxAmount()))) {
                     finalbuildstring = finalbuildstring + map.get(String.valueOf(c)) + StaticVal.getsplitter() + StaticVal.getbuffer();
                 } else {
                     finalbuildstring = finalbuildstring + map.get(String.valueOf(c)) + StaticVal.getsplitter();
@@ -49,6 +49,7 @@ public class Read {
         for(int c = 0; c < info_args.length; c++) {
             finalmap.put(String.valueOf(c + 1), info_args[c]);
         }
+        info_args = null;
         return finalmap;
     }
 }

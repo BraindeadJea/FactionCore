@@ -122,12 +122,11 @@ public class DiscordListener extends ListenerAdapter {
         } else if(args[0].equalsIgnoreCase("연동정보")) {
             if(!channel.equals(BotConnect.mainchannel)) {
                 channel.sendMessage("[" + user.getAsMention() + "]\n 해당 명령어는 " + ((TextChannel)BotConnect.mainchannel).getAsMention() + " 에서만 사용 가능합니다").queue();
-                return;
             }
             if(args.length != 2) {
                 BotConnect.mainchannel.sendMessage("[" + user.getAsMention() + "]\n 잘못된 명령어. `!연동정보 <닉네임/유저태그>`").queue();
-                return;
             }
         }
+        return;
     }
 }
