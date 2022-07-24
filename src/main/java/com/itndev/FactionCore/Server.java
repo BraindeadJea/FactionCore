@@ -33,10 +33,12 @@ public class Server {
 
     @Deprecated
     public static void main(String[] args) {
+        YamlDump.LoadConnectionInfo();
         System.out.println("[STARTUP] STARTING UP DATABASE CONNECTION");
         SQL.connect();
         PingSQL();
         Connect.RedisConnect();
+        Streamable = true;
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -61,10 +63,9 @@ public class Server {
         FactionTimeOut.TimeoutManager();
         BotConnect.ConnectBot("OTY3NDcyNzQ2OTU3MjYyODg4.YmQzNQ.IMfgHmqwJDfbRAk64k6b97giWUE");
         System.out.println("[TASK] RUNNING TASK MANAGER");
-        YamlDump.LoadConnectionInfo();
+
 
         System.out.println("[SYSTEM/" + SystemUtils.getDate(System.currentTimeMillis()) + "] Loading FlatFile...");
-        Streamable = true;
         try {
             Thread.sleep(10000);
         } catch (InterruptedException e) {
