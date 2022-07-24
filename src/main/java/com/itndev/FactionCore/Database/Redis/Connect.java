@@ -80,11 +80,13 @@ public class Connect {
     // CONNECT TO REDIS
     @Deprecated
     public static void RedisConnect() {
-        RedisURI redisURI = RedisURI.Builder.redis(redis_address, redis_port).withPassword(redis_password).build();
-        client = RedisClient.create(redisURI);
-        connection = client.connect();
-        commands = connection.sync();
-        setcommands = connection.sync();
+        new Thread(() -> {
+            RedisURI redisURI = RedisURI.Builder.redis(redis_address, redis_port).withPassword(redis_password).build();
+            client = RedisClient.create(redisURI);
+            connection = client.connect();
+            commands = connection.sync();
+            setcommands = connection.sync();
+        }).start();
     }
 
     public static void ReloadStorageFromRemoteServer(String key) {

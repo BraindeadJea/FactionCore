@@ -39,26 +39,29 @@ public class Server {
         PingSQL();
         Connect.RedisConnect();
         Streamable = true;
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        streamIO = new StreamIO();
-        streamIO.start_ReadStream();
-        BungeeStreamReader.RedisStreamReader();
-        try {
-            if(!RedisDump.has_Verification()) {
-                //RedisDump.ReloadStorageFromRemoteServer("DUMP");
-                MySQLDump.LoadFromMySQL();
-            } else {
-                TryLoadYaml();
+        new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            //RedisDump.ReloadStorageFromRemoteServer("DUMP");
-            //TryLoadYaml();
-            SystemUtils.error_logger(e.getMessage());
-        }
+            streamIO = new StreamIO();
+            streamIO.start_ReadStream();
+            BungeeStreamReader.RedisStreamReader();
+            try {
+                if(!RedisDump.has_Verification()) {
+                    //RedisDump.ReloadStorageFromRemoteServer("DUMP");
+                    MySQLDump.LoadFromMySQL();
+                } else {
+                    TryLoadYaml();
+                }
+            } catch (Exception e) {
+                //RedisDump.ReloadStorageFromRemoteServer("DUMP");
+                //TryLoadYaml();
+                SystemUtils.error_logger(e.getMessage());
+            }
+        }).start();
+
         ValidChecker.setvalid();
         FactionTimeOut.TimeoutManager();
         BotConnect.ConnectBot("OTY3NDcyNzQ2OTU3MjYyODg4.YmQzNQ.IMfgHmqwJDfbRAk64k6b97giWUE");
@@ -92,6 +95,8 @@ public class Server {
                 System.out.println("[SYSTEM/" + SystemUtils.getDate(System.currentTimeMillis()) + "] BACKUP DONE TO MYSQL");
                 if(Close) {
 
+
+                    streamIO.StopIO();
                     //RedisDump.deleteandupload("DUMP");
                     try {
                         MySQLDump.DumpToMySQL();
@@ -102,7 +107,6 @@ public class Server {
                     Streamable = false;
                     Thread.sleep(1000);
                     Connect.getRedisConnection().close();
-                    YamlDump.SaveConnectionInfo();
                     TryDumpYaml();
                     try {
                         SQL.getConnection().getHikariConnection().close();
@@ -122,6 +126,7 @@ public class Server {
         }
         try {
             Thread.sleep(3000);
+            YamlDump.SaveConnectionInfo();
             System.out.println("[SYSTEM/" + SystemUtils.getDate(System.currentTimeMillis()) + "] STOPPING SERVICE");
             System.exit(0);
         } catch (InterruptedException e2) {

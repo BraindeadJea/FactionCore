@@ -31,10 +31,8 @@ public class DeleteFaction {
             }
             String FactionUUID = FactionUtils.getPlayerFactionUUID(UUID);
             if(FactionTimeOut.Timeout1info.containsKey(FactionUUID)) {
-                String temp394328UUID = FactionTimeOut.Timeout1info.get(FactionUUID);
-                FactionTimeOut.Timeout1.remove(FactionUUID + "%" + temp394328UUID);
+                FactionTimeOut.Timeout1.remove(FactionUUID + "%" + FactionTimeOut.Timeout1info.get(FactionUUID));
                 DeleteFactionUtils.DeteleFaction(UUID, FactionUUID);
-                temp394328UUID = null;
             } else {
                 SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f국가를 해체하시려면 먼저 &r&7/국가 해체 &r&f를 먼저 해주세요");
             }
