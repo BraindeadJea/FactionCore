@@ -8,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class ConnectSQL {
-    private HikariDataSource dataSource;
+    HikariDataSource dataSource;
 
     private Connection connection;
 
@@ -40,16 +40,11 @@ public class ConnectSQL {
     }
 
     public void PingDatabase() {
-        try {
-            connection = dataSource.getConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
 
-    public Connection getHikariConnection() {
-        /*try {
+    public Connection getHikariConnection() throws SQLException {
+        try {
             if(connection != null || !connection.isClosed()) {
                 return connection;
             } else {
@@ -70,16 +65,8 @@ public class ConnectSQL {
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
-
             return null;
-        }*/
-        try {
-            return dataSource.getConnection();
-        } catch (SQLException e) {
-            SystemUtils.error_logger(e.getMessage());
-            e.printStackTrace();
         }
-        return null;
     }
 
     public void createHikariTable() {
@@ -92,14 +79,14 @@ public class ConnectSQL {
 
     public void CreateFactionNameTable() {
         try {
-            Connection connection = SQL.getConnection().getHikariConnection();
-            PreparedStatement ps = connection.prepareStatement("CREATE TABLE IF NOT EXISTS FactionName "
+            //Connection connection = SQL.getConnection().dataSource.getConnection();
+            PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("CREATE TABLE IF NOT EXISTS FactionName "
                     + "(FactionName VARCHAR(100),"
                     + "FactionUUID VARCHAR(100),"
                     + "FactionNameCap VARCHAR(100),"
                     + "PRIMARY KEY (FactionName))");
             ps.executeUpdate();
-            SQL.closeConnections(connection, ps, null);
+            SQL.closeConnections(null, ps, null);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -107,14 +94,14 @@ public class ConnectSQL {
 
     public void CreateFactionDTRTable() {
         try {
-            Connection connection = SQL.getConnection().getHikariConnection();
-            PreparedStatement ps = connection.prepareStatement("CREATE TABLE IF NOT EXISTS FactionDTR "
+            // connection = SQL.getConnection().dataSource.getConnection();
+            PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("CREATE TABLE IF NOT EXISTS FactionDTR "
                     + "(FactionUUID VARCHAR(100),"
                     + "FactionName VARCHAR(100),"
                     + "FactionDTR VARCHAR(100),"
                     + "PRIMARY KEY (FactionUUID))");
             ps.executeUpdate();
-            SQL.closeConnections(connection, ps, null);
+            SQL.closeConnections(null, ps, null);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -122,14 +109,14 @@ public class ConnectSQL {
 
     public void CreateFactionBankTable() {
         try {
-            Connection connection = SQL.getConnection().getHikariConnection();
-            PreparedStatement ps = connection.prepareStatement("CREATE TABLE IF NOT EXISTS FactionBank "
+            //Connection connection = SQL.getConnection().dataSource.getConnection();
+            PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("CREATE TABLE IF NOT EXISTS FactionBank "
                     + "(FactionUUID VARCHAR(100),"
                     + "FactionName VARCHAR(100),"
                     + "FactionBank VARCHAR(100),"
                     + "PRIMARY KEY (FactionUUID))");
             ps.executeUpdate();
-            SQL.closeConnections(connection, ps, null);
+            SQL.closeConnections(null, ps, null);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -137,14 +124,14 @@ public class ConnectSQL {
 
     public void CreateFactionELOTable() {
         try {
-            Connection connection = SQL.getConnection().getHikariConnection();
-            PreparedStatement ps = connection.prepareStatement("CREATE TABLE IF NOT EXISTS FactionELO "
+            //Connection connection = SQL.getConnection().dataSource.getConnection();
+            PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("CREATE TABLE IF NOT EXISTS FactionELO "
                     + "(FactionUUID VARCHAR(100),"
                     + "FactionName VARCHAR(100),"
                     + "FactionELO VARCHAR(100),"
                     + "PRIMARY KEY (FactionUUID))"); //%^G$%G$%D&*3#d^ %^U5jui34jhhy5i4$y7G54U^5ty
             ps.executeUpdate();
-            SQL.closeConnections(connection, ps, null);
+            SQL.closeConnections(null, ps, null);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -152,13 +139,13 @@ public class ConnectSQL {
 
     public void CreateFactionBackupTable() {
         try {
-            Connection connection = SQL.getConnection().getHikariConnection();
-            PreparedStatement ps = connection.prepareStatement("CREATE TABLE IF NOT EXISTS FactionBackup "
+            //Connection connection = SQL.getConnection().dataSource.getConnection();
+            PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("CREATE TABLE IF NOT EXISTS FactionBackup "
                     + "(MAP_NAME VARCHAR(100),"
                     + "MAP_KEY VARCHAR(100),"
                     + "MAP_VALUE VARCHAR(10000))"); //%^G$%G$%D&*3#d^ %^U5jui34jhhy5i4$y7G54U^5ty
             ps.executeUpdate();
-            SQL.closeConnections(connection, ps, null);
+            SQL.closeConnections(null, ps, null);
         } catch (SQLException e) {
             e.printStackTrace();
         }

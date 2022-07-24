@@ -41,6 +41,13 @@ public class SQL {
                     rs.close();
                 }
                 connection.close();
+            } else if(connection == null) {
+                if (ps != null && !ps.isClosed()) {
+                    ps.close();
+                }
+                if (rs != null && !rs.isClosed()) {
+                    rs.close();
+                }
             }
         } catch (Exception e) {
             SystemUtils.error_logger(e.getMessage());
