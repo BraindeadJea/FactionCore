@@ -1,6 +1,7 @@
 package com.itndev.FactionCore.Factions;
 
 import com.itndev.FactionCore.Database.Redis.Obj.Storage;
+import com.itndev.FactionCore.Server;
 import com.itndev.FactionCore.Utils.Factions.FactionUtils;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 import com.itndev.FactionCore.Utils.Factions.UserInfoUtils;
@@ -30,25 +31,39 @@ public class FactionTimeOut {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                if(Server.Streamable) {
+                    break;
+                }
                 new Thread(() -> {
-
-                    for(String k : Timeout1.keySet()) {
-                        int temp = Timeout1.get(k) - 1;
-                        Timeout1.put(k, temp);
+                    for(String k : Timeout2.keySet()) {
+                        int temp = Timeout2.get(k) - 1;
+                        Timeout2.put(k, temp);
                         if(temp <= 0) {
-                            Timeout1.remove(k);
+                            Timeout2.remove(k);
 
-                            String[] parts = k.split("%");
+                            String parts[] = k.split("%");
 
-                            String FactionUUID = parts[0];
+                            String PlayerUUID = parts[0];
+                            String FactionUUID = parts[1];
 
-                            Timeout1info.remove(FactionUUID);
+                            ArrayList<String> templist = Timeout2info.get(PlayerUUID);
+                            if(!templist.isEmpty()) {
+                                if(templist.contains(FactionUUID)) {
+                                    templist.remove(FactionUUID);
+                                    //FactionUtils.SendFactionMessage(PlayerUUID, PlayerUUID, "single", "&r&c" + FactionUtils.getCappedFactionName(FactionUtils.getFactionName(FactionUUID)) + "&r&f 에서 보낸 초대가 만료되었습니다");
+                                    SystemUtils.UUID_BASED_MSG_SENDER(PlayerUUID, "&r&c" + FactionUtils.getCappedFactionName(FactionUtils.getFactionName(FactionUUID)) + "&r&f 에서 보낸 초대가 만료되었습니다");
+                                    if(templist.isEmpty()) {
+                                        Timeout2info.remove(PlayerUUID);
+                                    } else {
+                                        Timeout2info.put(PlayerUUID, templist);
+                                    }
+                                }
 
-                            String playeruuid = parts[1];
-
-                            FactionUtils.SendFactionMessage(playeruuid, playeruuid, "single", "&r&c" + FactionUtils.getCapFactionNameFromUUID(FactionUUID) + "&r&f 에 대한 해체수락이 만료되었습니다");
+                            }
                         }
                     }
+                }).start();
+                new Thread(() -> {
                     for(String k : Timeout3.keySet()) {
                         int temp = Timeout3.get(k) - 1;
                         Timeout3.put(k, temp);
@@ -76,31 +91,23 @@ public class FactionTimeOut {
                             }
                         }
                     }
-                    for(String k : Timeout2.keySet()) {
-                        int temp = Timeout2.get(k) - 1;
-                        Timeout2.put(k, temp);
+                }).start();
+                new Thread(() -> {
+                    for(String k : Timeout1.keySet()) {
+                        int temp = Timeout1.get(k) - 1;
+                        Timeout1.put(k, temp);
                         if(temp <= 0) {
-                            Timeout2.remove(k);
+                            Timeout1.remove(k);
 
-                            String parts[] = k.split("%");
+                            String[] parts = k.split("%");
 
-                            String PlayerUUID = parts[0];
-                            String FactionUUID = parts[1];
+                            String FactionUUID = parts[0];
 
-                            ArrayList<String> templist = Timeout2info.get(PlayerUUID);
-                            if(!templist.isEmpty()) {
-                                if(templist.contains(FactionUUID)) {
-                                    templist.remove(FactionUUID);
-                                    //FactionUtils.SendFactionMessage(PlayerUUID, PlayerUUID, "single", "&r&c" + FactionUtils.getCappedFactionName(FactionUtils.getFactionName(FactionUUID)) + "&r&f 에서 보낸 초대가 만료되었습니다");
-                                    SystemUtils.UUID_BASED_MSG_SENDER(PlayerUUID, "&r&c" + FactionUtils.getCappedFactionName(FactionUtils.getFactionName(FactionUUID)) + "&r&f 에서 보낸 초대가 만료되었습니다");
-                                    if(templist.isEmpty()) {
-                                        Timeout2info.remove(PlayerUUID);
-                                    } else {
-                                        Timeout2info.put(PlayerUUID, templist);
-                                    }
-                                }
+                            Timeout1info.remove(FactionUUID);
 
-                            }
+                            String playeruuid = parts[1];
+
+                            FactionUtils.SendFactionMessage(playeruuid, playeruuid, "single", "&r&c" + FactionUtils.getCapFactionNameFromUUID(FactionUUID) + "&r&f 에 대한 해체수락이 만료되었습니다");
                         }
                     }
                 }).start();

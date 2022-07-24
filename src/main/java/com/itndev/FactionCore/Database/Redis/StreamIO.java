@@ -30,7 +30,7 @@ public class StreamIO {
 
     private void StreamReader() {
         new Thread(() -> {
-            while (Server.Streamable) {
+            while (true) {
                 try {
                     StreamReader_INNER();
                     StreamReader_INPUT();
@@ -39,9 +39,12 @@ public class StreamIO {
                     SystemUtils.logger(e.getMessage());
                 }
                 try {
-                    Thread.sleep(2);
+                    Thread.sleep(20);
                 } catch (InterruptedException e) {
                     SystemUtils.logger(e.getMessage());
+                }
+                if(Server.Streamable) {
+                    break;
                 }
             }
         }).start();
@@ -49,12 +52,15 @@ public class StreamIO {
 
     private void StreamWriter() {
         new Thread(() -> {
-            while (Server.Streamable) {
+            while (true) {
                 StreamWriter_OUTPUT();
                 try {
-                    Thread.sleep(2);
+                    Thread.sleep(20);
                 } catch (InterruptedException e) {
                     SystemUtils.logger(e.getMessage());
+                }
+                if(Server.Streamable) {
+                    break;
                 }
             }
         }).start();

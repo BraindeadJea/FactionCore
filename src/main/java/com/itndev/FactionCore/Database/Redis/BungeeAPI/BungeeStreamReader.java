@@ -2,6 +2,7 @@ package com.itndev.FactionCore.Database.Redis.BungeeAPI;
 
 import com.itndev.FactionCore.Database.Redis.Connect;
 import com.itndev.FactionCore.Database.Redis.Obj.StreamConfig;
+import com.itndev.FactionCore.Server;
 import com.itndev.FactionCore.Utils.Database.Redis.Read;
 import com.itndev.FactionCore.Utils.Database.Redis.StaticVal;
 import io.lettuce.core.StreamMessage;
@@ -20,6 +21,9 @@ public class BungeeStreamReader {
                     Thread.sleep(5);
                 } catch (Exception e) {
                     e.printStackTrace();
+                }
+                if(Server.Streamable) {
+                    break;
                 }
             }
         }).start();
