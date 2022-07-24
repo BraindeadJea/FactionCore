@@ -40,6 +40,7 @@ public class SystemUtils {
             for(String d : parts) {
                 memlist.add(d);
             }
+            parts = null;
             return memlist;
         } else {
             ArrayList<String> memlist = new ArrayList<>();
@@ -49,7 +50,7 @@ public class SystemUtils {
     }
     public static String list2string(ArrayList<String> list) {
         String k = "";
-        int i = 0;
+        Integer i = 0;
         for(String c : list) {
             i = i + 1;
             if(list.size() > i) {
@@ -58,8 +59,9 @@ public class SystemUtils {
                 k = k + c;
             }
 
-
+            c = null;
         }
+        i = null;
         return k;
     }
 
@@ -73,7 +75,7 @@ public class SystemUtils {
 
     public static String Args2String(String[] args, int Start) {
         String FinalString = "";
-        for(int k = Start; k < args.length; k++) {
+        for(Integer k = Start; k < args.length; k++) {
             if(args[k] == null) {
                 break;
             }
@@ -82,6 +84,7 @@ public class SystemUtils {
             } else {
                 FinalString = FinalString + args[k] + " ";
             }
+            k = null;
         }
         return FinalString;
     }

@@ -17,6 +17,8 @@ public class DeleteFactionUtils {
         SQL.getDatabase().DeleteFactionName(FactionUUID);
         SQL.getDatabase().DeleteFactionBank(FactionUUID);
         SQL.getDatabase().DeleteFactionDTR(FactionUUID);
+        FactionName = null;
+        OriginFactionName = null;
     }
 
     @Deprecated
@@ -30,6 +32,8 @@ public class DeleteFactionUtils {
         SQL.getDatabase().DeleteFactionName(FactionUUID);
         SQL.getDatabase().DeleteFactionBank(FactionUUID);
         SQL.getDatabase().DeleteFactionDTR(FactionUUID);
+        FactionName = null;
+        OriginFactionName = null;
     }
 
 

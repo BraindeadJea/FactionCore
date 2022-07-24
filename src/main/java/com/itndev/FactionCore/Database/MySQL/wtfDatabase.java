@@ -26,10 +26,12 @@ public class wtfDatabase {
                         PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("Call CREATENAME('" +
                                 FactionName + "','" + FactionUUID + "','" + FactionNameCapped + "')");
                         ps.executeQuery();
+                        ps = null;
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
                 }
+                isExistingNamed = null;
             } catch (InterruptedException | TimeoutException | ExecutionException e) {
                 e.printStackTrace();
             }
@@ -48,11 +50,14 @@ public class wtfDatabase {
                 PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("SELECT " +
                         "FactionDTR FROM FactionDTR WHERE FactionUUID='" + FactionUUID + "'");
                 ResultSet rs = ps.executeQuery();
-                double DTR = 0;
+                Double DTR = 0D;
                 if(rs.next()) {
                     DTR = Double.parseDouble(rs.getString("FactionDTR"));
                     CacheUtils.UpdateCachedDTR(FactionUUID, DTR);
                 }
+                rs = null;
+                DTR = null;
+                ps = null;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -71,11 +76,14 @@ public class wtfDatabase {
                 PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("SELECT " +
                         "FactionBank FROM FactionBank WHERE FactionUUID='" + FactionUUID + "'");
                 ResultSet rs = ps.executeQuery();
-                double Bank = 0;
+                Double Bank = 0D;
                 if(rs.next()) {
                     Bank = Double.parseDouble(rs.getString("FactionBank"));
                     CacheUtils.UpdateCachedBank(FactionUUID, Bank);
                 }
+                rs = null;
+                Bank = null;
+                ps = null;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -91,13 +99,16 @@ public class wtfDatabase {
                 //ps.setString(1, FactionUUID);
                 ResultSet rs = ps.executeQuery();
                 if(rs.next()) {
-                    double temp = rs.getDouble("VALUE_Boolean");
+                    Double temp = rs.getDouble("VALUE_Boolean");
                     if(temp == 0) {
                         hasSucceed.complete(true);
                     } else if(temp == 1) {
                         hasSucceed.complete(false);
                     }
+                    temp = null;
                 }
+                rs = null;
+                ps = null;
             } catch (SQLException e) {
                 e.printStackTrace();
                 hasSucceed.complete(false);
@@ -113,6 +124,7 @@ public class wtfDatabase {
                 PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("DELETE FROM FactionName WHERE FactionUUID=?");
                 ps.setString(1, FactionUUID);
                 ps.executeUpdate();
+                ps = null;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -136,6 +148,7 @@ public class wtfDatabase {
                         FactionUUID + "','" + FactionName + "','100')");
                 ps.executeQuery();
                 CacheUtils.UpdateCachedDTR(FactionUUID, 100.0);
+                ps = null;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -150,6 +163,7 @@ public class wtfDatabase {
                         FactionUUID + "','" + FactionName + "','0')");
                 ps.executeQuery();
                 CacheUtils.UpdateCachedBank(FactionUUID, 0.0);
+                ps = null;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -172,6 +186,8 @@ public class wtfDatabase {
                     } else {
                         FutureBoolean.complete(false);
                     }
+                    rs = null;
+                    ps = null;
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -190,6 +206,7 @@ public class wtfDatabase {
                 ps.setString(1, FactionUUID);
                 ps.executeUpdate();
                 CacheUtils.removeCachedDTR(FactionUUID);
+                ps = null;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -204,6 +221,7 @@ public class wtfDatabase {
                 ps.setString(1, FactionUUID);
                 ps.executeUpdate();
                 CacheUtils.removeCachedBank(FactionUUID);
+                ps = null;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -218,12 +236,15 @@ public class wtfDatabase {
                 PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("SELECT " +
                         "FactionDTR FROM FactionDTR WHERE FactionUUID='" + FactionUUID + "'");
                 ResultSet rs = ps.executeQuery();
-                double DTR = 0;
+                Double DTR = 0D;
                 if(rs.next()) {
                     DTR = Double.parseDouble(rs.getString("FactionDTR"));
                     FutureDTR.complete(DTR);
                     CacheUtils.UpdateCachedDTR(FactionUUID, DTR);
                 }
+                rs = null;
+                ps = null;
+                DTR = null;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -239,12 +260,15 @@ public class wtfDatabase {
                 PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement("SELECT " +
                         "FactionBank FROM FactionBank WHERE FactionUUID='" + FactionUUID + "'");
                 ResultSet rs = ps.executeQuery();
-                double Bank = 0;
+                Double Bank = 0D;
                 if(rs.next()) {
                     Bank = Double.parseDouble(rs.getString("FactionBank"));
                     FutureBank.complete(Bank);
                     CacheUtils.UpdateCachedBank(FactionUUID, Bank);
                 }
+                rs = null;
+                ps = null;
+                Bank = null;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -272,6 +296,7 @@ public class wtfDatabase {
                     Double FinalDTR = rs.getDouble("FINALDTR");
                     futureDTR.complete(FinalDTR);
                     CacheUtils.UpdateCachedDTR(FactionUUID, FinalDTR);
+                    FinalDTR = null;
                 } else {
                     futureDTR.complete(-420D);
                 }
@@ -290,6 +315,8 @@ public class wtfDatabase {
                 PreparedStatement unlock = Main.hikariCP.getHikariConnection().prepareStatement("UNLOCK " +
                         "TABLE FactionDTR");
                 unlock.executeUpdate();*/
+                ps = null;
+                rs = null;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -314,6 +341,9 @@ public class wtfDatabase {
                     futureBank.complete(-420D);
                 }
                 CacheFactionBank(FactionUUID);
+                ps = null;
+                cmd = null;
+                rs = null;
                 /*PreparedStatement DTRUPDATE = Main.hikariCP.getHikariConnection().prepareStatement("SELECT @ORIGINNAME := (SELECT FactionBank FROM FactionBank WHERE FactionUUID='"+ FactionUUID +"');" +
                         "UPDATE FactionBank SET FactionBank=CONVERT(CONVERT(@ORIGINNAME, DOUBLE) + " + String.valueOf(DTR) + ", CHAR) WHERE FactionUUID='"+ FactionUUID +"';" +
                         "SELECT FactionBank FROM FactionBank WHERE FactionUUID='"+ FactionUUID +"';");
@@ -351,6 +381,8 @@ public class wtfDatabase {
                 String cmd = "Call UPDATENAME('" + FactionNameCap.toLowerCase(Locale.ROOT) + "','" + FactionUUID + "','" + FactionNameCap + "')";
                 PreparedStatement ps = SQL.getConnection().getHikariConnection().prepareStatement(cmd);
                 ps.executeQuery();
+                cmd = null;
+                ps = null;
             } catch (SQLException e) {
                 e.printStackTrace();
             }

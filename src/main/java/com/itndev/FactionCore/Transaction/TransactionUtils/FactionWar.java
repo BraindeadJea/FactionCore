@@ -32,6 +32,7 @@ public class FactionWar {
             if(FactionUtils.isInWar(FactionUUID)) {
                 String OPPFACNAME = FactionUtils.getCapFactionNameFromUUID(FactionUtils.getOPPWar(FactionUUID));
                 SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f이미 &c" + OPPFACNAME + " &r국가와 전쟁 중입니다");
+                OPPFACNAME = null;
                 return;
             }
             if(!FactionUtils.hasMainBeacon(FactionUUID)) {
@@ -47,6 +48,7 @@ public class FactionWar {
             if(FactionUtils.isInWar(FactionUUID)) {
                 String OPPFACNAME = FactionUtils.getCapFactionNameFromUUID(FactionUtils.getOPPWar(FactionUUID));
                 SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f이미 &c" + OPPFACNAME + " &r국가와 전쟁 중입니다");
+                OPPFACNAME = null;
                 return;
             }
             if(!FactionUtils.hasMainBeacon(FactionUUID)) {

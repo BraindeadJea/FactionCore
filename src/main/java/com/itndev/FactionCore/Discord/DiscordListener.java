@@ -20,6 +20,7 @@ public class DiscordListener extends ListenerAdapter {
             cmd[0] = cmd[0].replaceFirst("!", "");
             performcommand(e.getAuthor(), cmd, e.getChannel(), e.getGuild());
         }
+        cmd = null;
     }
 
     @Deprecated
@@ -30,6 +31,8 @@ public class DiscordListener extends ListenerAdapter {
             String id = e.getUser().getId();
             System.out.println("[DISCORD] " + tag + "/" + id + " has left the server");
             RemoveUser(id);
+            tag = null;
+            id = null;
         } catch (NullPointerException ex) {
             ex.printStackTrace();
         }
@@ -42,6 +45,8 @@ public class DiscordListener extends ListenerAdapter {
             String id = e.getUser().getId();
             System.out.println("[DISCORD] " + tag + "/" + id + " has left the server");
             RemoveUser(id);
+            tag = null;
+            id = null;
         } catch (NullPointerException ex) {
             ex.printStackTrace();
         }
@@ -56,6 +61,7 @@ public class DiscordListener extends ListenerAdapter {
         AuthStorage.UUID_TO_DISCORDID.remove(UUID);
         Storage.AddCommandToQueue("discord:=:auth:=:" + UUID + ":=:" + "NULL");
         FactionUtils.SendFactionMessage(UUID, "puremessagesendoptiontrue", "single", "[디스코드]" + " 계정 인증이 풀렸습니다");
+        UUID = null;
     }
 
 
@@ -86,11 +92,15 @@ public class DiscordListener extends ListenerAdapter {
                 return;
             }
             Random random = new Random();
-            int c = random.nextInt(999999);
+            Integer c = random.nextInt(999999);
             AuthStorage.AddAuth(UUID, String.valueOf(c), user.getId());
             BotConnect.mainchannel.sendMessage( "[" + user.getAsMention() + "]\n 성공적으로 연동요청을 넣었습니다.\n 연동을 인증하기 위해서는 인게임에서 `" + UserInfoUtils.getPlayerUUIDOriginName(UUID)
                     + "` 계정으로 `/연동 " + String.valueOf(c) + "` 를 입력하시면 됩니다").queue();
 
+            name = null;
+            UUID = null;
+            random = null;
+            c = null;
         } else if(args[0].equalsIgnoreCase("연동해제")) {
             if(!AuthStorage.DISCORDID_TO_UUID.containsKey(user.getId())) {
                 BotConnect.mainchannel.sendMessage( "[" + user.getAsMention() + "]\n"
@@ -107,6 +117,8 @@ public class DiscordListener extends ListenerAdapter {
             BotConnect.mainguild.removeRoleFromMember(user.getId(), BotConnect.mainguild.getRolesByName("USER", false).get(0)).queue();
             Member m = BotConnect.mainguild.retrieveMemberById(user.getId()).complete();
             m.modifyNickname(user.getName()).queue();
+            UUID = null;
+            m = null;
         } else if(args[0].equalsIgnoreCase("연동정보")) {
             if(!channel.equals(BotConnect.mainchannel)) {
                 channel.sendMessage("[" + user.getAsMention() + "]\n 해당 명령어는 " + ((TextChannel)BotConnect.mainchannel).getAsMention() + " 에서만 사용 가능합니다").queue();

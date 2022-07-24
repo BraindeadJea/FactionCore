@@ -74,7 +74,10 @@ public class StreamIO {
             Connect.setLastID_INNER(message.getId());
             String compressedhashmap = message.getBody().get(StaticVal.getCommand());
             Read.READ_COMPRESSEDMAP(compressedhashmap);
+            message = null;
+            compressedhashmap = null;
         }
+        messages = null;
     }
 
     @Deprecated
@@ -85,7 +88,10 @@ public class StreamIO {
             Connect.setLastID_INPUT(message.getId());
             String compressedhashmap = message.getBody().get(StaticVal.getCommand());
             Read.READ_COMPRESSEDMAP(compressedhashmap);
+            message = null;
+            compressedhashmap = null;
         }
+        messages = null;
     }
 
     @Deprecated
@@ -99,5 +105,6 @@ public class StreamIO {
             Map<String, String> body = Collections.singletonMap(StaticVal.getCommand(), compressedhashmap);
             Connect.getRedisCommands().xadd(StreamConfig.get_Stream_OUTPUT_NAME(), body);
         }
+        compressedhashmap = null;
     }
 }

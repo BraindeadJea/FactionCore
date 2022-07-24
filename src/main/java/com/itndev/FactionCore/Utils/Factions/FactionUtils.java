@@ -14,6 +14,8 @@ public class FactionUtils {
         Long time = System.currentTimeMillis();
         UUID uuid2 = UUID.randomUUID();
         uuid = String.valueOf(time) + "=" + String.valueOf(uuid2);
+        time = null;
+        uuid2 = null;
         return uuid;
     }
 
@@ -127,6 +129,7 @@ public class FactionUtils {
             Storage.AddCommandToQueue("update:=:FactionNameToFactionUUID:=:add:=:" + NewFactionName.toLowerCase(Locale.ROOT) + ":=:add:=:" + FactionUUID);
             Storage.AddCommandToQueue("update:=:FactionUUIDToFactionName:=:add:=:" + FactionUUID + ":=:add:=:" + NewFactionName.toLowerCase(Locale.ROOT));
         }
+        oldFactionName = null;
     }
 
 
@@ -141,6 +144,8 @@ public class FactionUtils {
         BulkCMD.add("update:=:FactionRank:=:add:=:" + LeaderUUID + ":=:add:=:" + Config.Leader);
         BulkCMD.add("update:=:PlayerFaction:=:add:=:" + LeaderUUID + ":=:add:=:" + FactionUUID);
         Storage.AddBulkCommandToQueue(BulkCMD);
+        FactionName = null;
+        BulkCMD = null;
     }
 
     public static String Build_PERMLVLINFO(int PERMLVL, int FINALPERMLVL, String SUCCESSID) {
@@ -191,6 +196,8 @@ public class FactionUtils {
         BulkCMD.add("update:=:FactionOutPost:=:remove:=:" + FactionUUID + ":=:add:=:" + "nothing");
         BulkCMD.add("update:=:FactionWarpLocations:=:remove:=:" + FactionUUID + ":=:add:=:" + "nothing");
         Storage.AddBulkCommandToQueue(BulkCMD);
+        FactionName = null;
+        BulkCMD = null;
     }
 
     public static Boolean isExistingOutPost(String FactionUUID, String OutPostName) {
@@ -234,6 +241,7 @@ public class FactionUtils {
         updatelist.add(Chunkkey);
         FactionStorage.FactionToLand.put(FactionUUID, updatelist);
         Storage.AddCommandToQueue("update:=:FactionToLand:=:add:=:" + FactionUUID + ":=:add:=:" + Chunkkey + ":=:" + Server.getServerName());
+        updatelist = null;
     }
 
     @Deprecated
@@ -248,6 +256,7 @@ public class FactionUtils {
             FactionStorage.FactionToLand.put(FactionUUID, updatelist);
         }
         Storage.AddCommandToQueue("update:=:FactionToLand:=:add:=:" + FactionUUID + ":=:remove:=:" + Chunkkey + ":=:" + Server.getServerName());
+        updatelist = null;
     }
 
     @Deprecated
@@ -261,6 +270,7 @@ public class FactionUtils {
         updatelist.add(Chunkkey);
         FactionStorage.FactionToOutPost.put(FactionUUID, updatelist);
         Storage.AddCommandToQueue("update:=:FactionToOutPost:=:add:=:" + FactionUUID + ":=:add:=:" + Chunkkey + ":=:" + Server.getServerName());
+        updatelist = null;
     }
 
     @Deprecated
@@ -275,22 +285,29 @@ public class FactionUtils {
             FactionStorage.FactionToOutPost.put(FactionUUID, updatelist);
         }
         Storage.AddCommandToQueue("update:=:FactionToOutPost:=:add:=:" + FactionUUID + ":=:remove:=:" + Chunkkey + ":=:" + Server.getServerName());
+        updatelist = null;
     }
 
 
     public static Boolean isAExistingLangRank(String LangRank) {
         String lowcaserank = LangRank.toLowerCase(Locale.ROOT);
         if(lowcaserank.equalsIgnoreCase(Config.Leader_Lang)) {
+            lowcaserank = null;
             return true;
         } else if(lowcaserank.equalsIgnoreCase(Config.CoLeader_Lang)) {
+            lowcaserank = null;
             return true;
         } else if(lowcaserank.equalsIgnoreCase(Config.VipMember_Lang)) {
+            lowcaserank = null;
             return true;
         } else if(lowcaserank.equalsIgnoreCase(Config.Warrior_Lang)) {
+            lowcaserank = null;
             return true;
         } else if(lowcaserank.equalsIgnoreCase(Config.Member_Lang)) {
+            lowcaserank = null;
             return true;
         } else {
+            lowcaserank = null;
             return false;
         }
     }
@@ -337,8 +354,10 @@ public class FactionUtils {
         if(FactionStorage.FactionUUIDToFactionName.containsKey(FactionUUID)) {
             String FactionTempName = FactionStorage.FactionUUIDToFactionName.get(FactionUUID);
             if(FactionStorage.FactionNameToFactionName.containsKey(FactionTempName)) {
+                FactionTempName = null;
                 return FactionStorage.FactionNameToFactionName.get(FactionTempName);
             }
+            FactionTempName = null;
         }
         return null;
     }
@@ -458,8 +477,10 @@ public class FactionUtils {
     public static Boolean HigherThenRank(String UUID, String Rank) {
         String PlayerRank = FactionUtils.getPlayerRank(UUID);
         if(RankPrio(PlayerRank) > RankPrio(Rank)) {
+            PlayerRank = null;
             return true;
         } else {
+            PlayerRank = null;
             return false;
         }
     }
@@ -501,6 +522,7 @@ public class FactionUtils {
         if(FactionStorage.FactionInfoList.containsKey(FactionUUID)) {
             for (String key : FactionStorage.FactionInfoList.get(FactionUUID)) {
                 Storage.AddCommandToQueue("update:=:FactionInfo:=:remove:=:" + FactionUUID + "=" + key + ":=:remove:=:YES");
+                key = null;
             }
             Storage.AddCommandToQueue("update:=:FactionInfoList:=:remove:=:" + FactionUUID + ":=:remove:=:");
         }
@@ -532,28 +554,28 @@ public class FactionUtils {
     }
 
     public static String GetFactionOutPostWarpLocation(String FactionUUID, String OutPostName) {
-        String key = FactionUUID + "=warplocation=" + OutPostName;
-        return FactionStorage.FactionInfo.get(key);
+        //String key = FactionUUID + "=warplocation=" + OutPostName;
+        return FactionStorage.FactionInfo.get(FactionUUID + "=warplocation=" + OutPostName);
     }
 
     public static String GetBeaconLocation(String FactionUUID, String OutPostName) {
-        String key = FactionUUID + "=beacon=" + OutPostName;
-        return FactionStorage.FactionInfo.get(key);
+        //String key = FactionUUID + "=beacon=" + OutPostName;
+        return FactionStorage.FactionInfo.get(FactionUUID + "=beacon=" + OutPostName);
     }
 
     public static String GetFactionOutPostName(String Chunkkey) {
         if(FactionStorage.OutPostToFaction.containsKey(Chunkkey)) {
-            String FactionUUID = FactionStorage.OutPostToFaction.get(Chunkkey);
-            String key = FactionUUID + "=outpost=" + Chunkkey;
-            return FactionStorage.FactionInfo.get(key);
+            //String FactionUUID = FactionStorage.OutPostToFaction.get(Chunkkey);
+            //String key = FactionUUID + "=outpost=" + Chunkkey;
+            return FactionStorage.FactionInfo.get(FactionStorage.OutPostToFaction.get(Chunkkey) + "=outpost=" + Chunkkey);
         } else {
             return null;
         }
     }
 
     public static String GetFactionOutPostChunkkey(String FactionUUID, String OutPostName) {
-        String key = FactionUUID + "=" + OutPostName;
-        return FactionStorage.FactionOutPost.get(key);
+        //String key = FactionUUID + "=" + OutPostName;
+        return FactionStorage.FactionOutPost.get(FactionUUID + "=" + OutPostName);
     }
 
     public static void RemoveFactionNotice(String FactionUUID) {

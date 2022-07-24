@@ -147,9 +147,16 @@ public class Processor {
                                 FactionUtils.SetPlayerRank(TargetUUID, TheRank);
                                 FactionUtils.SendFactionMessage(UUID, UUID, "single", "&r&f" + CasedTargetName + " 이의 등급을 " + FactionUtils.LangRankConvert(TheRank) + " 으로 변경하였습니다");
                                 FactionUtils.SendFactionMessage(TargetUUID, TargetUUID, "single", "&r&f당신의 등급이 " + FactionUtils.LangRankConvert(TheRank) + " 으로 변경되었습니다");
+
+                                TheRank = null;
+                                TargetUUID = null;
+                                CasedTargetName = null;
                             } else {
                                 SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f권한이 없습니다. &r&c" + Config.VipMember_Lang + " &r&f등급 이상부터 사용이 가능합니다");
                             }
+                            name = null;
+                            RealRank = null;
+                            RealPlayer = null;
 
                             //=================등급=================
 
@@ -172,6 +179,8 @@ public class Processor {
                             FactionUtils.SetFactionDesc(FactionUUID, Message);
 
                             SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f국가 설명을 &7( " + Message + " ) &r&f으로 변경했습니다");
+                            FactionUUID = null;
+                            Message = null;
 
                             //=================설명=================
 
@@ -195,6 +204,8 @@ public class Processor {
 
                             SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f국가 공지를 &7( " + Message + " ) &r&f으로 변경했습니다");
 
+                            FactionUUID = null;
+                            Message = null;
 
                             //=================공지=================
 
@@ -212,7 +223,7 @@ public class Processor {
                                 return;
                             }
 
-                            String OptionText = FactionUtils.FactionStatusConvert(args[1]);
+                            //String OptionText = FactionUtils.FactionStatusConvert(args[1]);
 
                             //ally , enemy , neutral
 

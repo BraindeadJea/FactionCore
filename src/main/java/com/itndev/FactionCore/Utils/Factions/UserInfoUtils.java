@@ -21,6 +21,7 @@ public class UserInfoUtils {
         if(!newName.equalsIgnoreCase(oldname)) {
             Storage.AddCommandToQueue("update:=:nameuuid:=:add:=:" + newName.toLowerCase(Locale.ROOT) + ":=:add:=:" + UUID);
         }
+        oldname = null;
     }
 
     public static void setPlayerOrginName(String newName, String UUID) {
@@ -32,6 +33,7 @@ public class UserInfoUtils {
             } else {
                 Storage.AddCommandToQueue("update:=:namename:=:add:=:" + newName.toLowerCase(Locale.ROOT) + ":=:add:=:" + newName);
             }
+            oldname = null;
         } else {
             Storage.AddCommandToQueue("update:=:namename:=:add:=:" + newName.toLowerCase(Locale.ROOT) + ":=:add:=:" + newName);
         }

@@ -31,6 +31,8 @@ public class FactionInvite {
                     } else {
                         SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&c" + CasedName + "&r&f(은)는 이미 다른 국가에 소속되어 있습니다");
                     }
+                    InviteUUID = null;
+                    CasedName = null;
                 } else {
                     SystemUtils.UUID_BASED_MSG_SENDER(UUID,   "&r&c" + args[1] + "&r&f(은)는 존재하지 않는 유저입니다");
                 }
@@ -56,8 +58,9 @@ public class FactionInvite {
             if (FactionUtils.HigherThenorSameRank(UUID, Config.VipMember)) {
                 if (UserInfoUtils.hasJoined(args[1])) {
                     String InviteUUID = UserInfoUtils.getPlayerUUID(args[1].toLowerCase(Locale.ROOT));
-                    String CasedName = UserInfoUtils.getPlayerOrginName(UserInfoUtils.getPlayerName(InviteUUID));
+                    //String CasedName = UserInfoUtils.getPlayerOrginName(UserInfoUtils.getPlayerName(InviteUUID));
                     FactionTimeOut.cancelInvite(UUID, FactionUtils.getPlayerFactionUUID(UUID), InviteUUID);
+                    InviteUUID = null;
                 } else {
                     SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&c" + args[1] + "&r&f(은)는 존재하지 않는 유저입니다");
                 }
@@ -84,6 +87,7 @@ public class FactionInvite {
                     return;
                 }
                 FactionTimeOut.AcceptInvite(UUID, FactionUUID);
+                FactionUUID = null;
             } else {
                 SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f해당 국가 " + args[1] + " 은 존재하지 않습니다");
             }

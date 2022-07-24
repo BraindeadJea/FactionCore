@@ -40,12 +40,13 @@ public class CachedStorage {
                         //할거 없다
                     }
                 }
+                key = null;
+                value = null;
 
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
-                if(CachedStorage.CachedDTR.containsKey(key)) {
-                    CachedStorage.CachedDTR.remove(key);
-                }
+                CachedStorage.CachedDTR.remove(key);
+                key = null;
             }
         } else if(args[1].equalsIgnoreCase("CachedBank")) {
             if(args[2].equalsIgnoreCase("add")) {
@@ -71,12 +72,15 @@ public class CachedStorage {
                         //할거 없다
                     }
                 }
+                key = null;
+                value = null;
 
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 if(CachedStorage.CachedBank.containsKey(key)) {
                     CachedStorage.CachedBank.remove(key);
                 }
+                key = null;
             }
         }
     }

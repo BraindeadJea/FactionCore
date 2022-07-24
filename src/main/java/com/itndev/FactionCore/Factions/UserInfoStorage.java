@@ -34,12 +34,15 @@ public class UserInfoStorage {
                         //할거 없다
                     }
                 }
+                key = null;
+                value = null;
 
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 if(UserInfoStorage.namename.containsKey(key)) {
                     UserInfoStorage.namename.remove(key);
                 }
+                key = null;
             }
 
         } else if(args[1].equalsIgnoreCase("nameuuid")) {
@@ -68,11 +71,15 @@ public class UserInfoStorage {
                     }
                 }
 
+                key = null;
+                value = null;
+
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 if(UserInfoStorage.nameuuid.containsKey(key)) {
                     UserInfoStorage.nameuuid.remove(key);
                 }
+                key = null;
             }
 
         } else if(args[1].equalsIgnoreCase("uuidname")) {
@@ -100,12 +107,15 @@ public class UserInfoStorage {
                         //할거 없다
                     }
                 }
+                key = null;
+                value = null;
 
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 if(UserInfoStorage.uuidname.containsKey(key)) {
                     UserInfoStorage.uuidname.remove(key);
                 }
+                key = null;
             }
 
         }

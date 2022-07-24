@@ -21,10 +21,13 @@ public class ValidChecker {
                     isfinished = true;
                     break;
                 }
+                l = null;
             }
             if(!isfinished) {
                 futureboolean.complete(true);
             }
+            temp = null;
+            isfinished = null;
         }).start();
         return futureboolean;
     }
@@ -35,7 +38,9 @@ public class ValidChecker {
             if(!validnumber.contains(l)) {
                 return false;
             }
+            l = null;
         }
+        temp = null;
         return true;
     }
 
@@ -419,6 +424,26 @@ public class ValidChecker {
             valid.addAll(Arrays.asList(words3));
             valid.addAll(Arrays.asList(words4));
             validnumber.addAll(Arrays.asList(words4));
+            k = null;
+            k_temp = null;
+            k2 = null;
+            k3 = null;
+            k4 = null;
+            words = null;
+            words_temp = null;
+            words2 = null;
+            words3 = null;
+            words4 = null;
+            k = null;
+            k_temp = null;
+            k2 = null;
+            k3 = null;
+            k4 = null;
+            words = null;
+            words_temp = null;
+            words2 = null;
+            words3 = null;
+            words4 = null;
         }).start();
 
     }

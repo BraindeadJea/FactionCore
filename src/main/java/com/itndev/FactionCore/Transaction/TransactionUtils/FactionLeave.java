@@ -34,6 +34,7 @@ public class FactionLeave {
         BulkCMD.add(FactionUtils.SetPlayerRank_GETRAWCMD(UUID, Config.Nomad));
         SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f성공적으로 국가 " + FactionUtils.getCappedFactionName(FactionUtils.getFactionName(FactionUUID)) + " 에서 나왔습니다.");
         Storage.AddCommandToQueue("notify:=:" + FactionUtils.getFactionLeader(FactionUUID) + ":=:" + "SIBAL" + ":=:" + "&r&f" + UserInfoUtils.getPlayerUUIDOriginName(UUID) + " 이가 당신의 국가에서 나갔습니다" + ":=:" + "true");
+        BulkCMD = null;
         Storage.AddBulkCommandToQueue(BulkCMD);
     }
 }

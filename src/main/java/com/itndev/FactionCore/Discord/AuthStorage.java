@@ -39,6 +39,8 @@ public class AuthStorage {
             BotConnect.mainguild.removeRoleFromMember(DiscordID, BotConnect.mainguild.getRolesByName("USER", false).get(0)).queue();
             Member m = BotConnect.mainguild.retrieveMemberById(DiscordID).complete();
             m.modifyNickname(m.getUser().getName()).queue();
+            DiscordID = null;
+            m = null;
         } else {
             FactionUtils.SendFactionMessage(UUID, "puremessagesendoptiontrue", "single", "[디스코드]" + " 연동되어있는 계정이 없습니다");
         }
@@ -56,6 +58,7 @@ public class AuthStorage {
         }
         finalmsg = finalmsg + "&3&m-------------------------------------";
         SystemUtils.UUID_BASED_PURE_MSG_SENDER(UUID, finalmsg);
+        finalmsg = null;
     }
 
     public static String getID_FROM_UUID(String UUID) {
@@ -86,7 +89,7 @@ public class AuthStorage {
         list.add(ID);
         TEMP_AUTH_CACHE.put(UUID, list);
         TEMP_UUID_ID_CACHE_TO_DISCORDID.put(UUID + ID, DiscordID);
-
+        list = null;
         //
     }
 
@@ -100,6 +103,7 @@ public class AuthStorage {
                     DISCORDID_TO_UUID.put(DiscordID, UUID);
                     for(String k : TEMP_AUTH_CACHE.get(UUID)) {
                         TEMP_UUID_ID_CACHE_TO_DISCORDID.remove(UUID + k);
+                        k = null;
                     }
                     TEMP_AUTH_CACHE.remove(UUID);
                     String tag = BotConnect.bot.retrieveUserById(DiscordID).complete().getAsTag();
@@ -107,6 +111,8 @@ public class AuthStorage {
                     Storage.AddCommandToQueue("discord:=:auth:=:" + UUID + ":=:" + tag);
                     BotConnect.mainguild.addRoleToMember(DiscordID, BotConnect.mainguild.getRolesByName("USER", false).get(0)).queue();
                     BotConnect.mainguild.retrieveMemberById(DiscordID).complete().modifyNickname("[USER] " + UserInfoUtils.getPlayerUUIDOriginName(UUID)).queue();
+                    DiscordID = null;
+                    tag = null;
                 } else {
                     FactionUtils.SendFactionMessage(UUID, "puremessagesendoptiontrue", "single", "[디스코드]" + " 잘못된 아이디입니다");
                 }

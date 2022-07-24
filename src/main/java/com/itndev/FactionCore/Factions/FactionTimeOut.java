@@ -36,7 +36,7 @@ public class FactionTimeOut {
                 }
                 new Thread(() -> {
                     for(String k : Timeout2.keySet()) {
-                        int temp = Timeout2.get(k) - 1;
+                        Integer temp = Timeout2.get(k) - 1;
                         Timeout2.put(k, temp);
                         if(temp <= 0) {
                             Timeout2.remove(k);
@@ -60,12 +60,19 @@ public class FactionTimeOut {
                                 }
 
                             }
+                            parts = null;
+                            PlayerUUID = null;
+                            FactionUUID = null;
+                            templist = null;
                         }
+                        k = null;
+                        temp = null;
+
                     }
                 }).start();
                 new Thread(() -> {
                     for(String k : Timeout3.keySet()) {
-                        int temp = Timeout3.get(k) - 1;
+                        Integer temp = Timeout3.get(k) - 1;
                         Timeout3.put(k, temp);
                         if(temp <= 0) {
                             Timeout3.remove(k);
@@ -89,12 +96,18 @@ public class FactionTimeOut {
                                 }
 
                             }
+                            parts = null;
+                            RECIEVE_FactionUUID = null;
+                            FactionUUID = null;
+                            templist = null;
                         }
+                        k = null;
+                        temp = null;
                     }
                 }).start();
                 new Thread(() -> {
                     for(String k : Timeout1.keySet()) {
-                        int temp = Timeout1.get(k) - 1;
+                        Integer temp = Timeout1.get(k) - 1;
                         Timeout1.put(k, temp);
                         if(temp <= 0) {
                             Timeout1.remove(k);
@@ -108,7 +121,12 @@ public class FactionTimeOut {
                             String playeruuid = parts[1];
 
                             FactionUtils.SendFactionMessage(playeruuid, playeruuid, "single", "&r&c" + FactionUtils.getCapFactionNameFromUUID(FactionUUID) + "&r&f 에 대한 해체수락이 만료되었습니다");
+
+                            parts = null;
+                            FactionUUID = null;
+                            playeruuid = null;
                         }
+                        temp = null;
                     }
                 }).start();
             }
@@ -128,6 +146,7 @@ public class FactionTimeOut {
                 SystemUtils.UUID_BASED_MSG_SENDER(LeaderUUID, "&r&f해당국가 &c" + FactionUtils.getCapFactionNameFromUUID(RECIEVE_FactionUUID) + " &r에게 성공적으로 전쟁을 신청하였습니다");
                 SystemUtils.UUID_BASED_MSG_SENDER(FactionUtils.getFactionLeader(RECIEVE_FactionUUID), "&r&f해당국가 &c" + FactionUtils.getCapFactionNameFromUUID(FactionUUID) + " &r에서 전쟁을 신청하였습니다.\n&r수락하려면 &7(/국가 전쟁 수락 " + FactionUtils.getCapFactionNameFromUUID(FactionUUID) + ")");
             }
+            temp = null;
         } else {
             ArrayList<String> temp = new ArrayList<>();
             temp.add(RECIEVE_FactionUUID);
@@ -135,6 +154,7 @@ public class FactionTimeOut {
             Timeout3.put(FactionUUID + "=WAR%" + RECIEVE_FactionUUID, 60);
             SystemUtils.UUID_BASED_MSG_SENDER(LeaderUUID, "&r&f해당국가 &c" + FactionUtils.getCapFactionNameFromUUID(RECIEVE_FactionUUID) + " &r에게 성공적으로 전쟁을 신청하였습니다");
             SystemUtils.UUID_BASED_MSG_SENDER(FactionUtils.getFactionLeader(RECIEVE_FactionUUID), "&r&f해당국가 &c" + FactionUtils.getCapFactionNameFromUUID(FactionUUID) + " &r에서 전쟁을 신청하였습니다.\n&r수락하려면 &7(/국가 전쟁 수락 " + FactionUtils.getCapFactionNameFromUUID(FactionUUID) + ")");
+            temp = null;
         }
 
     }
@@ -149,6 +169,8 @@ public class FactionTimeOut {
             //ANNOUNCE WAR
             SystemUtils.UUID_BASED_MSG_SENDER(LeaderUUID, "&r&f해당 국가 " + REQUEST_FactionName + "&r(이)의 전쟁 신청을 수락했습니다");
             Storage.AddCommandToQueue("notify:=:" + LeaderUUID + ":=:" + "all" + ":=:" + "&r&f" + "&c" + REQUEST_FactionName + " &r(이)와 &c" + FactionName + " &r이가 전쟁을 시작합니다:=:" + "true");
+            FactionName = null;
+            REQUEST_FactionName = null;
         }
     }
 
@@ -169,6 +191,7 @@ public class FactionTimeOut {
         String FactionName = FactionUtils.getCappedFactionName(FactionUtils.getFactionName(FactionUUID));
         FactionUtils.SendFactionMessage(UUID, UUID, "single", "&r&f" + FactionName + " 에서 당신을 초대했습니다.\n" +
                 "&7(/국가 수락 " + FactionName + ")");
+        FactionName = null;
     }
 
 

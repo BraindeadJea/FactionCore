@@ -51,6 +51,11 @@ public class FactionLeaderPromote {
                 "변경된 당신의 등급 &7&l: &r&f" + Config.Leader_Lang);
         Storage.AddCommandToQueue("notify:=:" + UUID + ":=:" + "SIBAL" + ":=:" + "&r&f" + givername + " 이가 국가의 소유권을 " + UserInfoUtils.getPlayerOrginName(UserInfoUtils.getPlayerName(TargetUUID)) + " 에게 넘겨주었습니다" + ":=:" + "true");
         Storage.AddBulkCommandToQueue(BulkCMD);
+        name = null;
+        TargetUUID = null;
+        givername = null;
+        originname = null;
+        BulkCMD = null;
     }
 
 }

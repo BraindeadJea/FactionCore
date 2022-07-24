@@ -17,9 +17,10 @@ public class Storage {
                 TempCommandQueue.put(StaticVal.getMaxAmount(), "1");
                 TempCommandQueue.put("1", command);
             } else {
-                int num = Integer.parseInt(TempCommandQueue.get(StaticVal.getMaxAmount()));
+                Integer num = Integer.parseInt(TempCommandQueue.get(StaticVal.getMaxAmount()));
                 TempCommandQueue.put(StaticVal.getMaxAmount(), String.valueOf(num + 1));
                 TempCommandQueue.put(String.valueOf(num + 1), command);
+                num = null;
             }
         }
     }
@@ -31,9 +32,10 @@ public class Storage {
                 TempCommandQueue.put(StaticVal.getMaxAmount(), "1");
                 TempCommandQueue.put("1", command);
             } else {
-                int num = Integer.parseInt(TempCommandQueue.get(StaticVal.getMaxAmount()));
+                Integer num = Integer.parseInt(TempCommandQueue.get(StaticVal.getMaxAmount()));
                 TempCommandQueue.put(StaticVal.getMaxAmount(), String.valueOf(num + 1));
                 TempCommandQueue.put(String.valueOf(num + 1), command);
+                num = null;
             }
         }
     }

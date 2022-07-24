@@ -37,7 +37,10 @@ public class BungeeStreamReader {
             Connect.set_LastID_BUNGEE(message.getId());
             String compressedhashmap = message.getBody().get(StaticVal.getCommand());
             ReadCompressedHashMap_READ(StreamConfig.get_Stream_BUNGEE_LINE(), compressedhashmap);
+            message = null;
+            compressedhashmap = null;
         }
+        messages = null;
     }
 
     private static void ReadCompressedHashMap_READ(String clientname, String compressedhashmap) {
@@ -47,5 +50,6 @@ public class BungeeStreamReader {
                 BungeeStorage.READ_Bungee_command(map.get(String.valueOf(c)));
             }
         }
+        map = null;
     }
 }

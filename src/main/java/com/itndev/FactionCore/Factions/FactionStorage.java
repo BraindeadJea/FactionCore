@@ -69,17 +69,20 @@ public class FactionStorage {
                                 updatelist.add(value);
                             }
                             FactionStorage.FactionToLand.put(key, updatelist);
+                            updatelist = null;
                         } else {
 
                             //해당 키가 없으면
                             ArrayList<String> updatelist2 = new ArrayList<>();
                             updatelist2.add(value);
                             FactionStorage.FactionToLand.put(key, updatelist2);
+                            updatelist2 = null;
                         }
                     } else { //만약 비어있으면
                         ArrayList<String> updatelist3 = new ArrayList<>();
                         updatelist3.add(value);
-                        FactionStorage.FactionToLand.put(key, updatelist3);;
+                        FactionStorage.FactionToLand.put(key, updatelist3);
+                        updatelist3 = null;
                     }
                 } else if(args[4].equalsIgnoreCase("remove")) {
                     if (!FactionStorage.FactionToLand.isEmpty()) { //비어있지 않으면
@@ -102,9 +105,12 @@ public class FactionStorage {
                         //시발 존재하지도 않는데 어떻게 없애냐 뭔시발 병신이냐
                     }
                 }
+                key = null;
+                value = null;
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 FactionStorage.FactionToLand.remove(key);
+                key = null;
             }
 
         } else if(args[1].equalsIgnoreCase("LandToFaction")) {
@@ -134,10 +140,13 @@ public class FactionStorage {
                         //할거 없다
                     }
                 }
+                key = null;
+                value = null;
 
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 FactionStorage.LandToFaction.remove(key);
+                key = null;
             }
 
         } else if(args[1].equalsIgnoreCase("FactionRank")) {
@@ -164,12 +173,15 @@ public class FactionStorage {
                         //할거 없다
                     }
                 }
+                key = null;
+                value = null;
 
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 if(FactionStorage.FactionRank.containsKey(key)) {
                     FactionStorage.FactionRank.remove(key);
                 }
+                key = null;
             }
 
         } else if(args[1].equalsIgnoreCase("PlayerFaction")) {
@@ -197,12 +209,15 @@ public class FactionStorage {
                         //할거 없다
                     }
                 }
+                key = null;
+                value = null;
 
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 if(FactionStorage.PlayerFaction.containsKey(key)) {
                     FactionStorage.PlayerFaction.remove(key);
                 }
+                key = null;
             }
 
         } else if(args[1].equalsIgnoreCase("FactionMember")) {
@@ -219,19 +234,20 @@ public class FactionStorage {
                                 updatelist.add(value);
                             }
                             FactionStorage.FactionMember.put(key, updatelist);
+                            updatelist = null;
                         } else {
 
                             //해당 키가 없으면
                             ArrayList<String> updatelist2 = new ArrayList<>();
-                            if(!updatelist2.contains(value)) {
-                                updatelist2.add(value);
-                            }
+                            updatelist2.add(value);
                             FactionStorage.FactionMember.put(key, updatelist2);
+                            updatelist2 = null;
                         }
                     } else { //만약 비어있으면
                         ArrayList<String> updatelist3 = new ArrayList<>();
                         updatelist3.add(value);
                         FactionStorage.FactionMember.put(key, updatelist3);;
+                        updatelist3 = null;
                     }
                 } else if(args[4].equalsIgnoreCase("remove")) {
                     if (!FactionStorage.FactionMember.isEmpty()) { //비어있지 않으면
@@ -243,6 +259,7 @@ public class FactionStorage {
                                 updatelist.remove(value);
                             }
                             FactionStorage.FactionMember.put(key, updatelist);
+                            updatelist = null;
                         } else {
 
                             //해당 키가 없으면
@@ -252,11 +269,14 @@ public class FactionStorage {
                         //시발 존재하지도 않는데 어떻게 없애냐 뭔시발 병신이냐
                     }
                 }
+                key = null;
+                value = null;
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 if(FactionStorage.FactionMember.containsKey(key)) {
                     FactionStorage.FactionMember.remove(key);
                 }
+                key = null;
             }
 
         } else if(args[1].equalsIgnoreCase("FactionNameToFactionName")) {
@@ -284,12 +304,15 @@ public class FactionStorage {
                         //할거 없다
                     }
                 }
+                key = null;
+                value = null;
 
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 if(FactionStorage.FactionNameToFactionName.containsKey(key)) {
                     FactionStorage.FactionNameToFactionName.remove(key);
                 }
+                key = null;
             }
 
         } else if(args[1].equalsIgnoreCase("FactionNameToFactionUUID")) {
@@ -317,12 +340,15 @@ public class FactionStorage {
                         //할거 없다
                     }
                 }
+                key = null;
+                value = null;
 
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 if(FactionStorage.FactionNameToFactionUUID.containsKey(key)) {
                     FactionStorage.FactionNameToFactionUUID.remove(key);
                 }
+                key = null;
             }
 
         } else if(args[1].equalsIgnoreCase("FactionUUIDToFactionName")) {
@@ -350,12 +376,15 @@ public class FactionStorage {
                         //할거 없다
                     }
                 }
+                key = null;
+                value = null;
 
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 if(FactionStorage.FactionUUIDToFactionName.containsKey(key)) {
                     FactionStorage.FactionUUIDToFactionName.remove(key);
                 }
+                key = null;
             }
 
         } else if(args[1].equalsIgnoreCase("FactionInfo")) { //no longer used
@@ -383,12 +412,15 @@ public class FactionStorage {
                         //할거 없다
                     }
                 }
+                key = null;
+                value = null;
 
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 if(FactionStorage.FactionInfo.containsKey(key)) {
                     FactionStorage.FactionInfo.remove(key);
                 }
+                key = null;
             }
         } else if(args[1].equalsIgnoreCase("FactionInfoList")) {
 
@@ -405,17 +437,20 @@ public class FactionStorage {
                                 updatelist.add(value);
                             }
                             FactionStorage.FactionInfoList.put(key, updatelist);
+                            updatelist = null;
                         } else {
 
                             //해당 키가 없으면
                             ArrayList<String> updatelist2 = new ArrayList<>();
                             updatelist2.add(value);
                             FactionStorage.FactionInfoList.put(key, updatelist2);
+                            updatelist2 = null;
                         }
                     } else { //만약 비어있으면
                         ArrayList<String> updatelist3 = new ArrayList<>();
                         updatelist3.add(value);
                         FactionStorage.FactionInfoList.put(key, updatelist3);;
+                        updatelist3 = null;
                     }
                 } else if(args[4].equalsIgnoreCase("remove")) {
                     if (!FactionStorage.FactionInfoList.isEmpty()) { //비어있지 않으면
@@ -425,6 +460,7 @@ public class FactionStorage {
                             ArrayList<String> updatelist = FactionStorage.FactionInfoList.get(key);
                             updatelist.remove(value);
                             FactionStorage.FactionInfoList.put(key, updatelist);
+                            updatelist = null;
                         } else {
 
                             //해당 키가 없으면
@@ -434,9 +470,12 @@ public class FactionStorage {
                         //시발 존재하지도 않는데 어떻게 없애냐 뭔시발 병신이냐
                     }
                 }
+                key = null;
+                value = null;
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 FactionStorage.FactionInfoList.remove(key);
+                key = null;
             }
 
         } else if(args[1].equalsIgnoreCase("FactionInviteQueue")) {
@@ -454,6 +493,7 @@ public class FactionStorage {
                                 updatelist.add(value);
                             }
                             FactionStorage.FactionInviteQueue.put(key, updatelist);
+                            updatelist = null;
                         } else {
 
                             //해당 키가 없으면
@@ -462,11 +502,13 @@ public class FactionStorage {
                                 updatelist2.add(value);
                             }
                             FactionStorage.FactionInviteQueue.put(key, updatelist2);
+                            updatelist2 = null;
                         }
                     } else { //만약 비어있으면
                         ArrayList<String> updatelist3 = new ArrayList<>();
                         updatelist3.add(value);
                         FactionStorage.FactionInviteQueue.put(key, updatelist3);;
+                        updatelist3 = null;
                     }
                 } else if(args[4].equalsIgnoreCase("remove")) {
                     if (!FactionStorage.FactionInviteQueue.isEmpty()) { //비어있지 않으면
@@ -478,6 +520,7 @@ public class FactionStorage {
                                 updatelist.remove(value);
                             }
                             FactionStorage.FactionInviteQueue.put(key, updatelist);
+                            updatelist = null;
                         } else {
 
                             //해당 키가 없으면
@@ -487,11 +530,14 @@ public class FactionStorage {
                         //시발 존재하지도 않는데 어떻게 없애냐 뭔시발 병신이냐
                     }
                 }
+                key = null;
+                value = null;
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 if(FactionStorage.FactionInviteQueue.containsKey(key)) {
                     FactionStorage.FactionInviteQueue.remove(key);
                 }
+                key = null;
             }
 
         } else if(args[1].equalsIgnoreCase("Timeout2info")) {
@@ -509,19 +555,20 @@ public class FactionStorage {
                                 updatelist.add(value);
                             }
                             FactionTimeOut.Timeout2info.put(key, updatelist);
+                            updatelist = null;
                         } else {
 
                             //해당 키가 없으면
                             ArrayList<String> updatelist2 = new ArrayList<>();
-                            if(!updatelist2.contains(value)) {
-                                updatelist2.add(value);
-                            }
+                            updatelist2.add(value);
                             FactionTimeOut.Timeout2info.put(key, updatelist2);
+                            updatelist2 = null;
                         }
                     } else { //만약 비어있으면
                         ArrayList<String> updatelist3 = new ArrayList<>();
                         updatelist3.add(value);
                         FactionTimeOut.Timeout2info.put(key, updatelist3);;
+                        updatelist3 = null;
                     }
                 } else if(args[4].equalsIgnoreCase("remove")) {
                     if (!FactionTimeOut.Timeout2info.isEmpty()) { //비어있지 않으면
@@ -533,6 +580,7 @@ public class FactionStorage {
                                 updatelist.remove(value);
                             }
                             FactionTimeOut.Timeout2info.put(key, updatelist);
+                            updatelist = null;
                         } else {
 
                             //해당 키가 없으면
@@ -542,11 +590,14 @@ public class FactionStorage {
                         //시발 존재하지도 않는데 어떻게 없애냐 뭔시발 병신이냐
                     }
                 }
+                key = null;
+                value = null;
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 if(FactionTimeOut.Timeout2info.containsKey(key)) {
                     FactionTimeOut.Timeout2info.remove(key);
                 }
+                key = null;
             }
 
         } else if(args[1].equalsIgnoreCase("Timeout2")) {
@@ -554,7 +605,7 @@ public class FactionStorage {
             if(args[2].equalsIgnoreCase("add")) {
                 String key = args[3]; //키
                 String value = args[5]; //추가하고 싶은 값
-                int intvalue = Integer.parseInt(value);
+                Integer intvalue = Integer.parseInt(value);
 
 
                 if(args[4].equalsIgnoreCase("add")) {
@@ -576,12 +627,16 @@ public class FactionStorage {
                         //할거 없다
                     }
                 }
+                key = null;
+                value = null;
+                intvalue = null;
 
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 if(FactionTimeOut.Timeout2.containsKey(key)) {
                     FactionTimeOut.Timeout2.remove(key);
                 }
+                key = null;
             }
 
         } else if(args[1].equalsIgnoreCase("OutPostToFaction")) {
@@ -608,12 +663,15 @@ public class FactionStorage {
                         //할거 없다
                     }
                 }
+                key = null;
+                value = null;
 
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 if(FactionStorage.OutPostToFaction.containsKey(key)) {
                     FactionStorage.OutPostToFaction.remove(key);
                 }
+                key = null;
             }
         } else if(args[1].equalsIgnoreCase("FactionToOutPost")) {
             if(args.length > 6 && args[6].equalsIgnoreCase(Server.getServerName())) {
@@ -632,17 +690,20 @@ public class FactionStorage {
                                 updatelist.add(value);
                             }
                             FactionStorage.FactionToOutPost.put(key, updatelist);
+                            updatelist = null;
                         } else {
 
                             //해당 키가 없으면
                             ArrayList<String> updatelist2 = new ArrayList<>();
                             updatelist2.add(value);
                             FactionStorage.FactionToOutPost.put(key, updatelist2);
+                            updatelist2 = null;
                         }
                     } else { //만약 비어있으면
                         ArrayList<String> updatelist3 = new ArrayList<>();
                         updatelist3.add(value);
-                        FactionStorage.FactionToOutPost.put(key, updatelist3);;
+                        FactionStorage.FactionToOutPost.put(key, updatelist3);
+                        updatelist3 = null;
                     }
                 } else if(args[4].equalsIgnoreCase("remove")) {
                     if (!FactionStorage.FactionToOutPost.isEmpty()) { //비어있지 않으면
@@ -656,6 +717,7 @@ public class FactionStorage {
                             } else {
                                 FactionStorage.FactionToOutPost.put(key, updatelist);
                             }
+                            updatelist = null;
                         } else {
 
                             //해당 키가 없으면
@@ -665,9 +727,12 @@ public class FactionStorage {
                         //시발 존재하지도 않는데 어떻게 없애냐 뭔시발 병신이냐
                     }
                 }
+                key = null;
+                value = null;
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 FactionStorage.FactionToOutPost.remove(key);
+                key = null;
             }
 
         } else if(args[1].equalsIgnoreCase("FactionOutPostList")) {
@@ -684,17 +749,20 @@ public class FactionStorage {
                                 updatelist.add(value);
                             }
                             FactionStorage.FactionOutPostList.put(key, updatelist);
+                            updatelist = null;
                         } else {
 
                             //해당 키가 없으면
                             ArrayList<String> updatelist2 = new ArrayList<>();
                             updatelist2.add(value);
                             FactionStorage.FactionOutPostList.put(key, updatelist2);
+                            updatelist2 = null;
                         }
                     } else { //만약 비어있으면
                         ArrayList<String> updatelist3 = new ArrayList<>();
                         updatelist3.add(value);
-                        FactionStorage.FactionOutPostList.put(key, updatelist3);;
+                        FactionStorage.FactionOutPostList.put(key, updatelist3);
+                        updatelist3 = null;
                     }
                 } else if(args[4].equalsIgnoreCase("remove")) {
                     if (!FactionStorage.FactionOutPostList.isEmpty()) { //비어있지 않으면
@@ -708,6 +776,7 @@ public class FactionStorage {
                             } else {
                                 FactionStorage.FactionOutPostList.put(key, updatelist);
                             }
+                            updatelist = null;
                         } else {
 
                             //해당 키가 없으면
@@ -717,9 +786,12 @@ public class FactionStorage {
                         //시발 존재하지도 않는데 어떻게 없애냐 뭔시발 병신이냐
                     }
                 }
+                key = null;
+                value = null;
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 FactionStorage.FactionOutPostList.remove(key);
+                key = null;
             }
 
         } else if(args[1].equalsIgnoreCase("FactionOutPost")) { //no longer used
@@ -746,12 +818,15 @@ public class FactionStorage {
                         //할거 없다
                     }
                 }
+                key = null;
+                value = null;
 
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 if(FactionStorage.FactionOutPost.containsKey(key)) {
                     FactionStorage.FactionOutPost.remove(key);
                 }
+                key = null;
             }
         }else if(args[1].equalsIgnoreCase("DESTORYED_FactionToLand")) {
             if(args[2].equalsIgnoreCase("add")) {
@@ -767,17 +842,20 @@ public class FactionStorage {
                                 updatelist.add(value);
                             }
                             FactionStorage.DESTORYED_FactionToLand.put(key, updatelist);
+                            updatelist = null;
                         } else {
 
                             //해당 키가 없으면
                             ArrayList<String> updatelist2 = new ArrayList<>();
                             updatelist2.add(value);
                             FactionStorage.DESTORYED_FactionToLand.put(key, updatelist2);
+                            updatelist2 = null;
                         }
                     } else { //만약 비어있으면
                         ArrayList<String> updatelist3 = new ArrayList<>();
                         updatelist3.add(value);
                         FactionStorage.DESTORYED_FactionToLand.put(key, updatelist3);;
+                        updatelist3 = null;
                     }
                 } else if(args[4].equalsIgnoreCase("remove")) {
                     if (!FactionStorage.DESTORYED_FactionToLand.isEmpty()) { //비어있지 않으면
@@ -791,6 +869,7 @@ public class FactionStorage {
                             } else {
                                 FactionStorage.DESTORYED_FactionToLand.put(key, updatelist);
                             }
+                            updatelist = null;
                         } else {
 
                             //해당 키가 없으면
@@ -800,9 +879,12 @@ public class FactionStorage {
                         //시발 존재하지도 않는데 어떻게 없애냐 뭔시발 병신이냐
                     }
                 }
+                key = null;
+                value = null;
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 FactionStorage.DESTORYED_FactionToLand.remove(key);
+                key = null;
             }
 
         } else if(args[1].equalsIgnoreCase("DESTORYED_LandToFaction")) {
@@ -829,10 +911,13 @@ public class FactionStorage {
                         //할거 없다
                     }
                 }
+                key = null;
+                value = null;
 
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 FactionStorage.DESTORYED_LandToFaction.remove(key);
+                key = null;
             }
 
         } else if(args[1].equalsIgnoreCase("DESTROYED_FactionUUIDToFactionName")) {
@@ -857,12 +942,16 @@ public class FactionStorage {
                         //할거 없다
                     } else {
                         //할거 없다
+
                     }
                 }
+                key = null;
+                value = null;
 
             } else if(args[2].equalsIgnoreCase("remove")) {
                 String key = args[3];
                 FactionStorage.DESTROYED_FactionUUIDToFactionName.remove(key);
+                key = null;
             }
 
         }
