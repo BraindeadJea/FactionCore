@@ -92,6 +92,7 @@ public class Server {
                 try {
                     new Thread(() -> {
                         //RedisDump.deleteandupload("DUMP");
+                        TryDumpYaml();
                         try {
                             MySQLDump.DumpToMySQL();
                         } catch (Exception ex) {

@@ -8,9 +8,15 @@ public class GuiPanel {
     public static JPanel panel = null;
     public static Boolean isLoaded = false;
 
+    public static JButton ExitButton = null;
+
+    public static JButton LoadButton = null;
+
+    public static JButton Load2Button = null;
+
     public GuiPanel() {
-        JButton ExitButton = new JButton("Exit");
-        JButton LoadButton = new JButton("Load From MySQL");
+        ExitButton = new JButton("Exit");
+        LoadButton = new JButton("Load From MySQL");
         JButton Load2Button = new JButton("Load From YAML");
         JLabel label1 = new JLabel("");
         JLabel label2 = new JLabel("");

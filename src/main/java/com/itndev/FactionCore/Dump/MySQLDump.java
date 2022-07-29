@@ -20,7 +20,7 @@ public class MySQLDump {
 
     private static void TruncateBackup() {
         try {
-            SQL.getConnection().getHikariConnection().prepareStatement("TRUNCATE FactionBackup").executeUpdate();
+            SQL.getConnection().getHikariConnection().prepareStatement("TRUNCATE FactionBackup").executeQuery();
         } catch (SQLException throwables) {
             SystemUtils.logger(throwables.getMessage());
         }
