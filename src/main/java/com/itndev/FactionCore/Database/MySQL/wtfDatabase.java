@@ -15,7 +15,6 @@ import java.util.concurrent.TimeoutException;
 
 public class wtfDatabase {
 
-    @Deprecated
     public void AddNewFactionName(String FactionNameCapped, String FactionUUID) {
         String FactionName = FactionNameCapped.toLowerCase(Locale.ROOT);
         CompletableFuture<Boolean> isExistingNamefuture = SQL.getDatabase().isExistingName(FactionName);
@@ -41,7 +40,6 @@ public class wtfDatabase {
         }).start();
     }
 
-    @Deprecated
     public static void CacheFactionDTR(String FactionUUID) {
         new Thread( () -> {
             try {
@@ -67,7 +65,6 @@ public class wtfDatabase {
         }).start();
     }
 
-    @Deprecated
     public static void CacheFactionBank(String FactionUUID) {
         new Thread( () -> {
             try {
@@ -93,7 +90,6 @@ public class wtfDatabase {
         }).start();
     }
 
-    @Deprecated
     public CompletableFuture<Boolean> TryClaimName(String FactionNameCapped, String FactionUUID) {
         CompletableFuture<Boolean> hasSucceed = new CompletableFuture<>();
         new Thread(() -> {
@@ -120,7 +116,7 @@ public class wtfDatabase {
         return hasSucceed;
     }
 
-    @Deprecated
+
     public void DeleteFactionName(String FactionUUID) {
         new Thread(() -> {
             try {
@@ -135,7 +131,6 @@ public class wtfDatabase {
         }).start();
     }
 
-    @Deprecated
     public void CreateNewDTR(String FactionUUID, String FactionName) {
         new Thread(() -> {
             try {
@@ -160,7 +155,6 @@ public class wtfDatabase {
         }).start();
     }
 
-    @Deprecated
     public void CreateNewBank(String FactionUUID, String FactionName) {
         new Thread(() -> {
             try {
@@ -176,7 +170,6 @@ public class wtfDatabase {
         }).start();
     }
 
-    @Deprecated
     public CompletableFuture<Boolean> isExistingName(String FactionName) {
         CompletableFuture<Boolean> FutureBoolean = new CompletableFuture<>();
         new Thread(() -> {
@@ -205,7 +198,6 @@ public class wtfDatabase {
         return FutureBoolean;
     }
 
-    @Deprecated
     public void DeleteFactionDTR(String FactionUUID) {
         new Thread(() -> {
             try {
@@ -221,7 +213,6 @@ public class wtfDatabase {
         }).start();
     }
 
-    @Deprecated
     public void DeleteFactionBank(String FactionUUID) {
         new Thread(() -> {
             try {
@@ -237,7 +228,6 @@ public class wtfDatabase {
         }).start();
     }
 
-    @Deprecated
     public CompletableFuture<Double> GetFactionDTR(String FactionUUID) {
         CompletableFuture<Double> FutureDTR = new CompletableFuture();
         new Thread( () -> {
@@ -261,7 +251,6 @@ public class wtfDatabase {
         return FutureDTR;
     }
 
-    @Deprecated
     public CompletableFuture<Double> GetFactionBank(String FactionUUID) {
         CompletableFuture<Double> FutureBank = new CompletableFuture();
         new Thread( () -> {
@@ -285,7 +274,6 @@ public class wtfDatabase {
         return FutureBank;
     }
 
-    @Deprecated
     public CompletableFuture<Double> AddFactionDTR(String FactionUUID, double DTR) {
         CompletableFuture<Double> futureDTR = new CompletableFuture<>();
         new Thread( () ->{
@@ -333,7 +321,6 @@ public class wtfDatabase {
         return futureDTR;
     }
 
-    @Deprecated
     public CompletableFuture<Double> AddFactionBank(String FactionUUID, double Bank) {
         CompletableFuture<Double> futureBank = new CompletableFuture<>();
         new Thread( () ->{
@@ -382,7 +369,6 @@ public class wtfDatabase {
         return futureBank;
     }
 
-    @Deprecated
     public void ChangeFactionDatabaseName(String FactionUUID, String FactionNameCap) {
         new Thread( () ->{
             try {

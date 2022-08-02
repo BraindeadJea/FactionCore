@@ -12,7 +12,6 @@ import java.util.Locale;
 
 public class FactionLeaderPromote {
 
-    @Deprecated
     public static void FactionLeaderPromote(String UUID, String[] args) {
         if(args.length < 2) {
             SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f명령어 사용법 : &f/국가 소속 &7(이름)\n");

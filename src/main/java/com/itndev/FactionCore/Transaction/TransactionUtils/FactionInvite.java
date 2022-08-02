@@ -10,7 +10,6 @@ import java.util.Locale;
 
 public class FactionInvite {
 
-    @Deprecated
     public static void FactionInvite(String UUID, String[] args) {
         if(args.length < 2) {
             SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f명령어 사용법 : &f/국가 초대 &7(이름)");
@@ -44,7 +43,6 @@ public class FactionInvite {
         }
     }
 
-    @Deprecated
     public static void FactionInviteCancel(String UUID, String[] args) {
         if(args.length < 2) {
             SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f명령어 사용법 : &f/국가 초대취소 &7(이름)");
@@ -72,7 +70,6 @@ public class FactionInvite {
         }
     }
 
-    @Deprecated
     public static void FactionInviteAccept(String UUID, String[] args) {
         if(args.length < 2) {
             SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f명령어 사용법 : &f/국가 수락 &7(국가이름)");

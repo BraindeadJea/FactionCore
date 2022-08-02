@@ -6,7 +6,7 @@ import com.itndev.FactionCore.Utils.Factions.FactionUtils;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 
 public class DeleteFactionUtils {
-    @Deprecated
+
     public static void DeteleFaction(String UUID, String FactionUUID) {
         String FactionName = FactionUtils.getFactionName(FactionUUID);
         String OriginFactionName = FactionUtils.getCappedFactionName(FactionName);
@@ -21,7 +21,7 @@ public class DeleteFactionUtils {
         OriginFactionName = null;
     }
 
-    @Deprecated
+
     public static void DESTORYFaction(String UUID, String FactionUUID) {
         String FactionName = FactionUtils.getFactionName(FactionUUID);
         String OriginFactionName = FactionUtils.getCappedFactionName(FactionName);

@@ -11,7 +11,6 @@ import java.util.List;
 
 public class FactionLeave {
 
-    @Deprecated
     public static void FactionLeave(String UUID, String[] args) {
         if(!FactionUtils.isInFaction(UUID)) {
             SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f당신은 소속된 국가가 없습니다");

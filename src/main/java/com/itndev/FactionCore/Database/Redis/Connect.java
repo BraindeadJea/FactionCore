@@ -7,6 +7,7 @@ import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.api.sync.RedisStreamCommands;
 
@@ -29,6 +30,7 @@ public class Connect {
     private static Boolean sslEnabled = true;
 
     private static Boolean isClosed = false;
+    private static RedisAsyncCommands<String, String> asyncCommands = null;
 
     public static void setRedis_address(String address) {
         redis_address = address;
@@ -78,10 +80,10 @@ public class Connect {
     }
 
     // CONNECT TO REDIS
-    @Deprecated
+
     public static void RedisConnect() {
         new Thread(() -> {
-            RedisURI redisURI = RedisURI.Builder.redis(redis_address, redis_port).withPassword(redis_password).build();
+            RedisURI redisURI = RedisURI.Builder.redis(redis_address, redis_port).withPassword(redis_password.toCharArray()).build();
             client = RedisClient.create(redisURI);
             connection = client.connect();
             commands = connection.sync();
@@ -246,5 +248,12 @@ public class Connect {
             commands = getRedisConnection().sync();
         }
         return commands;
+    }
+
+    public static RedisAsyncCommands<String, String> getAsyncRedisCommands() {
+        if(asyncCommands == null) {
+            asyncCommands = getRedisConnection().async();
+        }
+        return asyncCommands;
     }
 }

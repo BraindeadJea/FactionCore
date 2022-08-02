@@ -16,7 +16,6 @@ public class CmdExecute {
     private static String USER_Announce = "<&@USER>";
     private static String CMD_ARGS_SPLITTER = ":=:";
 
-    @Deprecated
     public static void CMD_READ(String CMD) {
         try {
             if(CMD.startsWith(CMD_SPLITTER)) {

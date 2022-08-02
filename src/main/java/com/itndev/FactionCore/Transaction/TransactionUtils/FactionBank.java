@@ -13,7 +13,6 @@ import java.util.concurrent.ExecutionException;
 public class FactionBank {
     private static DecimalFormat df = new DecimalFormat("0.00");
 
-    @Deprecated
     public static void FactionBank(String UUID, String[] args, String balance) {
         new Thread( () -> {
             try {

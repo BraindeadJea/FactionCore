@@ -22,7 +22,6 @@ public class FactionTimeOut {
     public static HashMap<String, Integer> Timeout3 = new HashMap<>();
 
 
-    @Deprecated
     public static void TimeoutManager() {
         new Thread(() -> {
             while (true) {
@@ -185,7 +184,6 @@ public class FactionTimeOut {
         return;
     }
 
-    @Deprecated
     public static void InvitePlayer(String InviteUUID, String FactionUUID, String UUID) {
         SystemUtils.UUID_BASED_MSG_SENDER(InviteUUID, "&r&f해당 유저 " + UserInfoUtils.getPlayerOrginName(UserInfoUtils.getPlayerName(UUID)) + " 을 당신의 국가에 초대하였습니다");
         Storage.AddCommandToQueue("update:=:Timeout2:=:add:=:" + UUID + "%" + FactionUUID + ":=:add:=:" + 30);
@@ -198,7 +196,6 @@ public class FactionTimeOut {
     }
 
 
-    @Deprecated
     public static void AcceptInvite(String UUID, String FactionUUID) {
         if(!FactionUtils.isInFaction(UUID)) {
             if (Timeout2.containsKey(UUID + "%" + FactionUUID) && Timeout2info.get(UUID).contains(FactionUUID)) {
@@ -221,7 +218,6 @@ public class FactionTimeOut {
         }
     }
 
-    @Deprecated
     public static void cancelInvite(String InviteUUID, String FactionUUID, String UUID) {
         if (Timeout2info.containsKey(UUID) && Timeout2info.get(UUID).contains(FactionUUID)) {
             SystemUtils.UUID_BASED_MSG_SENDER(InviteUUID, "&r&f해당 유저 " + UserInfoUtils.getPlayerOrginName(UserInfoUtils.getPlayerName(UUID)) + " 에게 보낸 초대장을 취소하였습니다");

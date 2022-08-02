@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class CreateFaction {
-    @Deprecated
     public static void CreateFaction(String UUID, String[] args) {
         new Thread( () -> {
             try {

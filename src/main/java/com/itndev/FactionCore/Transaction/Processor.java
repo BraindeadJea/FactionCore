@@ -12,7 +12,6 @@ import java.util.Locale;
 
 public class Processor {
 
-    @Deprecated
     public static void Processor(String UUID, String[] args, String additionalinfo, String ServerName) {
         if(args.length < 1) {
             FactionHelp.FactionHelp(UUID);

@@ -23,7 +23,6 @@ public class DiscordListener extends ListenerAdapter {
         cmd = null;
     }
 
-    @Deprecated
     @Override
     public void onGuildMemberLeave(GuildMemberLeaveEvent e) {
         try {

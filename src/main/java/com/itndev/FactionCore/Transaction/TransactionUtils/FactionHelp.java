@@ -5,7 +5,6 @@ import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 
 public class FactionHelp {
 
-    @Deprecated
     public static void FactionHelp(String UUID) {
         SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&m&l------------&r&3&l[ &f&o국가 명령어 &3&l]&r&m&l------------\n" +
                 "&r/국가 도움말 &8&l-&r &7해당 도움말을 보여줍니다\n" +

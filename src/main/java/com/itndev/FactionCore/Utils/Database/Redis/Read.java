@@ -7,7 +7,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Read {
 
-    @Deprecated
     public static void READ_COMPRESSEDMAP(String compressedhashmap) {
         HashMap<String, String> map = String2HashMap(compressedhashmap);
         if (!map.isEmpty()) {

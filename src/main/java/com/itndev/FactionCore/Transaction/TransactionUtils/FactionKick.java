@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class FactionKick {
-    @Deprecated
     public static void FactionKick(String UUID, String[] args) {
         if(args.length < 2) {
             SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f명령어 사용법 : &f/국가 추방 &7(이름)");

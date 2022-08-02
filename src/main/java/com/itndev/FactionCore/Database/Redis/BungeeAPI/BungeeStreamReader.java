@@ -10,6 +10,9 @@ import io.lettuce.core.XReadArgs;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class BungeeStreamReader {
 
@@ -29,9 +32,9 @@ public class BungeeStreamReader {
         }).start();
     }
 
-    private static void READ_OUTPUT_STREAM() {
-        List<StreamMessage<String, String>> messages = Connect.getRedisCommands().xread(
-                XReadArgs.StreamOffset.from(StreamConfig.get_Stream_BUNGEE_LINE(), Connect.get_LastID_BUNGEE()));
+    private static void READ_OUTPUT_STREAM() throws ExecutionException, InterruptedException, TimeoutException {
+        List<StreamMessage<String, String>> messages = Connect.getAsyncRedisCommands().xread(
+                XReadArgs.StreamOffset.from(StreamConfig.get_Stream_BUNGEE_LINE(), Connect.get_LastID_BUNGEE())).get(StaticVal.getRedisCommandTimeoutInMillies(), TimeUnit.MILLISECONDS);
 
         for (StreamMessage<String, String> message : messages) {
             Connect.set_LastID_BUNGEE(message.getId());

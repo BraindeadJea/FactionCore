@@ -12,6 +12,9 @@ import io.lettuce.core.XReadArgs;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class StreamIO {
 
@@ -68,10 +71,9 @@ public class StreamIO {
         }).start();
     }
 
-    @Deprecated
-    private void StreamReader_INNER() {
-        List<StreamMessage<String, String>> messages = Connect.getRedisCommands().xread(
-                XReadArgs.StreamOffset.from(StreamConfig.get_Stream_INTERCONNECT_NAME(), Connect.get_LastID_INNER()));
+    private void StreamReader_INNER() throws ExecutionException, InterruptedException, TimeoutException {
+        List<StreamMessage<String, String>> messages = Connect.getAsyncRedisCommands().xread(
+                XReadArgs.StreamOffset.from(StreamConfig.get_Stream_INTERCONNECT_NAME(), Connect.get_LastID_INNER())).get(StaticVal.getRedisCommandTimeoutInMillies(), TimeUnit.MILLISECONDS);
         for (StreamMessage<String, String> message : messages) {
             Connect.setLastID_INNER(message.getId());
             //String compressedhashmap = message.getBody().get(StaticVal.getCommand());
@@ -81,10 +83,9 @@ public class StreamIO {
         messages = null;
     }
 
-    @Deprecated
-    private void StreamReader_INPUT() {
-        List<StreamMessage<String, String>> messages = Connect.getRedisCommands().xread(
-                XReadArgs.StreamOffset.from(StreamConfig.get_Stream_INPUT_NAME(), Connect.get_LastID_INPUT()));
+    private void StreamReader_INPUT() throws ExecutionException, InterruptedException, TimeoutException {
+        List<StreamMessage<String, String>> messages = Connect.getAsyncRedisCommands().xread(
+                XReadArgs.StreamOffset.from(StreamConfig.get_Stream_INPUT_NAME(), Connect.get_LastID_INPUT())).get(StaticVal.getRedisCommandTimeoutInMillies(), TimeUnit.MILLISECONDS);
         for (StreamMessage<String, String> message : messages) {
             Connect.setLastID_INPUT(message.getId());
             Read.READ_COMPRESSEDMAP(message.getBody().get(StaticVal.getCommand()));
@@ -101,7 +102,7 @@ public class StreamIO {
             Storage.TempCommandQueue.clear();
         }
         if(compressedhashmap != null) {
-            Connect.getRedisCommands().xadd(StreamConfig.get_Stream_OUTPUT_NAME(), Collections.singletonMap(StaticVal.getCommand(), compressedhashmap));
+            Connect.getAsyncRedisCommands().xadd(StreamConfig.get_Stream_OUTPUT_NAME(), Collections.singletonMap(StaticVal.getCommand(), compressedhashmap));
         }
         compressedhashmap = null;
     }

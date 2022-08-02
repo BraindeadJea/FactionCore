@@ -22,7 +22,6 @@ public class DeleteFaction {
         }
     }
 
-    @Deprecated
     public static void DeleteFaction(String UUID, String[] args) {
         if (FactionUtils.getPlayerRank(UUID).equalsIgnoreCase("leader")) {
             if(FactionUtils.isInWar(FactionUtils.getPlayerFactionUUID(UUID))) {

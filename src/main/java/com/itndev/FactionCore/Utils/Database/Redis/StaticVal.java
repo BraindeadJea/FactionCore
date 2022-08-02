@@ -8,6 +8,12 @@ public class StaticVal {
     private static String buffer = "-buffer-";
     private static String command = "commands";
 
+    private static Long RedisCommandTimeoutInMillies = 40L;
+
+    public static Long getRedisCommandTimeoutInMillies() {
+        return RedisCommandTimeoutInMillies;
+    }
+
     public static String getCommand() {
         return command;
     }
