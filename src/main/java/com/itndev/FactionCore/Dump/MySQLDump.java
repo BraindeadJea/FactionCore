@@ -20,7 +20,7 @@ public class MySQLDump {
 
     private static void TruncateBackup() {
         try {
-            SQL.getConnection().getHikariConnection().prepareStatement("TRUNCATE FactionBackup").executeQuery();
+            SQL.getConnection().getHikariConnection().prepareStatement("TRUNCATE FactionBackup").executeUpdate();
         } catch (SQLException throwables) {
             SystemUtils.logger(throwables.getMessage());
         }
@@ -231,7 +231,7 @@ public class MySQLDump {
             ps.setString(1, MapName);
             ps.setString(2, entry.getKey());
             ps.setString(3, entry.getValue());
-            ps.execute();
+            ps.executeUpdate();
             SQL.closeConnections(null, ps, null);
             entry = null;
         }

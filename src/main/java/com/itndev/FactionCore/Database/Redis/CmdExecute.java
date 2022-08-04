@@ -38,6 +38,9 @@ public class CmdExecute {
                     if(Command == null) {
                         //System.out.println("[ERROR LOG] []" + CMD_TEMP_ARGS[0] + "  -  " + CMD_TEMP_ARGS[1] + "  -  " + CMD_TEMP_ARGS[2] + "  -  " + CMD_TEMP_ARGS[3]);
                     }
+                    if(Command != null && Command.equalsIgnoreCase("KEEPALIVECHECK_REDISCLEANUP")) {
+                        RedisTRIM.KeepAliveResponce(ServerName, UUID);
+                    }
                     if(Command.contains(CMD_ARGS_SPLITTER)) {
                         //System.out.println("[TRANSACTION SUCCESS]");
                         Processor.Processor(UUID, Command.split(CMD_ARGS_SPLITTER), Additional, ServerName);

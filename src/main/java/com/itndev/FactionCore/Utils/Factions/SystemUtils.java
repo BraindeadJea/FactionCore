@@ -93,6 +93,12 @@ public class SystemUtils {
         Storage.AddCommandToQueue("notify:=:" + UUID + ":=:" + UUID + ":=:" + Message + ":=:" + "false");
     }
 
+    public static String KeepAlive() {
+        String UUID = java.util.UUID.randomUUID().toString();
+        Storage.AddCommandToQueue("keepalive:=:" + UUID);
+        return UUID;
+    }
+
     public static void UUID_BASED_PURE_MSG_SENDER(String UUID, String Message) {
         //FactionUtils.SendFactionMessage(UUID, "puremessagesendoptiontrue", "single", "");
         Storage.AddCommandToQueue("notify:=:" + UUID + ":=:" + "puremessagesendoptiontrue" + ":=:" + Message + ":=:" + "false");

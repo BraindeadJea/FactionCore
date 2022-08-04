@@ -4,6 +4,7 @@ import com.itndev.FactionCore.Database.Gui.GuiPanel;
 import com.itndev.FactionCore.Database.MySQL.SQL;
 import com.itndev.FactionCore.Database.Redis.BungeeAPI.BungeeStreamReader;
 import com.itndev.FactionCore.Database.Redis.Connect;
+import com.itndev.FactionCore.Database.Redis.RedisTRIM;
 import com.itndev.FactionCore.Database.Redis.StreamIO;
 import com.itndev.FactionCore.Discord.BotConnect;
 import com.itndev.FactionCore.Dump.MySQLDump;
@@ -95,6 +96,7 @@ public class Server {
                         TryDumpYaml();
                         try {
                             MySQLDump.DumpToMySQL();
+                            RedisTRIM.TryAskKeepAlive();
                         } catch (Exception ex) {
                             System.out.println("[ERROR/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + ex.getMessage());
                             Connect.RedisConnect();

@@ -32,7 +32,8 @@ public class StreamIO {
                 Thread.sleep(1000);
                 SystemUtils.logger("Waiting To execute Database Task Before Loading Storage...");
             } catch (InterruptedException e) {
-                SystemUtils.logger(e.getMessage());
+                SystemUtils.error_logger(e.getMessage());
+                e.printStackTrace();
             }
         }
         StreamReader();
@@ -47,12 +48,14 @@ public class StreamIO {
                     StreamReader_INPUT();
                 } catch (Exception e) {
                     //e.printStackTrace();
-                    SystemUtils.logger(e.getMessage());
+                    SystemUtils.error_logger(e.getMessage());
+                    e.printStackTrace();
                 }
                 try {
                     Thread.sleep(20);
                 } catch (InterruptedException e) {
-                    SystemUtils.logger(e.getMessage());
+                    SystemUtils.error_logger(e.getMessage());
+                    e.printStackTrace();
                 }
             }
         }).start();
@@ -65,7 +68,8 @@ public class StreamIO {
                 try {
                     Thread.sleep(20);
                 } catch (InterruptedException e) {
-                    SystemUtils.logger(e.getMessage());
+                    SystemUtils.error_logger(e.getMessage());
+                    e.printStackTrace();
                 }
             }
         }).start();
@@ -94,7 +98,6 @@ public class StreamIO {
         messages = null;
     }
 
-    @Deprecated
     private void StreamWriter_OUTPUT() {
         String compressedhashmap;
         synchronized (Storage.TempCommandQueue) {
