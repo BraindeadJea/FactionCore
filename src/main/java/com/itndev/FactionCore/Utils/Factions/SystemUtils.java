@@ -95,7 +95,7 @@ public class SystemUtils {
 
     public static String KeepAlive() {
         String UUID = java.util.UUID.randomUUID().toString();
-        Storage.AddCommandToQueue("keepalive:=:" + UUID);
+        Storage.ignoreUpdate_AddCommandToQueue("keepalive:=:" + UUID);
         return UUID;
     }
 

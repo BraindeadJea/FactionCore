@@ -37,6 +37,7 @@ com\itndev\FactionCore\Database\Redis\Obj\Storage.class
 com\itndev\FactionCore\Transaction\TransactionUtils\FactionBank.class
 com\itndev\FactionCore\Utils\Database\Redis\Read.class
 com\itndev\FactionCore\Utils\Factions\ValidChecker.class
+com\itndev\FactionCore\Database\Redis\RedisTRIM.class
 com\itndev\FactionCore\DataFixer\MapFixer.class
 com\itndev\FactionCore\Transaction\TransactionUtils\FactionHelp.class
 com\itndev\FactionCore\Factions\Lang.class

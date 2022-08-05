@@ -24,7 +24,7 @@ public class Connect {
     private static String LastID_INNER = "0-0";
     private static String LastID_BUNGEE = "0-0";
 
-    private static String redis_address = "221.167.222.87";
+    private static String redis_address = "220.118.89.72";
     private static Integer redis_port = 6614;
     private static String redis_password = "54rg46ujhy7ju57wujndt35ytgryeutwefer4rt34rd34rsfg6hdf43truhgfwgr348yfgcs";
     private static Boolean sslEnabled = true;

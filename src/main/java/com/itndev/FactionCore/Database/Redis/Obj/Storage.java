@@ -25,6 +25,20 @@ public class Storage {
         }
     }
 
+    public static void ignoreUpdate_AddCommandToQueue(String command) {
+        synchronized (TempCommandQueue) {
+            if(!TempCommandQueue.containsKey(StaticVal.getMaxAmount())) {
+                TempCommandQueue.put(StaticVal.getMaxAmount(), "1");
+                TempCommandQueue.put("1", command);
+            } else {
+                Integer num = Integer.parseInt(TempCommandQueue.get(StaticVal.getMaxAmount()));
+                TempCommandQueue.put(StaticVal.getMaxAmount(), String.valueOf(num + 1));
+                TempCommandQueue.put(String.valueOf(num + 1), command);
+                num = null;
+            }
+        }
+    }
+
     public static void AddCommandToQueueFix(String command, String nothing) {
         CmdExecute.updatehashmap(command);
         synchronized (TempCommandQueue) {
