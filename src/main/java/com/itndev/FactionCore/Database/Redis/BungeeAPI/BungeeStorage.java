@@ -98,11 +98,11 @@ public class BungeeStorage {
     public static void UPDATE_USERINFO(String UUID, String Name) {
         List<String> bulkcmd = new ArrayList<>();
         if(UserInfoStorage.uuidname.containsKey(UUID)) {
-            if(!UserInfoStorage.uuidname.get(UUID).equals(Name)) {
+            if(!UserInfoStorage.namename.get(UserInfoStorage.uuidname.get(UUID)).equals(Name)) {
                 String OriginalName = UserInfoStorage.uuidname.get(UUID);
-                bulkcmd.add("update:=:nameuuid:=:remove:=:" + OriginalName.toLowerCase(Locale.ROOT) + ":=:add:=:" + UUID);
-                bulkcmd.add("update:=:namename:=:remove:=:" + OriginalName.toLowerCase(Locale.ROOT) + ":=:add:=:" + Name);
-                //
+                bulkcmd.add("update:=:nameuuid:=:remove:=:" + OriginalName + ":=:add:=:" + UUID);
+                bulkcmd.add("update:=:namename:=:remove:=:" + OriginalName + ":=:add:=:" + Name);
+                bulkcmd.add("update:=:uuidname:=:remove:=:" + UUID + ":=:add:=:" + Name.toLowerCase(Locale.ROOT));
                 bulkcmd.add("update:=:uuidname:=:add:=:" + UUID + ":=:add:=:" + Name.toLowerCase(Locale.ROOT));
                 bulkcmd.add("update:=:nameuuid:=:add:=:" + Name.toLowerCase(Locale.ROOT) + ":=:add:=:" + UUID);
                 bulkcmd.add("update:=:namename:=:add:=:" + Name.toLowerCase(Locale.ROOT) + ":=:add:=:" + Name);

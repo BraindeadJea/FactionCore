@@ -40,6 +40,7 @@ C:\Users\Server\Desktop\FactionBackEndTransactionManagement\src\main\java\com\it
 C:\Users\Server\Desktop\FactionBackEndTransactionManagement\src\main\java\com\itndev\FactionCore\Database\Redis\Connect.java
 C:\Users\Server\Desktop\FactionBackEndTransactionManagement\src\main\java\com\itndev\FactionCore\Database\Redis\Obj\Storage.java
 C:\Users\Server\Desktop\FactionBackEndTransactionManagement\src\main\java\com\itndev\FactionCore\Dump\RedisDump.java
+C:\Users\Server\Desktop\FactionBackEndTransactionManagement\src\main\java\com\itndev\FactionCore\Database\Redis\RedisTRIM.java
 C:\Users\Server\Desktop\FactionBackEndTransactionManagement\src\main\java\com\itndev\FactionCore\Database\MySQL\SQL.java
 C:\Users\Server\Desktop\FactionBackEndTransactionManagement\src\main\java\com\itndev\FactionCore\Server.java
 C:\Users\Server\Desktop\FactionBackEndTransactionManagement\src\main\java\com\itndev\FactionCore\Utils\Database\Redis\StaticVal.java

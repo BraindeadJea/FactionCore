@@ -47,7 +47,7 @@
     </build>
     <groupId>com.itndev.FBTM</groupId>
     <artifactId>FactionCore</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.2</version>
 
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
@@ -102,6 +102,11 @@
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
             <version>4.3.0_348</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.39.2.0</version>
         </dependency>
     </dependencies>
 </project>

@@ -1,5 +1,7 @@
 package com.itndev.FactionCore.Transaction;
 
+import com.itndev.EloSystem.API.EloUpdater;
+import com.itndev.EloSystem.Package.EloResult;
 import com.itndev.FactionCore.Discord.AuthStorage;
 import com.itndev.FactionCore.Factions.Config;
 import com.itndev.FactionCore.Transaction.TransactionUtils.*;
@@ -8,6 +10,8 @@ import com.itndev.FactionCore.Utils.Factions.FactionUtils;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 import com.itndev.FactionCore.Utils.Factions.UserInfoUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class Processor {
@@ -31,7 +35,15 @@ public class Processor {
                         AuthStorage.SendAuthInfo(UUID);
                     }
                 } else if(args[0].equalsIgnoreCase("국가멸망")){
-                    DeleteFactionUtils.DESTORYFaction(UUID, FactionUtils.getPlayerFactionUUID(UUID));
+                    String LoserFaction = FactionUtils.getPlayerFactionUUID(UUID);
+                    String WinnerFaction = FactionUtils.getOPPWar(FactionUtils.getPlayerFactionUUID(UUID));
+                    ArrayList<String> LoserFactionMember = FactionUtils.getFactionMember(LoserFaction);
+                    ArrayList<String> WinnerFactionMember = FactionUtils.getFactionMember(WinnerFaction);
+                    List<EloResult> eloResultList = EloUpdater.ProcessWarElo(WinnerFactionMember, LoserFactionMember, true, WinnerFaction, LoserFaction);
+                    new Thread(() -> {
+                        //eloResultList//;
+                    }).start();
+                    DeleteFactionUtils.DESTORYFaction(UUID, LoserFaction);
                     FactionWar.NomoreinWar(args[1]);
                 } else if(args[0].equalsIgnoreCase("생성")) {
 

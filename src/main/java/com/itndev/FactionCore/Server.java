@@ -1,5 +1,7 @@
 package com.itndev.FactionCore;
 
+import com.itndev.EloSystem.API.Loader;
+import com.itndev.EloSystem.Storage.SQLite;
 import com.itndev.FactionCore.Database.Gui.GuiPanel;
 import com.itndev.FactionCore.Database.MySQL.SQL;
 import com.itndev.FactionCore.Database.Redis.BungeeAPI.BungeeStreamReader;
@@ -15,6 +17,9 @@ import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 import com.itndev.FactionCore.Utils.Factions.ValidChecker;
 
 import java.sql.SQLException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class Server {
 
@@ -73,7 +78,12 @@ public class Server {
                 TryLoadYaml();
             }
         }).start();
-
+        try {
+            Loader.run().get(1000, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            SystemUtils.error_logger(e.getMessage());
+            throw new RuntimeException(e);
+        }
         ValidChecker.setvalid();
         FactionTimeOut.TimeoutManager();
         BotConnect.ConnectBot("OTY3NDcyNzQ2OTU3MjYyODg4.YmQzNQ.IMfgHmqwJDfbRAk64k6b97giWUE");
@@ -87,6 +97,16 @@ public class Server {
             e.printStackTrace();
         }
         System.out.println("[SYSTEM/" + SystemUtils.getDate(System.currentTimeMillis()) + "] Starting up Process");
+        new Thread(() -> {
+            while(true) {
+                try {
+                    Thread.sleep(20000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                RedisTRIM.TryAskKeepAlive();
+            }
+        }).start();
         while (true) {
             try {
                 Thread.sleep(10000);
@@ -96,7 +116,7 @@ public class Server {
                         TryDumpYaml();
                         try {
                             MySQLDump.DumpToMySQL();
-                            RedisTRIM.TryAskKeepAlive();
+
                         } catch (Exception ex) {
                             System.out.println("[ERROR/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + ex.getMessage());
                             Connect.RedisConnect();
@@ -130,6 +150,7 @@ public class Server {
                         System.out.println("[ERROR/" + SystemUtils.getDate(System.currentTimeMillis()) + "] MYSQL CONNECTION FAILED TO CLOSE");
                         System.out.println("[ERROR/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + throwables.getMessage());
                     }
+                    SQLite.close();
                    break;
                 }
                 //System.out.println("[LOG] (EVERY 10 SECONDS) TIME ->" + SystemUtils.getDate(System.currentTimeMillis()));
