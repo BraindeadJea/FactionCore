@@ -107,6 +107,18 @@ public class Server {
                 RedisTRIM.TryAskKeepAlive();
             }
         }).start();
+        new Thread(() -> {
+            while(true) {
+                try {
+                    Thread.sleep(60000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                if(RedisTRIM.getSmallest() > 1000) {
+                    RedisTRIM.Trim(RedisTRIM.getSmallest() - 1000);
+                }
+            }
+        }).start();
         while (true) {
             try {
                 Thread.sleep(10000);

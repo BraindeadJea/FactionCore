@@ -32,10 +32,9 @@ public class RedisTRIM {
         } else if(ServerName.equalsIgnoreCase("client3")) {
             client3 = System.currentTimeMillis();
         }
-        Trim(getSmallest());
     }
 
-    private static Long getSmallest() {
+    public static Long getSmallest() {
         if(client1 <= client2 && client1 <= client3) {
             return client1;
         } else if(client2 <= client1 && client2 <= client3) {
@@ -45,7 +44,7 @@ public class RedisTRIM {
         }
     }
 
-    private static void Trim(Long thistime) {
+    public static void Trim(Long thistime) {
         String time = String.valueOf(thistime);
         Connect.getAsyncRedisCommands().xtrim(StreamConfig.get_Stream_BUNGEE_LINE(),XTrimArgs.Builder.minId(time).exactTrimming());
         Connect.getAsyncRedisCommands().xtrim(StreamConfig.get_Stream_INPUT_NAME(),XTrimArgs.Builder.minId(time));

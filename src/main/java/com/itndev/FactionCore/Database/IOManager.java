@@ -5,12 +5,12 @@ import com.itndev.FactionCore.Database.Redis.StreamIO;
 
 public class IOManager {
 
-    private static StreamIO streamIO = new StreamIO();
+    //private static StreamIO streamIO = new StreamIO();
 
     @Deprecated
     private static void REDIS_STARTUP() {
         Connect.RedisConnect();
-        streamIO.start_ReadStream();
+        //streamIO.start_ReadStream();
     }
 
     @Deprecated
