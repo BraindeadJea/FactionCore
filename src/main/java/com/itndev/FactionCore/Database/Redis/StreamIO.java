@@ -6,6 +6,7 @@ import com.itndev.FactionCore.Server;
 import com.itndev.FactionCore.Utils.Database.Redis.Read;
 import com.itndev.FactionCore.Utils.Database.Redis.StaticVal;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
+import io.lettuce.core.RedisFuture;
 import io.lettuce.core.StreamMessage;
 import io.lettuce.core.XReadArgs;
 
@@ -44,16 +45,11 @@ public class StreamIO {
         new Thread(() -> {
             while (Reader_1) {
                 try {
-                    StreamReader_INNER();
-                    StreamReader_INPUT();
-                } catch (Exception e) {
-                    //e.printStackTrace();
-                    SystemUtils.error_logger(e.getMessage());
-                    e.printStackTrace();
-                }
-                try {
+                    //StreamReader_INNER();
+                    //StreamReader_INPUT();
+                    READ_STREAM_ASYNC();
                     Thread.sleep(20);
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
                     SystemUtils.error_logger(e.getMessage());
                     e.printStackTrace();
                 }
@@ -73,6 +69,29 @@ public class StreamIO {
                 }
             }
         }).start();
+    }
+
+    private static void READ_STREAM_ASYNC() throws ExecutionException, InterruptedException, TimeoutException {
+        RedisFuture<List<StreamMessage<String, String>>> OUTPUT = Connect.getAsyncRedisCommands().xread(
+                XReadArgs.StreamOffset.from(StreamConfig.get_Stream_INPUT_NAME(), Connect.get_LastID_INPUT()));
+        RedisFuture<List<StreamMessage<String, String>>> INTER = Connect.getAsyncRedisCommands().xread(
+                XReadArgs.StreamOffset.from(StreamConfig.get_Stream_INTERCONNECT_NAME(), Connect.get_LastID_INNER()));
+        Thread.sleep(5);
+        List<StreamMessage<String, String>> INPUT_RESPONCE = OUTPUT.get(StaticVal.getRedisCommandTimeoutInMillies(), TimeUnit.MILLISECONDS);
+        List<StreamMessage<String, String>> INTER_RESPONCE = INTER.get(StaticVal.getRedisCommandTimeoutInMillies(), TimeUnit.MILLISECONDS);
+        for (StreamMessage<String, String> message : INPUT_RESPONCE) {
+            Connect.setLastID_INPUT(message.getId());
+            Read.READ_COMPRESSEDMAP(message.getBody().get(StaticVal.getCommand()));
+            message = null;
+        }
+        INPUT_RESPONCE = null;
+        for (StreamMessage<String, String> message : INTER_RESPONCE) {
+            Connect.setLastID_INNER(message.getId());
+            //String compressedhashmap = message.getBody().get(StaticVal.getCommand());
+            Read.READ_COMPRESSEDMAP(message.getBody().get(StaticVal.getCommand()));
+            message = null;
+        }
+        INTER_RESPONCE = null;
     }
 
     private void StreamReader_INNER() throws ExecutionException, InterruptedException, TimeoutException {

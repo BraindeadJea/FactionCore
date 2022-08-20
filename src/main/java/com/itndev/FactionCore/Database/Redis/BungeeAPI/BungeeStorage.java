@@ -49,7 +49,6 @@ public class BungeeStorage {
 
     public static void READ_Bungee_command(String command) {
         if(command.contains(":=:")) {
-            System.out.println("...");
             String[] cmd_args = command.split(":=:");
             if(cmd_args[0].equalsIgnoreCase("PROXY-JOIN")) {
                 String[] TEMP = cmd_args[1].replace("{", "").replace("}", "").split(",");
@@ -85,7 +84,7 @@ public class BungeeStorage {
                 String UUID = TEMP[0];
                 String NAME = TEMP[1];
                 String ServerName = TEMP[2];
-                UPDATE_USERINFO(UUID, NAME);
+                //UPDATE_USERINFO(UUID, NAME);
                 addPlayer(UUID, ServerName);
                 UUID = null;
                 NAME = null;
@@ -99,7 +98,7 @@ public class BungeeStorage {
     }
 
     public static void UPDATE_USERINFO(String UUID, String Name) {
-        SystemUtils.logger("Player NAME:" + Name + ", UUID:" + UUID + " has connected to server");
+        //SystemUtils.logger("Player NAME:" + Name + ", UUID:" + UUID + " has connected to server");
         List<String> bulkcmd = new ArrayList<>();
         if(UserInfoStorage.uuidname.containsKey(UUID)) {
             if(!UserInfoStorage.namename.get(UserInfoStorage.uuidname.get(UUID)).equals(Name)) {

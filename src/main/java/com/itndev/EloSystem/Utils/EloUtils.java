@@ -39,26 +39,12 @@ public class EloUtils {
             if(hasTeam1Won) {
                 Integer Gain = 16 - differenceFactor;
                 Integer Lose = 8 - (differenceFactor/(2));
-                if(Lose < 2) {
-                    Lose = 2;
-                }
-                if(Gain < 4) {
-                    Gain = 4;
-                }
-                eloResult1 = new EloResult(UUID1, "idk", true, Elo1, Elo1 + Gain);
-                if(Elo2 - Lose <= 0) {
-                    eloResult2 = new EloResult(UUID2, "idk", false, Elo2, 0);
-                } else {
-                    eloResult2 = new EloResult(UUID2, "idk", false, Elo2, Elo2 - Lose);
-                }
+                eloResult1 = new EloResult(UUID1, "idk", true, Elo1, Elo1 + Math.max(Gain, 4));
+                eloResult2 = new EloResult(UUID1, "idk", false, Elo1, Math.max(Elo1 - Math.max(Lose, 2), 0));
             } else {
                 Integer Gain = 16 + differenceFactor;
                 Integer Lose = 8 + (differenceFactor/(2));
-                if(Elo1 - Lose <= 0) {
-                    eloResult1 = new EloResult(UUID1, "idk", false, Elo1, 0);
-                } else {
-                    eloResult1 = new EloResult(UUID1, "idk", false, Elo1, Elo1 - Lose);
-                }
+                eloResult1 = new EloResult(UUID1, "idk", false, Elo1, Math.max(Elo1 - Lose, 0));
                 eloResult2 = new EloResult(UUID2, "idk", true, Elo2, Elo2 + Gain);
             }
         } else if(Elo1 < Elo2) {
@@ -77,26 +63,12 @@ public class EloUtils {
             if(hasTeam1Won) {
                 Integer Gain = 16 - differenceFactor;
                 Integer Lose = 8 - (differenceFactor/(2));
-                if(Lose < 2) {
-                    Lose = 2;
-                }
-                if(Gain < 4) {
-                    Gain = 4;
-                }
-                eloResult1 = new EloResult(UUID1, "idk", true, Elo1, Elo1 + Gain);
-                if(Elo2 - Lose <= 0) {
-                    eloResult2 = new EloResult(UUID2, "idk", false, Elo2, 0);
-                } else {
-                    eloResult2 = new EloResult(UUID2, "idk", false, Elo2, Elo2 - Lose);
-                }
+                eloResult1 = new EloResult(UUID1, "idk", true, Elo1, Elo1 + Math.max(Gain, 4));
+                eloResult2 = new EloResult(UUID1, "idk", false, Elo1, Math.max(Elo1 - Math.max(Lose, 2), 0));
             } else {
                 Integer Gain = 16 + differenceFactor;
                 Integer Lose = 8 + (differenceFactor/(2));
-                if(Elo1 - Lose <= 0) {
-                    eloResult1 = new EloResult(UUID1, "idk", false, Elo1, 0);
-                } else {
-                    eloResult1 = new EloResult(UUID1, "idk", false, Elo1, Elo1 - Lose);
-                }
+                eloResult1 = new EloResult(UUID1, "idk", false, Elo1, Math.max(Elo1 - Lose, 0));
                 eloResult2 = new EloResult(UUID2, "idk", true, Elo2, Elo2 + Gain);
             }
         } else {
@@ -104,17 +76,9 @@ public class EloUtils {
             Integer Lose = 8;
             if(hasTeam1Won) {
                 eloResult1 = new EloResult(UUID1, "idk", true, Elo1, Elo1 + Gain);
-                if(Elo2 - Lose <= 0) {
-                    eloResult2 = new EloResult(UUID2, "idk", false, Elo2, 0);
-                } else {
-                    eloResult2 = new EloResult(UUID2, "idk", false, Elo2, Elo2 - Lose);
-                }
+                eloResult2 = new EloResult(UUID2, "idk", false, Elo2, Math.max(Elo2 - Lose, 0));
             } else {
-                if(Elo1 - Lose <= 0) {
-                    eloResult1 = new EloResult(UUID1, "idk", false, Elo1, 0);
-                } else {
-                    eloResult1 = new EloResult(UUID1, "idk", false, Elo1, Elo1 - Lose);
-                }
+                eloResult1 = new EloResult(UUID1, "idk", false, Elo1, Math.max(Elo1 - Lose, 0));
                 eloResult2 = new EloResult(UUID2, "idk", true, Elo2, Elo2 + Gain);
             }
             //-8, +16
