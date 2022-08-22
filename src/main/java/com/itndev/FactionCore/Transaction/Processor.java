@@ -37,11 +37,13 @@ public class Processor {
                 } else if(args[0].equalsIgnoreCase("국가멸망")){
                     String LoserFaction = FactionUtils.getPlayerFactionUUID(UUID);
                     String WinnerFaction = FactionUtils.getOPPWar(FactionUtils.getPlayerFactionUUID(UUID));
+                    String LoserFactionName = FactionUtils.getCapFactionNameFromUUID(LoserFaction);
+                    String WinnerFactionName = FactionUtils.getCapFactionNameFromUUID(WinnerFaction);
                     ArrayList<String> LoserFactionMember = FactionUtils.getFactionMember(LoserFaction);
                     ArrayList<String> WinnerFactionMember = FactionUtils.getFactionMember(WinnerFaction);
                     List<EloResult> eloResultList = EloUpdater.ProcessWarElo(WinnerFactionMember, LoserFactionMember, true, WinnerFaction, LoserFaction);
                     new Thread(() -> {
-                        //eloResultList//;
+                        FactionWar.WarEloUpdate(LoserFactionName, WinnerFactionName, LoserFaction, WinnerFaction, LoserFactionMember, WinnerFactionMember, eloResultList);
                     }).start();
                     DeleteFactionUtils.DESTORYFaction(UUID, LoserFaction);
                     FactionWar.NomoreinWar(args[1]);

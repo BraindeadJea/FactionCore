@@ -3,6 +3,7 @@ com\itndev\FactionCore\Transaction\TransactionUtils\FactionCD\DeleteFactionUtils
 com\itndev\FactionCore\Dump\MySQLDump.class
 com\itndev\FactionCore\Database\Redis\StreamIO.class
 com\itndev\FactionCore\Factions\TransactionManager.class
+com\itndev\PlayerPower\Loader.class
 com\itndev\FactionCore\Factions\Config.class
 com\itndev\FactionCore\Server.class
 com\itndev\FactionCore\Database\MySQL\ConnectSQL.class
@@ -45,12 +46,14 @@ com\itndev\FactionCore\Utils\Factions\ValidChecker.class
 com\itndev\EloSystem\Utils\EloUtils.class
 com\itndev\FactionCore\Database\Redis\RedisTRIM.class
 com\itndev\EloSystem\Storage\EloPlayer.class
+com\itndev\PlayerPower\PlayerPower.class
 com\itndev\FactionCore\DataFixer\MapFixer.class
 com\itndev\EloSystem\API\Loader.class
 com\itndev\FactionCore\Transaction\TransactionUtils\FactionHelp.class
 com\itndev\FactionCore\Factions\Lang.class
 com\itndev\FactionCore\Factions\UserInfoStorage.class
 com\itndev\FactionCore\Database\Redis\CmdExecute.class
+com\itndev\FactionCore\Database\Redis\StreamListener.class
 com\itndev\FactionCore\Database\Gui\LoadMySQLListener.class
 com\itndev\FactionCore\Factions\FactionStorage.class
 com\itndev\FactionCore\Utils\Factions\FactionUtils.class

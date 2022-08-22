@@ -1,6 +1,5 @@
 package com.itndev.FactionCore;
 
-import com.itndev.EloSystem.API.Loader;
 import com.itndev.EloSystem.Storage.SQLite;
 import com.itndev.FactionCore.Database.Gui.GuiPanel;
 import com.itndev.FactionCore.Database.MySQL.SQL;
@@ -15,6 +14,8 @@ import com.itndev.FactionCore.Dump.YamlDump;
 import com.itndev.FactionCore.Factions.FactionTimeOut;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 import com.itndev.FactionCore.Utils.Factions.ValidChecker;
+import com.itndev.PlayerPower.Loader;
+import com.itndev.PlayerPower.PlayerPower;
 
 import java.sql.SQLException;
 import java.util.concurrent.ExecutionException;
@@ -79,7 +80,7 @@ public class Server {
             }
         }).start();
         try {
-            Loader.run().get(1000, TimeUnit.MILLISECONDS);
+            com.itndev.EloSystem.API.Loader.run().get(1000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             SystemUtils.error_logger(e.getMessage());
             throw new RuntimeException(e);
@@ -118,6 +119,12 @@ public class Server {
                     RedisTRIM.Trim(RedisTRIM.getSmallest() - 1000);
                 }
             }
+        }).start();
+        new Thread(() -> {
+            com.itndev.PlayerPower.Loader loader = new com.itndev.PlayerPower.Loader();
+            loader.setupConnectionInfo();
+            loader.connect();
+            new PlayerPower(loader);
         }).start();
         while (true) {
             try {

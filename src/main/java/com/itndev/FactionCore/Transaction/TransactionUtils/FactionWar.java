@@ -1,12 +1,17 @@
 package com.itndev.FactionCore.Transaction.TransactionUtils;
 
+import com.itndev.EloSystem.Package.EloResult;
 import com.itndev.FactionCore.Database.Redis.Obj.Storage;
 import com.itndev.FactionCore.Factions.Config;
 import com.itndev.FactionCore.Factions.FactionTimeOut;
 import com.itndev.FactionCore.Utils.Factions.FactionUtils;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
+import com.itndev.FactionCore.Utils.Factions.UserInfoUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class FactionWar {
 
@@ -68,4 +73,52 @@ public class FactionWar {
         Storage.AddCommandToQueue("notify:=:" + FactionUtils.getFactionLeader(FactionUUID) + ":=:" + "SIBAL" + ":=:" + "&r&f전쟁이 끝났습니다" + ":=:" + "true");
         FactionUtils.removeFromWar(FactionUUID);
     }
+
+    public static void WarEloUpdate(String loserFactionName, String winnerFactionName, String loserFaction, String winnerFaction,
+                                    ArrayList<String> loserFactionMember, ArrayList<String> winnerFactionMember,
+                                    List<EloResult> eloResultList) {
+        //====================//
+        ArrayList<String> IncludedList = new ArrayList<>();
+        IncludedList.addAll(loserFactionMember);
+        IncludedList.addAll(winnerFactionMember);
+        String message;
+        message = "&r&f&m-----------------&r&a&o&l[ &r&f전쟁 결과 &r&a&o&l]&r&f&m-----------------\n" +
+                "&r&7&l>&r&a  승전국 &7:&r " + winnerFactionName + "&r\n" +
+                "&r&7&l>&r&f  " + ListEloUpdate(winnerFaction, eloResultList) + "&r\n" +
+                "&r\n" +
+                "&r&7&l>&r&c  패전국 &7:&r " + loserFactionName + "&r\n" +
+                "&r&7&l>&r&f  " + ListEloUpdate(loserFaction, eloResultList) + "&r\n" +
+                "&r&f&m-----------------&r&a&o&l[ &r&f전쟁 결과 &r&a&o&l]&r&f&m-----------------\n";
+        //====================//
+        IncludedList.forEach(UUID -> SystemUtils.UUID_BASED_PURE_MSG_SENDER(UUID, message));
+    }
+
+    public static String ListEloUpdate(String FactionUUID, List<EloResult> eloResultList) {
+        String message = "";
+        List<EloResult> list = new ArrayList<>();
+        for(EloResult result : eloResultList) {
+            if(Objects.equals(result.getFactionUUID(), FactionUUID)) {
+                list.add(result);
+            }
+        }
+        int size = 0;
+        for(EloResult result : list) {
+            size++;
+            if(result.getHasWon()) {
+                if (list.size() > size) {
+                    message = message + "&r&e" + UserInfoUtils.getPlayerUUIDOriginName(result.getUUID()) + " &r&f: &r&a" + result.getBeforeElo() + " -> " + result.getCurrentElo() + " (+" + (result.getCurrentElo() - result.getBeforeElo()) + ")&r&8,&r ";
+                } else {
+                    message = message + "&r&e" + UserInfoUtils.getPlayerUUIDOriginName(result.getUUID()) + " &r&f: &r&a" + result.getBeforeElo() + " -> " + result.getCurrentElo() + " (+" + (result.getCurrentElo() - result.getBeforeElo()) + ")";
+                }
+            } else {
+                if (list.size() > size) {
+                    message = message + "&r&7" + UserInfoUtils.getPlayerUUIDOriginName(result.getUUID()) + " &r&f: &r&c" + result.getBeforeElo() + " -> " + result.getCurrentElo() + " (-" + (result.getBeforeElo() - result.getCurrentElo()) + ")&r&8,&r ";
+                } else {
+                    message = message + "&r&7" + UserInfoUtils.getPlayerUUIDOriginName(result.getUUID()) + " &r&f: &r&c" + result.getBeforeElo() + " -> " + result.getCurrentElo() + " (-" + (result.getBeforeElo() - result.getCurrentElo()) + ")";
+                }
+            }
+        }
+        return message;
+    }
+
 }
