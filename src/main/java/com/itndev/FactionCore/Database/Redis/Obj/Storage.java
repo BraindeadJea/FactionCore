@@ -3,12 +3,12 @@ package com.itndev.FactionCore.Database.Redis.Obj;
 import com.itndev.FactionCore.Database.Redis.CmdExecute;
 import com.itndev.FactionCore.Utils.Database.Redis.StaticVal;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Storage {
-    public static final ConcurrentHashMap<String, String> TempCommandQueue = new ConcurrentHashMap<>();
-
+    public static final HashMap<String, String> TempCommandQueue = new HashMap<>();
 
     public static void AddCommandToQueue(String command) {
         CmdExecute.updatehashmap(command);

@@ -12,11 +12,13 @@ import com.itndev.FactionCore.Dump.MySQLDump;
 import com.itndev.FactionCore.Dump.RedisDump;
 import com.itndev.FactionCore.Dump.YamlDump;
 import com.itndev.FactionCore.Factions.FactionTimeOut;
+import com.itndev.FactionCore.SocketConnection.Client.Client;
+import com.itndev.FactionCore.SocketConnection.Socket;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 import com.itndev.FactionCore.Utils.Factions.ValidChecker;
 import com.itndev.PlayerPower.Loader;
 import com.itndev.PlayerPower.PlayerPower;
-
+import com.itndev.FactionCore.SocketConnection.kurumi;
 import java.sql.SQLException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -45,6 +47,7 @@ public class Server {
 
     @Deprecated
     public static void main(String[] args) {
+        SystemUtils.logger(kurumi.Kurumi(5).toString());
         YamlDump.LoadConnectionInfo();
         GUI = new GuiPanel();
         while(!GuiPanel.isLoaded) {
@@ -125,6 +128,9 @@ public class Server {
             loader.setupConnectionInfo();
             loader.connect();
             new PlayerPower(loader);
+        }).start();
+        new Thread(() -> {
+            new Client("hostname", 9999);
         }).start();
         while (true) {
             try {

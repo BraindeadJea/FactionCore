@@ -34,6 +34,22 @@ public class Read {
         return finalbuildstring;
     }
 
+    public static String HashMap2String(HashMap<String, String> map) {
+        String finalbuildstring = StaticVal.getbuffer() + StaticVal.getsplitter();
+        if(!map.isEmpty()) {
+            for (int c = 1; c <= Integer.parseInt(map.get(StaticVal.getMaxAmount())); c++) {
+                if (c == Integer.parseInt(map.get(StaticVal.getMaxAmount()))) {
+                    finalbuildstring = finalbuildstring + map.get(String.valueOf(c)) + StaticVal.getsplitter() + StaticVal.getbuffer();
+                } else {
+                    finalbuildstring = finalbuildstring + map.get(String.valueOf(c)) + StaticVal.getsplitter();
+                }
+            }
+        } else {
+            return null;
+        }
+        return finalbuildstring;
+    }
+
     public static HashMap<String, String> String2HashMap(String info) {
         HashMap<String, String> finalmap = new HashMap<>();
         if(!info.contains(StaticVal.getsplitter())) {
