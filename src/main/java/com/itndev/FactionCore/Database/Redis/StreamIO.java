@@ -43,11 +43,12 @@ public class StreamIO {
 
     private void StreamReader() {
         new Thread(() -> {
+            Thread.currentThread().setPriority(1);
             while (Reader_1) {
                 try {
-                    //StreamReader_INNER();
-                    //StreamReader_INPUT();
-                    READ_STREAM_ASYNC();
+                    StreamReader_INPUT();
+                    StreamReader_INNER();
+                    //READ_STREAM_ASYNC();
                     Thread.sleep(20);
                 } catch (Exception e) {
                     SystemUtils.error_logger(e.getMessage());
@@ -59,11 +60,12 @@ public class StreamIO {
 
     private void StreamWriter() {
         new Thread(() -> {
+            Thread.currentThread().setPriority(1);
             while (Reader_2) {
-                StreamWriter_OUTPUT();
                 try {
+                    StreamWriter_OUTPUT();
                     Thread.sleep(20);
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
                     SystemUtils.error_logger(e.getMessage());
                     e.printStackTrace();
                 }
@@ -124,7 +126,7 @@ public class StreamIO {
             Storage.TempCommandQueue.clear();
         }
         if(compressedhashmap != null) {
-            Connect.getAsyncRedisCommands().xadd(StreamConfig.get_Stream_OUTPUT_NAME(), Collections.singletonMap(StaticVal.getCommand(), compressedhashmap));
+            Connect.getRedisCommands().xadd(StreamConfig.get_Stream_OUTPUT_NAME(), Collections.singletonMap(StaticVal.getCommand(), compressedhashmap));
         }
         compressedhashmap = null;
     }

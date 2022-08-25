@@ -52,10 +52,10 @@ public class Loader {
                     + "StatsType VARCHAR(100),"
                     + "StatsValue VARCHAR(100))");
             ps.executeUpdate();
-            PreparedStatement ps2 = connection().prepareStatement("CREATE UNIQUE INDEX StatsID ON PLAYERSTATS (PlayerUUID, StatsType)");
-            ps2.executeQuery();
+            //PreparedStatement ps2 = connection().prepareStatement("CREATE UNIQUE INDEX StatsID ON PLAYERSTATS (PlayerUUID, StatsType)");
+            //ps2.executeQuery();
             close(null, ps, null);
-            close(null, ps2, null);
+            //close(null, ps2, null);
 
         } catch (SQLException e) {
             e.printStackTrace();

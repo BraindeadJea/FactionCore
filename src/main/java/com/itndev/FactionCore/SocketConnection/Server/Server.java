@@ -27,9 +27,8 @@ public class Server {
                 }
             }
             serverSocket = new ServerSocket(com.itndev.FactionCore.SocketConnection.Socket.getPort());
-            while (com.itndev.FactionCore.Server.Streamable) {
-                Socket socket = serverSocket.accept();
-                ConnectionThread ServerThread = new ConnectionThread(socket);
+            while (true) {
+                ConnectionThread ServerThread = new ConnectionThread(serverSocket.accept());
                 ServerThread.start();
                 ResponseList.get().add(ServerThread);
             }

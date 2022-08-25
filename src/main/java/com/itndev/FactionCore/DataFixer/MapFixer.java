@@ -8,7 +8,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MapFixer {
 
-    public static HashMap<String, String> Fixer_1_1(ConcurrentHashMap<String, String> map) {
+    private static MapFixer instance = null;
+    public static MapFixer get() {
+        if(instance == null) {
+            instance = new MapFixer();
+        }
+        return instance;
+    }
+
+    public HashMap<String, String> Fixer_1_1(ConcurrentHashMap<String, String> map) {
         HashMap<String, String> finalmap = new HashMap<>();
         for(String key : map.keySet()) {
             finalmap.put(key, map.get(key));
@@ -17,7 +25,7 @@ public class MapFixer {
         return finalmap;
     }
 
-    public static ConcurrentHashMap<String, String> Fixer_1_2(HashMap<String, String> map) {
+    public ConcurrentHashMap<String, String> Fixer_1_2(HashMap<String, String> map) {
         ConcurrentHashMap<String, String> finalmap = new ConcurrentHashMap<>();
         for(String key : map.keySet()) {
             finalmap.put(key, map.get(key));
@@ -26,7 +34,7 @@ public class MapFixer {
         return finalmap;
     }
 
-    public static HashMap<String, ArrayList<String>> Fixer_2_1(HashMap<String, String> map) {
+    public HashMap<String, ArrayList<String>> Fixer_2_1(HashMap<String, String> map) {
         HashMap<String, ArrayList<String>> finalmap = new HashMap<>();
         if(!map.isEmpty()) {
             for(String key : map.keySet()) {
@@ -36,7 +44,7 @@ public class MapFixer {
         return finalmap;
     }
 
-    public static HashMap<String, String> Fixer_2_2(HashMap<String, ArrayList<String>> map) {
+    public HashMap<String, String> Fixer_2_2(HashMap<String, ArrayList<String>> map) {
         HashMap finalMap = new HashMap<String, String>();
         if(!map.isEmpty()) {
             for(String key : map.keySet()) {
@@ -46,7 +54,7 @@ public class MapFixer {
         return finalMap;
     }
 
-    public static ConcurrentHashMap<String, ArrayList<String>> Fixer_3_1(HashMap<String, String> map) {
+    public ConcurrentHashMap<String, ArrayList<String>> Fixer_3_1(HashMap<String, String> map) {
         ConcurrentHashMap<String, ArrayList<String>> finalmap = new ConcurrentHashMap<>();
         if(!map.isEmpty()) {
             for(String key : map.keySet()) {
@@ -56,7 +64,7 @@ public class MapFixer {
         return finalmap;
     }
 
-    public static HashMap<String, String> Fixer_3_2(ConcurrentHashMap<String, ArrayList<String>> map) {
+    public HashMap<String, String> Fixer_3_2(ConcurrentHashMap<String, ArrayList<String>> map) {
         synchronized (map) {
             HashMap finalMap = new HashMap<String, String>();
             if(!map.isEmpty()) {

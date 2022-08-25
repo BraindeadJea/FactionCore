@@ -9,7 +9,6 @@ public class Loader {
     public static CompletableFuture<Boolean> run() {
         CompletableFuture<Boolean> success = new CompletableFuture<>();
         try {
-
             SQLite.setup("Elo.db");
             SQLite.open();
             success.complete(true);

@@ -2,6 +2,7 @@ package com.itndev.FactionCore.SocketConnection.Server;
 
 import com.itndev.FactionCore.Server;
 import com.itndev.FactionCore.SocketConnection.IO.ProcessList;
+import com.itndev.FactionCore.SocketConnection.IO.ResponseList;
 import com.itndev.FactionCore.Utils.Database.Redis.Read;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 
@@ -13,31 +14,38 @@ import java.util.HashMap;
 public class ConnectionThread extends Thread {
 
     private Socket socket;
-    private InputStream input;
-    private BufferedReader reader;
-    private DataOutputStream out;
-    private PrintWriter writer;
+
+    private ObjectInputStream input;
+
+    private ObjectOutputStream output;
 
     public ConnectionThread(Socket clientSocket) {
         this.socket = clientSocket;
     }
 
-    public void send(HashMap<String, String> localmap) {
-        String map = Read.HashMap2String(localmap);
-        writer.println(map + "\n\r");
+    public void send(HashMap<String, String> map) throws IOException {
+        if(map != null || !map.isEmpty()) {
+            if(output == null) {
+                System.out.println("OutputStream is Null");
+                return;
+            }
+            output.writeObject(map);
+            output.flush();
+        } else {
+            System.out.println("null on map");
+        }
     }
 
     public void close() throws IOException {
-        socket.close();
+        this.closeAll();
+        ResponseList.get().remove(this);
     }
 
     public void run() {
 
         try {
-            input = socket.getInputStream();
-            reader = new BufferedReader(new InputStreamReader(input));
-            out = new DataOutputStream(socket.getOutputStream());
-            writer = new PrintWriter(out, true);
+            output = new ObjectOutputStream(socket.getOutputStream());
+            input = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
             return;
         }
@@ -61,27 +69,36 @@ public class ConnectionThread extends Thread {
             }
         }).start();*/
         while (true) {
+
             if(socket.isClosed() || !Server.Streamable) {
                 break;
             }
             try {
-                String line = reader.readLine();
-                if ((line == null) || line.equalsIgnoreCase("QUIT")) {
-                    socket.close();
+                HashMap<String, String> map = (HashMap<String, String>) input.readObject();
+                if (map == null || map.isEmpty()) {
+                    this.closeAll();
                     break;
                 }
-                new Thread(() -> ProcessList.run(Read.String2HashMap(line))).start();
+                //System.out.println(line);
+                new Thread(() -> ProcessList.run(map)).start();
                 //HashMap<String, String> map = Read.String2HashMap(line);
                 //.add(map);
-            } catch (IOException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 SystemUtils.error_logger(Arrays.toString(e.getStackTrace()));
                 break;
             }
         }
         try {
-            socket.close();
+            this.closeAll();
         } catch (IOException e) {
             SystemUtils.error_logger(Arrays.toString(e.getStackTrace()));
         }
+        ResponseList.get().remove(this);
+    }
+
+    public void closeAll() throws IOException {
+        input.close();
+        output.close();
+        socket.close();
     }
 }

@@ -26,10 +26,25 @@ public class ProcessList {
 
     public static void run(HashMap<String, String> update) {
         synchronized (sync) {
+            //
             if (!update.isEmpty()) {
-                for(int c = 1; c <= Integer.parseInt(update.get(StaticVal.getMaxAmount())); c++) {
-                    CmdExecute.CMD_READ(update.get(String.valueOf(c)));
+                if(!update.containsKey(StaticVal.getDataTypeArgs())) {
+                    return;
                 }
+                String DataType = update.get(StaticVal.getDataTypeArgs());
+                if(DataType.equalsIgnoreCase("FrontEnd-Output")) {
+                    for(int c = 1; c <= Integer.parseInt(update.get(StaticVal.getMaxAmount())); c++) {
+                        CmdExecute.get().CMD_READ(update.get(String.valueOf(c)));
+                    }
+                } else if(DataType.equalsIgnoreCase("FrontEnd-Interconnect")) {
+                    for(int c = 1; c <= Integer.parseInt(update.get(StaticVal.getMaxAmount())); c++) {
+                        CmdExecute.get().CMD_READ(update.get(String.valueOf(c)));
+                    }
+                    ResponseList.get().response(update);
+                } else if(DataType.equalsIgnoreCase("FrontEnd-Chat")) {
+                    ResponseList.get().response(update);
+                }
+
             }
         }
     }

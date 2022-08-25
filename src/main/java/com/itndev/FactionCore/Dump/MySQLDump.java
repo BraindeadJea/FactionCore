@@ -28,73 +28,73 @@ public class MySQLDump {
 
     public static void LoadFromMySQL() throws SQLException {
         try {
-            FactionStorage.FactionInfo = MapFixer.Fixer_1_2(LoadHASHMAP("FactionInfo")); //(ConcurrentHashMap<String, String>) Connect.getSetcommands().hmget(key + "-" + "FactionInfo");
+            FactionStorage.FactionInfo = MapFixer.get().Fixer_1_2(LoadHASHMAP("FactionInfo")); //(ConcurrentHashMap<String, String>) Connect.getSetcommands().hmget(key + "-" + "FactionInfo");
         } catch (Exception e) {
             SystemUtils.error_logger(e.getMessage());
         }
 
         try {
-            FactionStorage.FactionMember = MapFixer.Fixer_3_1(LoadHASHMAP("FactionMember"));
+            FactionStorage.FactionMember = MapFixer.get().Fixer_3_1(LoadHASHMAP("FactionMember"));
         } catch (Exception e) {
             SystemUtils.error_logger(e.getMessage());
         }
 
         try {
-            FactionStorage.FactionNameToFactionName = MapFixer.Fixer_1_2(LoadHASHMAP("FactionNameToFactionName"));
+            FactionStorage.FactionNameToFactionName = MapFixer.get().Fixer_1_2(LoadHASHMAP("FactionNameToFactionName"));
         } catch (Exception e) {
             SystemUtils.error_logger(e.getMessage());
         }
 
         try {
-            FactionStorage.FactionInfoList = MapFixer.Fixer_3_1(LoadHASHMAP("FactionInfoList"));
+            FactionStorage.FactionInfoList = MapFixer.get().Fixer_3_1(LoadHASHMAP("FactionInfoList"));
         } catch (Exception e) {
             SystemUtils.error_logger(e.getMessage());
         }
 
         try {
-            FactionStorage.FactionNameToFactionUUID = MapFixer.Fixer_1_2(LoadHASHMAP("FactionNameToFactionUUID"));
+            FactionStorage.FactionNameToFactionUUID = MapFixer.get().Fixer_1_2(LoadHASHMAP("FactionNameToFactionUUID"));
         } catch (Exception e) {
             SystemUtils.error_logger(e.getMessage());
         }
 
         try {
-            FactionStorage.FactionOutPost = MapFixer.Fixer_1_2(LoadHASHMAP("FactionOutPost"));
+            FactionStorage.FactionOutPost = MapFixer.get().Fixer_1_2(LoadHASHMAP("FactionOutPost"));
         } catch (Exception e) {
             SystemUtils.error_logger(e.getMessage());
         }
 
         try {
-            FactionStorage.FactionOutPostList = MapFixer.Fixer_3_1(LoadHASHMAP("FactionOutPostList"));
+            FactionStorage.FactionOutPostList = MapFixer.get().Fixer_3_1(LoadHASHMAP("FactionOutPostList"));
         } catch (Exception e) {
             SystemUtils.error_logger(e.getMessage());
         }
 
         try {
-            FactionStorage.FactionRank = MapFixer.Fixer_1_2(LoadHASHMAP("FactionRank"));
+            FactionStorage.FactionRank = MapFixer.get().Fixer_1_2(LoadHASHMAP("FactionRank"));
         } catch (Exception e) {
             SystemUtils.error_logger(e.getMessage());
         }
 
         try {
-            FactionStorage.FactionToLand = MapFixer.Fixer_2_1(LoadHASHMAP("FactionToLand"));
+            FactionStorage.FactionToLand = MapFixer.get().Fixer_2_1(LoadHASHMAP("FactionToLand"));
         } catch (Exception e) {
             SystemUtils.error_logger(e.getMessage());
         }
 
         try {
-            FactionStorage.FactionToOutPost = MapFixer.Fixer_2_1(LoadHASHMAP("FactionToLand"));
+            FactionStorage.FactionToOutPost = MapFixer.get().Fixer_2_1(LoadHASHMAP("FactionToLand"));
         } catch (Exception e) {
             SystemUtils.error_logger(e.getMessage());
         }
 
         try {
-            FactionStorage.FactionUUIDToFactionName = MapFixer.Fixer_1_2(LoadHASHMAP("FactionUUIDToFactionName"));
+            FactionStorage.FactionUUIDToFactionName = MapFixer.get().Fixer_1_2(LoadHASHMAP("FactionUUIDToFactionName"));
         } catch (Exception e) {
             SystemUtils.error_logger(e.getMessage());
         }
 
         try {
-            FactionStorage.FactionWarpLocations = MapFixer.Fixer_1_2(LoadHASHMAP("FactionWarpLocations"));
+            FactionStorage.FactionWarpLocations = MapFixer.get().Fixer_1_2(LoadHASHMAP("FactionWarpLocations"));
         } catch (Exception e) {
             SystemUtils.error_logger(e.getMessage());
         }
@@ -106,25 +106,25 @@ public class MySQLDump {
         }
 
         try {
-            FactionStorage.PlayerFaction = MapFixer.Fixer_1_2(LoadHASHMAP("PlayerFaction"));
+            FactionStorage.PlayerFaction = MapFixer.get().Fixer_1_2(LoadHASHMAP("PlayerFaction"));
         } catch (Exception e) {
             SystemUtils.error_logger(e.getMessage());
         }
 
         try {
-            UserInfoStorage.namename = MapFixer.Fixer_1_2(LoadHASHMAP("namename"));
+            UserInfoStorage.namename = MapFixer.get().Fixer_1_2(LoadHASHMAP("namename"));
         } catch (Exception e) {
             SystemUtils.error_logger(e.getMessage());
         }
 
         try {
-            UserInfoStorage.uuidname = MapFixer.Fixer_1_2(LoadHASHMAP("uuidname"));
+            UserInfoStorage.uuidname = MapFixer.get().Fixer_1_2(LoadHASHMAP("uuidname"));
         } catch (Exception e) {
             SystemUtils.error_logger(e.getMessage());
         }
 
         try {
-            UserInfoStorage.nameuuid = MapFixer.Fixer_1_2(LoadHASHMAP("nameuuid"));
+            UserInfoStorage.nameuuid = MapFixer.get().Fixer_1_2(LoadHASHMAP("nameuuid"));
         } catch (Exception e) {
             SystemUtils.error_logger(e.getMessage());
         }
@@ -146,53 +146,53 @@ public class MySQLDump {
         TruncateBackup();
 
         if (!FactionStorage.FactionInfo.isEmpty()) {
-            DumpHASHMAP("FactionInfo", MapFixer.Fixer_1_1(FactionStorage.FactionInfo));
+            DumpHASHMAP("FactionInfo", MapFixer.get().Fixer_1_1(FactionStorage.FactionInfo));
         }
 
         if(!FactionStorage.FactionMember.isEmpty()) {
-            DumpHASHMAP("FactionMember", MapFixer.Fixer_3_2(FactionStorage.FactionMember));
+            DumpHASHMAP("FactionMember", MapFixer.get().Fixer_3_2(FactionStorage.FactionMember));
         }
 
         if(!FactionStorage.FactionNameToFactionName.isEmpty()) {
-            DumpHASHMAP("FactionNameToFactionName", MapFixer.Fixer_1_1(FactionStorage.FactionNameToFactionName));
+            DumpHASHMAP("FactionNameToFactionName", MapFixer.get().Fixer_1_1(FactionStorage.FactionNameToFactionName));
         }
 
         if(!FactionStorage.FactionInfoList.isEmpty()) {
-            DumpHASHMAP("FactionInfoList", MapFixer.Fixer_3_2(FactionStorage.FactionInfoList));
+            DumpHASHMAP("FactionInfoList", MapFixer.get().Fixer_3_2(FactionStorage.FactionInfoList));
         }
 
         //------>
         if(!FactionStorage.FactionNameToFactionUUID.isEmpty()) {
-            DumpHASHMAP("FactionNameToFactionUUID", MapFixer.Fixer_1_1(FactionStorage.FactionNameToFactionUUID));
+            DumpHASHMAP("FactionNameToFactionUUID", MapFixer.get().Fixer_1_1(FactionStorage.FactionNameToFactionUUID));
 
         }
 
         if(!FactionStorage.FactionOutPost.isEmpty()) {
-            DumpHASHMAP("FactionOutPost", MapFixer.Fixer_1_1(FactionStorage.FactionOutPost));
+            DumpHASHMAP("FactionOutPost", MapFixer.get().Fixer_1_1(FactionStorage.FactionOutPost));
         }
 
         if(!FactionStorage.FactionOutPostList.isEmpty()) {
-            DumpHASHMAP("FactionOutPostList", MapFixer.Fixer_3_2(FactionStorage.FactionOutPostList));
+            DumpHASHMAP("FactionOutPostList", MapFixer.get().Fixer_3_2(FactionStorage.FactionOutPostList));
         }
 
         if(!FactionStorage.FactionRank.isEmpty()) {
-            DumpHASHMAP("FactionRank", MapFixer.Fixer_1_1(FactionStorage.FactionRank));
+            DumpHASHMAP("FactionRank", MapFixer.get().Fixer_1_1(FactionStorage.FactionRank));
         }
 
         if(!FactionStorage.FactionToLand.isEmpty()) {
-            DumpHASHMAP("FactionToLand", MapFixer.Fixer_2_2(FactionStorage.FactionToLand));
+            DumpHASHMAP("FactionToLand", MapFixer.get().Fixer_2_2(FactionStorage.FactionToLand));
         }
 
         if(!FactionStorage.FactionToOutPost.isEmpty()) {
-            DumpHASHMAP("FactionToOutPost", MapFixer.Fixer_2_2(FactionStorage.FactionToOutPost));
+            DumpHASHMAP("FactionToOutPost", MapFixer.get().Fixer_2_2(FactionStorage.FactionToOutPost));
         }
 
         if(!FactionStorage.FactionUUIDToFactionName.isEmpty()) {
-            DumpHASHMAP("FactionUUIDToFactionName", MapFixer.Fixer_1_1(FactionStorage.FactionUUIDToFactionName));
+            DumpHASHMAP("FactionUUIDToFactionName", MapFixer.get().Fixer_1_1(FactionStorage.FactionUUIDToFactionName));
         }
 
         if(!FactionStorage.FactionWarpLocations.isEmpty()) {
-            DumpHASHMAP("FactionWarpLocations", MapFixer.Fixer_1_1(FactionStorage.FactionWarpLocations));
+            DumpHASHMAP("FactionWarpLocations", MapFixer.get().Fixer_1_1(FactionStorage.FactionWarpLocations));
         }
 
         if(!FactionStorage.OutPostToFaction.isEmpty()) {
@@ -200,19 +200,19 @@ public class MySQLDump {
         }
 
         if(!FactionStorage.PlayerFaction.isEmpty()) {
-            DumpHASHMAP("PlayerFaction", MapFixer.Fixer_1_1(FactionStorage.PlayerFaction));
+            DumpHASHMAP("PlayerFaction", MapFixer.get().Fixer_1_1(FactionStorage.PlayerFaction));
         }
 
         if(!UserInfoStorage.namename.isEmpty()) {
-            DumpHASHMAP("namename", MapFixer.Fixer_1_1(UserInfoStorage.namename));
+            DumpHASHMAP("namename", MapFixer.get().Fixer_1_1(UserInfoStorage.namename));
         }
 
         if(!UserInfoStorage.nameuuid.isEmpty()) {
-            DumpHASHMAP("nameuuid", MapFixer.Fixer_1_1(UserInfoStorage.nameuuid));
+            DumpHASHMAP("nameuuid", MapFixer.get().Fixer_1_1(UserInfoStorage.nameuuid));
         }
 
         if(!UserInfoStorage.uuidname.isEmpty()) {
-            DumpHASHMAP("uuidname", MapFixer.Fixer_1_1(UserInfoStorage.uuidname));
+            DumpHASHMAP("uuidname", MapFixer.get().Fixer_1_1(UserInfoStorage.uuidname));
         }
 
         if(!AuthStorage.DISCORDID_TO_UUID.isEmpty()) {

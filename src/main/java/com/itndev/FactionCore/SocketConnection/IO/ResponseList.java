@@ -32,7 +32,15 @@ public class ResponseList {
     }
 
     public void response(HashMap<String, String> map) {
-        Threads.forEach(serverThread -> new Thread(() -> serverThread.send(map)).start());
+        Threads.forEach(serverThread ->
+                    new Thread(() -> {
+                        try {
+                            serverThread.send(map);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }).start()
+                );
     }
 
     public void closeAll() {

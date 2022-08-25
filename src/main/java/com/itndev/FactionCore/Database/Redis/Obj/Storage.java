@@ -11,7 +11,7 @@ public class Storage {
     public static final HashMap<String, String> TempCommandQueue = new HashMap<>();
 
     public static void AddCommandToQueue(String command) {
-        CmdExecute.updatehashmap(command);
+        CmdExecute.get().updatehashmap(command);
         synchronized (TempCommandQueue) {
             if(!TempCommandQueue.containsKey(StaticVal.getMaxAmount())) {
                 TempCommandQueue.put(StaticVal.getMaxAmount(), "1");
@@ -40,7 +40,7 @@ public class Storage {
     }
 
     public static void AddCommandToQueueFix(String command, String nothing) {
-        CmdExecute.updatehashmap(command);
+        CmdExecute.get().updatehashmap(command);
         synchronized (TempCommandQueue) {
             if (!TempCommandQueue.containsKey(StaticVal.getMaxAmount())) {
                 TempCommandQueue.put(StaticVal.getMaxAmount(), "1");
@@ -56,7 +56,7 @@ public class Storage {
 
     public static void AddBulkCommandToQueue(List<String> BulkCMD) {
         for(String k : BulkCMD) {
-            CmdExecute.updatehashmap(k);
+            CmdExecute.get().updatehashmap(k);
         }
         synchronized (TempCommandQueue) {
             for(String command : BulkCMD) {

@@ -8,16 +8,27 @@ import com.itndev.FactionCore.Factions.UserInfoStorage;
 import com.itndev.FactionCore.Utils.Cache.CachedStorage;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 
+import java.util.UUID;
+
 public class CmdExecute {
 
-    private static String CMD_SPLITTER = "<CMD>&%CMD_12%<CMD>";
-    private static String CMD_Announce = "<&@CMD>";
-    private static String ADD_Announce = "<&@ADD>";
-    private static String USER_Announce = "<&@USER>";
-    private static String CMD_ARGS_SPLITTER = ":=:";
+    private static CmdExecute instance = null;
+    public static CmdExecute get() {
+        if (instance == null) {
+            instance = new CmdExecute();
+        }
+        return instance;
+    }
 
-    public static void CMD_READ(String CMD) {
+    private CmdExecute() {
+    }
+    public void CMD_READ(String CMD) {
         try {
+            String CMD_SPLITTER = "<CMD>&%CMD_12%<CMD>";
+            String CMD_Announce = "<&@CMD>";
+            String ADD_Announce = "<&@ADD>";
+            String USER_Announce = "<&@USER>";
+            String CMD_ARGS_SPLITTER = ":=:";
             if(CMD.startsWith(CMD_SPLITTER)) {
                 CMD = CMD.replaceFirst(CMD_SPLITTER, "");
                 if(CMD.contains(CMD_SPLITTER)) {
@@ -65,7 +76,7 @@ public class CmdExecute {
         }
     }
 
-    public static void updatehashmap(String k) {
+    public void updatehashmap(String k) {
         if(k.equalsIgnoreCase("-buffer-")) {
             return;
         }

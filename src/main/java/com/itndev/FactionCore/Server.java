@@ -13,6 +13,7 @@ import com.itndev.FactionCore.Dump.RedisDump;
 import com.itndev.FactionCore.Dump.YamlDump;
 import com.itndev.FactionCore.Factions.FactionTimeOut;
 import com.itndev.FactionCore.SocketConnection.Client.Client;
+import com.itndev.FactionCore.SocketConnection.Main;
 import com.itndev.FactionCore.SocketConnection.Socket;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 import com.itndev.FactionCore.Utils.Factions.ValidChecker;
@@ -69,8 +70,8 @@ public class Server {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            streamIO = new StreamIO();
-            streamIO.start_ReadStream();
+            //streamIO = new StreamIO();
+            //streamIO.start_ReadStream();
             BungeeStreamReader.RedisStreamReader();
             if(FromMYSQL) {
                 try {
@@ -82,6 +83,7 @@ public class Server {
                 TryLoadYaml();
             }
         }).start();
+        Main.launch();
         try {
             com.itndev.EloSystem.API.Loader.run().get(1000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
@@ -155,18 +157,41 @@ public class Server {
                 if(Close) {
 
 
-                    streamIO.StopIO();
+                    //streamIO.StopIO();
                     //RedisDump.deleteandupload("DUMP");
                     try {
                         MySQLDump.DumpToMySQL();
                     } catch (SQLException throwables) {
                         System.out.println("[ERROR/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + throwables.getMessage());
                     }
-                    RedisDump.set_Verification();
+                    try {
+                        RedisDump.set_Verification();
+                    } catch (Exception e) {
+                        SystemUtils.error_logger(e.getMessage());
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        Main.close();
+                    } catch (Exception e) {
+                        SystemUtils.error_logger(e.getMessage());
+                        e.printStackTrace();
+                    }
                     Streamable = false;
                     Thread.sleep(1000);
-                    Connect.getRedisConnection().close();
-                    TryDumpYaml();
+                    try {
+                        Connect.getRedisConnection().close();
+                    } catch (Exception e) {
+                        SystemUtils.error_logger(e.getMessage());
+                        e.printStackTrace();
+                    }
+                    try {
+                        TryDumpYaml();
+                    } catch (Exception e) {
+                        SystemUtils.error_logger(e.getMessage());
+                        e.printStackTrace();
+                    }
+
                     try {
                         SQL.getConnection().getHikariConnection().close();
                         System.out.println("[SYSTEM/" + SystemUtils.getDate(System.currentTimeMillis()) + "] CLOSED MYSQL CONNECTION");

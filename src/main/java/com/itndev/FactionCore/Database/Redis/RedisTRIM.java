@@ -11,16 +11,13 @@ import java.util.Objects;
 public class RedisTRIM {
 
     private static ArrayList<String> list = new ArrayList<>();
-    private static String this_UUID = "";
 
     private static Long client1 = 0L;
     private static Long client2 = 0L;
     private static Long client3 = 0L;
 
-    private static Long this_Time;
-
     public static void TryAskKeepAlive() {
-        this_UUID = SystemUtils.KeepAlive();
+        SystemUtils.KeepAlive();
     }
 
     public static void KeepAliveResponce(String ServerName, String UUID) {
@@ -51,17 +48,5 @@ public class RedisTRIM {
         Connect.getAsyncRedisCommands().xtrim(StreamConfig.get_Stream_OUTPUT_NAME(),XTrimArgs.Builder.minId(time));
         Connect.getAsyncRedisCommands().xtrim(StreamConfig.get_Stream_INTERCONNECT_NAME(),XTrimArgs.Builder.minId(time));
         Connect.getAsyncRedisCommands().xtrim(StreamConfig.get_Stream_INTERCONNECT_NAME() + "2",XTrimArgs.Builder.minId(time));
-    }
-
-    public static void CheckResponce() {
-        if(list.isEmpty()) {
-            this_UUID = "";
-            Connect.getAsyncRedisCommands().xtrim(StreamConfig.get_Stream_BUNGEE_LINE(), this_Time);
-            Connect.getAsyncRedisCommands().xtrim(StreamConfig.get_Stream_INPUT_NAME(), this_Time);
-            Connect.getAsyncRedisCommands().xtrim(StreamConfig.get_Stream_OUTPUT_NAME(), this_Time);
-            Connect.getAsyncRedisCommands().xtrim(StreamConfig.get_Stream_INTERCONNECT_NAME(), this_Time);
-            Connect.getAsyncRedisCommands().xtrim(StreamConfig.get_Stream_INTERCONNECT_NAME() + "2", this_Time);
-            SystemUtils.logger("TRIMMING Redis Streams Data for Memory Freeing");
-        }
     }
 }
