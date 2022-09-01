@@ -14,17 +14,18 @@ import com.itndev.FactionCore.Dump.YamlDump;
 import com.itndev.FactionCore.Factions.FactionTimeOut;
 import com.itndev.FactionCore.SocketConnection.Client.Client;
 import com.itndev.FactionCore.SocketConnection.Main;
-import com.itndev.FactionCore.SocketConnection.Socket;
+import com.itndev.FactionCore.SocketConnection.kurumi;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 import com.itndev.FactionCore.Utils.Factions.ValidChecker;
-import com.itndev.PlayerPower.Loader;
+import com.itndev.HttpAPI.Jetty;
 import com.itndev.PlayerPower.PlayerPower;
-import com.itndev.FactionCore.SocketConnection.kurumi;
+
 import java.sql.SQLException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+//@SpringBootApplication
 public class Server {
 
 
@@ -46,7 +47,6 @@ public class Server {
 
     public static Boolean FromMYSQL = false;
 
-    @Deprecated
     public static void main(String[] args) {
         SystemUtils.logger(kurumi.Kurumi(5).toString());
         YamlDump.LoadConnectionInfo();
@@ -84,6 +84,13 @@ public class Server {
             }
         }).start();
         Main.launch();
+        Jetty jetty = new Jetty();
+        try {
+            jetty.start();
+        } catch (Exception e) {
+            SystemUtils.error_logger(e.getMessage());
+            e.printStackTrace();
+        }
         try {
             com.itndev.EloSystem.API.Loader.run().get(1000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
@@ -140,7 +147,7 @@ public class Server {
                 try {
                     new Thread(() -> {
                         //RedisDump.deleteandupload("DUMP");
-                        TryDumpYaml();
+                        //TryDumpYaml();
                         try {
                             MySQLDump.DumpToMySQL();
 
@@ -187,6 +194,12 @@ public class Server {
                     }
                     try {
                         TryDumpYaml();
+                    } catch (Exception e) {
+                        SystemUtils.error_logger(e.getMessage());
+                        e.printStackTrace();
+                    }
+                    try {
+                        jetty.stop();
                     } catch (Exception e) {
                         SystemUtils.error_logger(e.getMessage());
                         e.printStackTrace();

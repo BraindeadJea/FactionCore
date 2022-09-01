@@ -21,22 +21,18 @@ public class Main {
     }
 
     private static void output() {
-        while(true) {
+        while (true) {
             if(!com.itndev.FactionCore.Server.Streamable) {
                 break;
             }
+            HashMap<String, String> map;
             synchronized (Storage.TempCommandQueue) {
-                if(!Storage.TempCommandQueue.isEmpty()) {
-                    HashMap<String, String> map = (HashMap<String, String>) Storage.TempCommandQueue.clone();
-                    map.put(StaticVal.getServerNameArgs(), "BackEnd");
-                    ResponseList.get().response(map);
-                    Storage.TempCommandQueue.clear();
-                }
+                map = (HashMap<String, String>) Storage.TempCommandQueue.clone();
+                Storage.TempCommandQueue.clear();
             }
-            try {
-                Thread.sleep(5);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if(!map.isEmpty()) {
+                map.put(StaticVal.getServerNameArgs(), "BackEnd");
+                ResponseList.get().response(map);
             }
         }
     }

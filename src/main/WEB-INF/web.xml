@@ -1,0 +1,23 @@
+<?xml version="1.0" endocing="UTF-8" ?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+		http://java.sun.com/xml/ns/j2ee/web-app_3_0.xsd"
+         id="WebApp_ID"
+        version="3.0">
+
+    <servlet>
+        <servlet-name>RestAPI</servlet-name>
+        <servlet-class>com.itndev.HttpAPI.RestAPI</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>RestAPI</servlet-name>
+        <url-pattern>/data/*</url-pattern>
+        <url-pattern>/data/user/*</url-pattern>
+        <url-pattern>/data/faction/*</url-pattern>
+    </servlet-mapping>
+
+
+</web-app>

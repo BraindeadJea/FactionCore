@@ -69,6 +69,14 @@ public class UserInfoUtils {
         return finalname;
     }
 
+    public static String getPlayerOrginNameFromUUID(String UUID) {
+        String finalname = null;
+        if(UserInfoStorage.uuidname.containsKey(UUID)) {
+            finalname = UserInfoStorage.namename.get(UserInfoStorage.uuidname.get(UUID));
+        }
+        return finalname;
+    }
+
 
 
 

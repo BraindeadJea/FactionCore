@@ -44,6 +44,7 @@ public class ResponseList {
     }
 
     public void closeAll() {
+        response(new HashMap<String, String>());
         Threads.forEach(serverThread -> {
             try {
                 serverThread.close();

@@ -24,7 +24,7 @@ public class ConnectionThread extends Thread {
     }
 
     public void send(HashMap<String, String> map) throws IOException {
-        if(map != null || !map.isEmpty()) {
+        if(map != null) {
             if(output == null) {
                 System.out.println("OutputStream is Null");
                 return;
@@ -77,14 +77,16 @@ public class ConnectionThread extends Thread {
                 HashMap<String, String> map = (HashMap<String, String>) input.readObject();
                 if (map == null || map.isEmpty()) {
                     this.closeAll();
+                    SystemUtils.error_logger("Connection Broken... Plase Reconnect");
                     break;
                 }
                 //System.out.println(line);
-                new Thread(() -> ProcessList.run(map)).start();
+                ProcessList.run(map);
                 //HashMap<String, String> map = Read.String2HashMap(line);
                 //.add(map);
             } catch (IOException | ClassNotFoundException e) {
                 SystemUtils.error_logger(Arrays.toString(e.getStackTrace()));
+                SystemUtils.error_logger("Connection Broken... Plase Reconnect");
                 break;
             }
         }
@@ -92,13 +94,13 @@ public class ConnectionThread extends Thread {
             this.closeAll();
         } catch (IOException e) {
             SystemUtils.error_logger(Arrays.toString(e.getStackTrace()));
+            SystemUtils.error_logger("Connection Broken... Plase Reconnect");
         }
         ResponseList.get().remove(this);
     }
 
     public void closeAll() throws IOException {
-        input.close();
-        output.close();
+        SystemUtils.error_logger("Disconnecting....");
         socket.close();
     }
 }
