@@ -22,12 +22,9 @@ public class Main {
 
     private static void output() {
         while (true) {
-            if(!com.itndev.FactionCore.Server.Streamable) {
-                break;
-            }
-            HashMap<String, String> map;
+            HashMap<Integer, String> map;
             synchronized (Storage.TempCommandQueue) {
-                map = (HashMap<String, String>) Storage.TempCommandQueue.clone();
+                map = new HashMap<>(Storage.TempCommandQueue);
                 Storage.TempCommandQueue.clear();
             }
             if(!map.isEmpty()) {

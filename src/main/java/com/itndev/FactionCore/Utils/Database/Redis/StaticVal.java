@@ -8,7 +8,7 @@ public class StaticVal {
     private static String buffer = "-buffer-";
     private static String command = "commands";
 
-    private static String ServerNameArgs = "SERVERNAME";
+    private static Integer ServerNameArgs = -1;
 
     private static Long RedisCommandTimeoutInMillies = 40L;
 
@@ -32,13 +32,13 @@ public class StaticVal {
         return splitter;
     }
 
-    public static String getServerNameArgs() {
+    public static Integer getServerNameArgs() {
         return ServerNameArgs;
     }
 
 
-    public static String DataTypeArgs = "DATATYPE";
-    public static String getDataTypeArgs() {
+    public static Integer DataTypeArgs = -2;
+    public static Integer getDataTypeArgs() {
         return DataTypeArgs;
     }
 }

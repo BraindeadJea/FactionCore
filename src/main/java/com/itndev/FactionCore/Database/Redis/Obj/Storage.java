@@ -8,33 +8,31 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Storage {
-    public static final HashMap<String, String> TempCommandQueue = new HashMap<>();
+    public static final HashMap<Integer, String> TempCommandQueue = new HashMap<>();
 
     public static void AddCommandToQueue(String command) {
         CmdExecute.get().updatehashmap(command);
         synchronized (TempCommandQueue) {
-            if(!TempCommandQueue.containsKey(StaticVal.getMaxAmount())) {
-                TempCommandQueue.put(StaticVal.getMaxAmount(), "1");
-                TempCommandQueue.put("1", command);
+            if(TempCommandQueue.isEmpty()) {
+                //TempCommandQueue.put(StaticVal.getMaxAmount(), "1");
+                TempCommandQueue.put(1, command);
             } else {
-                Integer num = Integer.parseInt(TempCommandQueue.get(StaticVal.getMaxAmount()));
-                TempCommandQueue.put(StaticVal.getMaxAmount(), String.valueOf(num + 1));
-                TempCommandQueue.put(String.valueOf(num + 1), command);
-                num = null;
+                //Integer num = Integer.parseInt(TempCommandQueue.get(StaticVal.getMaxAmount()));
+                //TempCommandQueue.put(StaticVal.getMaxAmount(), String.valueOf(num + 1));
+                TempCommandQueue.put(TempCommandQueue.size() + 1, command);
             }
         }
     }
 
     public static void ignoreUpdate_AddCommandToQueue(String command) {
         synchronized (TempCommandQueue) {
-            if(!TempCommandQueue.containsKey(StaticVal.getMaxAmount())) {
-                TempCommandQueue.put(StaticVal.getMaxAmount(), "1");
-                TempCommandQueue.put("1", command);
+            if(TempCommandQueue.isEmpty()) {
+                //TempCommandQueue.put(StaticVal.getMaxAmount(), "1");
+                TempCommandQueue.put(1, command);
             } else {
-                Integer num = Integer.parseInt(TempCommandQueue.get(StaticVal.getMaxAmount()));
-                TempCommandQueue.put(StaticVal.getMaxAmount(), String.valueOf(num + 1));
-                TempCommandQueue.put(String.valueOf(num + 1), command);
-                num = null;
+                //Integer num = Integer.parseInt(TempCommandQueue.get(StaticVal.getMaxAmount()));
+                //TempCommandQueue.put(StaticVal.getMaxAmount(), String.valueOf(num + 1));
+                TempCommandQueue.put(TempCommandQueue.size() + 1, command);
             }
         }
     }
@@ -42,14 +40,13 @@ public class Storage {
     public static void AddCommandToQueueFix(String command, String nothing) {
         CmdExecute.get().updatehashmap(command);
         synchronized (TempCommandQueue) {
-            if (!TempCommandQueue.containsKey(StaticVal.getMaxAmount())) {
-                TempCommandQueue.put(StaticVal.getMaxAmount(), "1");
-                TempCommandQueue.put("1", command);
+            if(TempCommandQueue.isEmpty()) {
+                //TempCommandQueue.put(StaticVal.getMaxAmount(), "1");
+                TempCommandQueue.put(1, command);
             } else {
-                Integer num = Integer.parseInt(TempCommandQueue.get(StaticVal.getMaxAmount()));
-                TempCommandQueue.put(StaticVal.getMaxAmount(), String.valueOf(num + 1));
-                TempCommandQueue.put(String.valueOf(num + 1), command);
-                num = null;
+                //Integer num = Integer.parseInt(TempCommandQueue.get(StaticVal.getMaxAmount()));
+                //TempCommandQueue.put(StaticVal.getMaxAmount(), String.valueOf(num + 1));
+                TempCommandQueue.put(TempCommandQueue.size() + 1, command);
             }
         }
     }
@@ -60,13 +57,13 @@ public class Storage {
         }
         synchronized (TempCommandQueue) {
             for(String command : BulkCMD) {
-                if(!TempCommandQueue.containsKey(StaticVal.getMaxAmount())) {
-                    TempCommandQueue.put(StaticVal.getMaxAmount(), "1");
-                    TempCommandQueue.put("1", command);
+                if(TempCommandQueue.isEmpty()) {
+                    //TempCommandQueue.put(StaticVal.getMaxAmount(), "1");
+                    TempCommandQueue.put(1, command);
                 } else {
-                    int num = Integer.parseInt(TempCommandQueue.get(StaticVal.getMaxAmount()));
-                    TempCommandQueue.put(StaticVal.getMaxAmount(), String.valueOf(num + 1));
-                    TempCommandQueue.put(String.valueOf(num + 1), command);
+                    //Integer num = Integer.parseInt(TempCommandQueue.get(StaticVal.getMaxAmount()));
+                    //TempCommandQueue.put(StaticVal.getMaxAmount(), String.valueOf(num + 1));
+                    TempCommandQueue.put(TempCommandQueue.size() + 1, command);
                 }
             }
         }

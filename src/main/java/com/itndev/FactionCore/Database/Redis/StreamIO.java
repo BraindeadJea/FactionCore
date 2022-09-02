@@ -122,12 +122,12 @@ public class StreamIO {
     private void StreamWriter_OUTPUT() {
         String compressedhashmap;
         synchronized (Storage.TempCommandQueue) {
-            compressedhashmap = Read.HashMap2String(Storage.TempCommandQueue);
+            //compressedhashmap = Read.HashMap2String(Storage.TempCommandQueue);
             Storage.TempCommandQueue.clear();
         }
-        if(compressedhashmap != null) {
-            Connect.getRedisCommands().xadd(StreamConfig.get_Stream_OUTPUT_NAME(), Collections.singletonMap(StaticVal.getCommand(), compressedhashmap));
-        }
+        //if(compressedhashmap != null) {
+        //    Connect.getRedisCommands().xadd(StreamConfig.get_Stream_OUTPUT_NAME(), Collections.singletonMap(StaticVal.getCommand(), compressedhashmap));
+        //}
         compressedhashmap = null;
     }
 }

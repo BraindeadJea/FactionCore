@@ -23,7 +23,7 @@ public class ConnectionThread extends Thread {
         this.socket = clientSocket;
     }
 
-    public void send(HashMap<String, String> map) throws IOException {
+    public void send(HashMap<Integer, String> map) throws IOException {
         if(map != null) {
             if(output == null) {
                 System.out.println("OutputStream is Null");
@@ -74,7 +74,7 @@ public class ConnectionThread extends Thread {
                 break;
             }
             try {
-                HashMap<String, String> map = (HashMap<String, String>) input.readObject();
+                HashMap<Integer, String> map = (HashMap<Integer, String>) input.readObject();
                 if (map == null || map.isEmpty()) {
                     this.closeAll();
                     SystemUtils.error_logger("Connection Broken... Plase Reconnect");

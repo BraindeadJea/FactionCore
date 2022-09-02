@@ -31,7 +31,7 @@ public class ResponseList {
         Threads.remove(serverThread);
     }
 
-    public void response(HashMap<String, String> map) {
+    public void response(HashMap<Integer, String> map) {
         Threads.forEach(serverThread ->
                     new Thread(() -> {
                         try {
@@ -44,7 +44,7 @@ public class ResponseList {
     }
 
     public void closeAll() {
-        response(new HashMap<String, String>());
+        response(new HashMap<Integer, String>());
         Threads.forEach(serverThread -> {
             try {
                 serverThread.close();
