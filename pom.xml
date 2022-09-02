@@ -57,7 +57,7 @@
     </build>
     <groupId>com.itndev.FBTM</groupId>
     <artifactId>FactionCore</artifactId>
-    <version>0.7.2</version>
+    <version>0.7.3</version>
 
     <properties>
         <maven.compiler.source>16</maven.compiler.source>

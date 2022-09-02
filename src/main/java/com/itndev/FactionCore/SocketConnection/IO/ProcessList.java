@@ -34,18 +34,18 @@ public class ProcessList {
                 }
                 String DataType = update.get(StaticVal.getDataTypeArgs());
                 if (DataType.equals("FrontEnd-Output")) {
-                    for (int c = 1; c <= update.size(); c++) {
+                    for (int c = 1; c <= update.size() - 2; c++) {
                         CmdExecute.get().CMD_READ(update.get(c));
                     }
                 } else if (DataType.equals("FrontEnd-Interconnect")) {
-                    for (int c = 1; c <= update.size(); c++) {
+                    for (int c = 1; c <= update.size() - 2; c++) {
                         CmdExecute.get().CMD_READ(update.get(c));
                     }
                     ResponseList.get().response(update);
                 } else if (DataType.equals("FrontEnd-Chat")) {
                     ResponseList.get().response(update);
                 } else if (DataType.equals("BungeeCord-Forward")) {
-                    for (int c = 1; c <= update.size(); c++) {
+                    for (int c = 1; c <= update.size() - 2; c++) {
                         BungeeStorage.READ_Bungee_command(update.get(c));
                     }
                     ResponseList.get().response(update);
