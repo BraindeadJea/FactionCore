@@ -12,6 +12,8 @@ import java.util.Queue;
 
 public class ProcessList {
 
+
+    private static final Object sync = new Object();
     /*public static void run() {
         new Thread(() -> {
             while(true) {
@@ -25,27 +27,29 @@ public class ProcessList {
 
      */
     public static void run(HashMap<Integer, String> update) {
-        if (!update.isEmpty()) {
-            if (!update.containsKey(StaticVal.getDataTypeArgs())) {
-                return;
-            }
-            String DataType = update.get(StaticVal.getDataTypeArgs());
-            if (DataType.equals("FrontEnd-Output")) {
-                for (int c = 1; c <= update.size(); c++) {
-                    CmdExecute.get().CMD_READ(update.get(c));
+        synchronized (sync) {
+            if (!update.isEmpty()) {
+                if (!update.containsKey(StaticVal.getDataTypeArgs())) {
+                    return;
                 }
-            } else if (DataType.equals("FrontEnd-Interconnect")) {
-                for (int c = 1; c <= update.size(); c++) {
-                    CmdExecute.get().CMD_READ(update.get(c));
+                String DataType = update.get(StaticVal.getDataTypeArgs());
+                if (DataType.equals("FrontEnd-Output")) {
+                    for (int c = 1; c <= update.size(); c++) {
+                        CmdExecute.get().CMD_READ(update.get(c));
+                    }
+                } else if (DataType.equals("FrontEnd-Interconnect")) {
+                    for (int c = 1; c <= update.size(); c++) {
+                        CmdExecute.get().CMD_READ(update.get(c));
+                    }
+                    ResponseList.get().response(update);
+                } else if (DataType.equals("FrontEnd-Chat")) {
+                    ResponseList.get().response(update);
+                } else if (DataType.equals("BungeeCord-Forward")) {
+                    for (int c = 1; c <= update.size(); c++) {
+                        BungeeStorage.READ_Bungee_command(update.get(c));
+                    }
+                    ResponseList.get().response(update);
                 }
-                ResponseList.get().response(update);
-            } else if (DataType.equals("FrontEnd-Chat")) {
-                ResponseList.get().response(update);
-            } else if (DataType.equals("BungeeCord-Forward")) {
-                for (int c = 1; c <= update.size(); c++) {
-                    BungeeStorage.READ_Bungee_command(update.get(c));
-                }
-                ResponseList.get().response(update);
             }
         }
     }
