@@ -49,7 +49,7 @@ public class Server {
 
     public static void main(String[] args) {
         SystemUtils.logger(kurumi.Kurumi(5).toString());
-        YamlDump.LoadConnectionInfo();
+        //YamlDump.LoadConnectionInfo();
         GUI = new GuiPanel();
         while(!GuiPanel.isLoaded) {
             try {
@@ -62,7 +62,7 @@ public class Server {
         System.out.println("[STARTUP] STARTING UP DATABASE CONNECTION");
         SQL.connect();
         PingSQL();
-        Connect.RedisConnect();
+        //Connect.RedisConnect();
         Streamable = true;
         new Thread(() -> {
             try {
@@ -72,7 +72,7 @@ public class Server {
             }
             //streamIO = new StreamIO();
             //streamIO.start_ReadStream();
-            BungeeStreamReader.RedisStreamReader();
+            //BungeeStreamReader.RedisStreamReader();
             if(FromMYSQL) {
                 try {
                     MySQLDump.LoadFromMySQL();
@@ -110,7 +110,7 @@ public class Server {
             e.printStackTrace();
         }
         System.out.println("[SYSTEM/" + SystemUtils.getDate(System.currentTimeMillis()) + "] Starting up Process");
-        new Thread(() -> {
+        /*new Thread(() -> {
             while(true) {
                 try {
                     Thread.sleep(20000);
@@ -131,7 +131,7 @@ public class Server {
                     RedisTRIM.Trim(RedisTRIM.getSmallest() - 1000);
                 }
             }
-        }).start();
+        }).start();*/
         new Thread(() -> {
             com.itndev.PlayerPower.Loader loader = new com.itndev.PlayerPower.Loader();
             loader.setupConnectionInfo();
@@ -153,7 +153,7 @@ public class Server {
 
                         } catch (Exception ex) {
                             System.out.println("[ERROR/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + ex.getMessage());
-                            Connect.RedisConnect();
+                            //Connect.RedisConnect();
                             SQL.connect();
                         }
                     }).start();
@@ -172,7 +172,7 @@ public class Server {
                         System.out.println("[ERROR/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + throwables.getMessage());
                     }
                     try {
-                        RedisDump.set_Verification();
+                        //RedisDump.set_Verification();
                     } catch (Exception e) {
                         SystemUtils.error_logger(e.getMessage());
                         e.printStackTrace();
@@ -186,12 +186,12 @@ public class Server {
                     }
                     Streamable = false;
                     Thread.sleep(1000);
-                    try {
+                    /*try {
                         Connect.getRedisConnection().close();
                     } catch (Exception e) {
                         SystemUtils.error_logger(e.getMessage());
                         e.printStackTrace();
-                    }
+                    }*/
                     try {
                         TryDumpYaml();
                     } catch (Exception e) {
@@ -219,7 +219,7 @@ public class Server {
                 //System.out.println("[LOG] (EVERY 10 SECONDS) TIME ->" + SystemUtils.getDate(System.currentTimeMillis()));
             } catch (InterruptedException e) {
                 System.out.println("[ERROR/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + e.getMessage());
-                Connect.RedisConnect();
+                //Connect.RedisConnect();
             }
         }
         try {

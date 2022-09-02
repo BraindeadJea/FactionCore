@@ -6,7 +6,7 @@ import com.itndev.FactionCore.SocketConnection.Server.Server;
 public class Socket {
 
     public static Integer getPort() {
-        return 14233;
+        return 9999;
     }
 
     public static void run() {
