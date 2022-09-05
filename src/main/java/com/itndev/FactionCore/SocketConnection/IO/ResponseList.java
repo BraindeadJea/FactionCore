@@ -21,6 +21,14 @@ public class ResponseList {
         return instance;
     }
 
+    public void removeOldConnections() {
+        Threads.forEach(thread -> {
+            if(thread.isClosed()) {
+                Threads.remove(thread);
+            }
+        });
+    }
+
     private ArrayList<ConnectionThread> Threads = new ArrayList<>();
 
     public void add(ConnectionThread serverThread) {
@@ -31,7 +39,7 @@ public class ResponseList {
         Threads.remove(serverThread);
     }
 
-    public void response(HashMap<Integer, String> map) {
+    public synchronized void response(HashMap<Integer, String> map) {
         Threads.forEach(serverThread ->
                     new Thread(() -> {
                         try {

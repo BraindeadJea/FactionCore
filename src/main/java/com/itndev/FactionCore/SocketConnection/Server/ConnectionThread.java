@@ -13,11 +13,17 @@ import java.util.HashMap;
 
 public class ConnectionThread extends Thread {
 
-    private Socket socket;
+    private final Socket socket;
 
     private ObjectInputStream input;
 
     private ObjectOutputStream output;
+
+    private Boolean isClosed = false;
+
+    public Boolean isClosed() {
+        return this.isClosed;
+    }
 
     public ConnectionThread(Socket clientSocket) {
         this.socket = clientSocket;
@@ -81,12 +87,12 @@ public class ConnectionThread extends Thread {
                     break;
                 }
                 //System.out.println(line);
-                ProcessList.run(map);
+                new Thread(() -> ProcessList.run(map));
                 //HashMap<String, String> map = Read.String2HashMap(line);
                 //.add(map);
             } catch (IOException | ClassNotFoundException e) {
                 SystemUtils.error_logger(Arrays.toString(e.getStackTrace()));
-                SystemUtils.error_logger("Connection Broken... Plase Reconnect");
+                SystemUtils.error_logger("Connection Broken... Please Reconnect");
                 break;
             }
         }
@@ -96,7 +102,9 @@ public class ConnectionThread extends Thread {
             SystemUtils.error_logger(Arrays.toString(e.getStackTrace()));
             SystemUtils.error_logger("Connection Broken... Plase Reconnect");
         }
+        isClosed = true;
         ResponseList.get().remove(this);
+        ResponseList.get().removeOldConnections();
     }
 
     public void closeAll() throws IOException {

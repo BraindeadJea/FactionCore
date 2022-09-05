@@ -17,21 +17,30 @@ public class Main {
     public static void launch() {
         server = new Server();
         new Thread(() -> server.run()).start();
-        new Thread(Main::output).start();
+        output();
     }
 
     private static void output() {
-        while (true) {
-            HashMap<Integer, String> map;
-            synchronized (Storage.TempCommandQueue) {
-                map = new HashMap<>(Storage.TempCommandQueue);
-                Storage.TempCommandQueue.clear();
+        new Thread(() -> {
+            try {
+                while (true) {
+                    HashMap<Integer, String> map;
+                    synchronized (Storage.TempCommandQueue) {
+                        map = new HashMap<>(Storage.TempCommandQueue);
+                        Storage.TempCommandQueue.clear();
+                    }
+                    if(!map.isEmpty()) {
+                        map.put(StaticVal.getServerNameArgs(), "BackEnd");
+                        map.put(StaticVal.getDataTypeArgs(), "BackEnd-Responce");
+                        ResponseList.get().response(map);
+                    }
+                    Thread.sleep(2);
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-            if(!map.isEmpty()) {
-                map.put(StaticVal.getServerNameArgs(), "BackEnd");
-                ResponseList.get().response(map);
-            }
-        }
+        }).start();
+
     }
 
     public static void close() {

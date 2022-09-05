@@ -3,6 +3,8 @@ package com.itndev.EloSystem.Storage;
 
 import org.sqlite.SQLiteConfig;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -21,7 +23,9 @@ public class SQLite {
 
     public static void open() throws SQLException {
         SQLiteConfig config = new SQLiteConfig();
-        connection = DriverManager.getConnection("jdbc:sqlite:/" + dbFileName, config.toProperties());
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        connection = DriverManager.getConnection("jdbc:sqlite:/" + s + "/" + dbFileName, config.toProperties());
         CreateELOTable();
     }
 
