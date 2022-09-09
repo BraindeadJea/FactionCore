@@ -1,4 +1,4 @@
-package com.itndev.FactionCore.DataFixer;
+package com.itndev.FaxLib.Utils.Data;
 
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 

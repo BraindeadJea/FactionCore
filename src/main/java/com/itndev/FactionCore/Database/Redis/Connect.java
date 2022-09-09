@@ -1,7 +1,7 @@
 package com.itndev.FactionCore.Database.Redis;
 
 import com.itndev.FactionCore.Discord.AuthStorage;
-import com.itndev.FactionCore.Factions.FactionStorage;
+import com.itndev.FactionCore.Factions.Storage.FactionStorage;
 import com.itndev.FactionCore.Factions.UserInfoStorage;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 import io.lettuce.core.RedisClient;

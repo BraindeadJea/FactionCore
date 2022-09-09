@@ -16,7 +16,7 @@ import java.util.Locale;
 
 public class Processor {
 
-    public static void Processor(String UUID, String[] args, String additionalinfo, String ServerName) {
+    public static synchronized void Processor(String UUID, String[] args, String additionalinfo, String ServerName) {
         if(args.length < 1) {
             FactionHelp.FactionHelp(UUID);
             return;
@@ -35,18 +35,9 @@ public class Processor {
                         AuthStorage.SendAuthInfo(UUID);
                     }
                 } else if(args[0].equalsIgnoreCase("국가멸망")){
-                    String LoserFaction = FactionUtils.getPlayerFactionUUID(UUID);
-                    String WinnerFaction = FactionUtils.getOPPWar(FactionUtils.getPlayerFactionUUID(UUID));
-                    String LoserFactionName = FactionUtils.getCapFactionNameFromUUID(LoserFaction);
-                    String WinnerFactionName = FactionUtils.getCapFactionNameFromUUID(WinnerFaction);
-                    ArrayList<String> LoserFactionMember = FactionUtils.getFactionMember(LoserFaction);
-                    ArrayList<String> WinnerFactionMember = FactionUtils.getFactionMember(WinnerFaction);
-                    List<EloResult> eloResultList = EloUpdater.ProcessWarElo(WinnerFactionMember, LoserFactionMember, true, WinnerFaction, LoserFaction);
-                    new Thread(() -> {
-                        FactionWar.WarEloUpdate(LoserFactionName, WinnerFactionName, LoserFaction, WinnerFaction, LoserFactionMember, WinnerFactionMember, eloResultList);
-                    }).start();
-                    DeleteFactionUtils.DESTORYFaction(UUID, LoserFaction);
-                    FactionWar.NomoreinWar(args[1]);
+
+                    FactionWar.FactionWarProcess(UUID, args);
+
                 } else if(args[0].equalsIgnoreCase("생성")) {
 
                     //=================생성=================
@@ -222,7 +213,7 @@ public class Processor {
 
                             //=================공지=================
 
-                        } else if (args[1].equalsIgnoreCase("동맹") || args[1].equalsIgnoreCase("적대") || args[1].equalsIgnoreCase("중립")) {
+                        }/* else if (args[1].equalsIgnoreCase("동맹") || args[1].equalsIgnoreCase("적대") || args[1].equalsIgnoreCase("중립")) {
 
                             //=================동맹/적대/중립=================
 
@@ -242,7 +233,7 @@ public class Processor {
 
                             //=================동맹/적대/중립=================
 
-                        }
+                        }*/
                     } else {
                         SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f당신은 소속된 국가가 없습니다");
                     }

@@ -1,6 +1,8 @@
 package com.itndev.FactionCore.Transaction.TransactionUtils;
 
 import com.itndev.FactionCore.Factions.FactionTimeOut;
+import com.itndev.FactionCore.Factions.Storage.FactionSync;
+import com.itndev.FactionCore.Lock.Lock;
 import com.itndev.FactionCore.Transaction.TransactionUtils.FactionCD.DeleteFactionUtils;
 import com.itndev.FactionCore.Utils.Factions.FactionUtils;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
@@ -22,20 +24,59 @@ public class DeleteFaction {
         }
     }
 
+
     public static void DeleteFaction(String UUID, String[] args) {
+        if(Lock.CachedhasLock(UUID)) {
+            synchronized (Lock.getLock(UUID).getLock()) {
+                DeleteFaction_lock_2(UUID);
+            }
+        } else {
+            if (Lock.hasLock(UUID)) {
+                synchronized (Lock.getLock(UUID).getLock()) {
+                    DeleteFaction_lock_2(UUID);
+                    Lock.AckLock(UUID);
+                }
+            } else {
+                synchronized (Lock.getPublicLock()) {
+                    DeleteFaction_lock_2(UUID);
+                }
+            }
+        }
+    }
+
+    private static void DeleteFaction_lock_2(String UUID) {
+        String FactionUUID = FactionUtils.getPlayerFactionUUID(UUID);
+        if(Lock.CachedhasLock(FactionUUID)) {
+            synchronized (Lock.getLock(FactionUUID).getLock()) {
+                run(UUID);
+            }
+        } else {
+            if (Lock.hasLock(FactionUUID)) {
+                synchronized (Lock.getLock(FactionUUID).getLock()) {
+                    run(UUID);
+                    Lock.AckLock(FactionUUID);
+                }
+            } else {
+                synchronized (Lock.getPublicLock()) {
+                    run(UUID);
+                }
+            }
+        }
+    }
+
+    private static void run(String UUID) {
         if (FactionUtils.getPlayerRank(UUID).equalsIgnoreCase("leader")) {
-            if(FactionUtils.isInWar(FactionUtils.getPlayerFactionUUID(UUID))) {
+            if (FactionUtils.isInWar(FactionUtils.getPlayerFactionUUID(UUID))) {
                 SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f전쟁 도중에는 국가를 해체할수 없습니다");
                 return;
             }
             String FactionUUID = FactionUtils.getPlayerFactionUUID(UUID);
-            if(FactionTimeOut.Timeout1info.containsKey(FactionUUID)) {
+            if (FactionTimeOut.Timeout1info.containsKey(FactionUUID)) {
                 FactionTimeOut.Timeout1.remove(FactionUUID + "%" + FactionTimeOut.Timeout1info.get(FactionUUID));
                 DeleteFactionUtils.DeteleFaction(UUID, FactionUUID);
             } else {
                 SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f국가를 해체하시려면 먼저 &r&7/국가 해체 &r&f를 먼저 해주세요");
             }
-            FactionUUID = null;
         } else {
             SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f당신은 국가에 소속되어 있지 않거나 국가의 왕이 아닙니다");
         }

@@ -1,20 +1,17 @@
 package com.itndev.FactionCore.Dump;
 
-import com.itndev.FactionCore.DataFixer.MapFixer;
+import com.itndev.FaxLib.Utils.Data.MapFixer;
 import com.itndev.FactionCore.Database.MySQL.SQL;
-import com.itndev.FactionCore.Database.Redis.Connect;
 import com.itndev.FactionCore.Discord.AuthStorage;
-import com.itndev.FactionCore.Factions.FactionStorage;
+import com.itndev.FactionCore.Factions.Storage.FactionStorage;
 import com.itndev.FactionCore.Factions.UserInfoStorage;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class MySQLDump {
 

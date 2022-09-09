@@ -8,12 +8,14 @@
         <outputRelativeToContentRoot value="true" />
         <module name="FactionCore" />
         <module name="FactionBackEnd" />
+        <module name="FactionBackEndTransactionManagement" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="FactionBackEnd" options="-parameters" />
+      <module name="FactionBackEndTransactionManagement" options="-parameters" />
     </option>
   </component>
 </project>

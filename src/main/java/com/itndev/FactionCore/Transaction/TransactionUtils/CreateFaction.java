@@ -2,6 +2,8 @@ package com.itndev.FactionCore.Transaction.TransactionUtils;
 
 import com.itndev.FactionCore.Database.MySQL.SQL;
 import com.itndev.FactionCore.Factions.Config;
+import com.itndev.FactionCore.Factions.Storage.FactionSync;
+import com.itndev.FactionCore.Lock.Lock;
 import com.itndev.FactionCore.Transaction.TransactionUtils.FactionCD.CreateFactionUtils;
 import com.itndev.FactionCore.Utils.Factions.FactionUtils;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
@@ -21,37 +23,53 @@ public class CreateFaction {
                     return;
                 }
                 CompletableFuture<Boolean> FutureValidCheck = ValidChecker.ValidCheck(args[1]);
-                if (FactionUtils.getPlayerRank(UUID).equalsIgnoreCase("nomad")) {
-                    if (FutureValidCheck.get(40, TimeUnit.MILLISECONDS)) {
-                        if (args[1].length() <= 12) {
-                            String newFactionUUID = FactionUtils.newFactionUUID();
-                            if (SQL.getDatabase().TryClaimName(args[1], newFactionUUID).get()) {//try creating a faction name) {
-                                //Main.econ.withdrawPlayer(op, Config.FactionCreateBalance);
-                                CreateFactionUtils.CreateFaction(UUID, newFactionUUID, args[1]);
-                            } else {
-                                SystemUtils.SendMoney(UUID, Config.FactionCreateBalance);
-                                SystemUtils.UUID_BASED_MSG_SENDER(UUID,  SystemUtils.getPrefix() + "&r&f해당 국가가 이미 존재합니다");
-                            }
-                            newFactionUUID = null;
-                        } else {
-                            SystemUtils.SendMoney(UUID, Config.FactionCreateBalance);
-                            SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f국가 이름의 길이는 12자를 초과할수 없습니다");
-                        }
-                    } else {
-                        SystemUtils.SendMoney(UUID, Config.FactionCreateBalance);
-                        SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f해당 문자/단어는 국가 이름에 들어갈수 없습니다");
+                if(Lock.CachedhasLock(UUID)) {
+                    synchronized (Lock.getLock(UUID).getLock()) {
+                        run(UUID, FutureValidCheck, args);
                     }
                 } else {
-                    SystemUtils.SendMoney(UUID, Config.FactionCreateBalance);
-                    SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f당신은 이미 다른 국가에 소속되어 있습니다. 기존 국가를 나간후에 다시 시도해 주십시오");
+                    if (Lock.hasLock(UUID)) {
+                        synchronized (Lock.getLock(UUID).getLock()) {
+                            run(UUID, FutureValidCheck, args);
+                            Lock.AckLock(UUID);
+                        }
+                    } else {
+                        synchronized (Lock.getPublicLock()) {
+                            run(UUID, FutureValidCheck, args);
+                        }
+                    }
                 }
-                FutureValidCheck = null;
-
             } catch (ExecutionException | InterruptedException | TimeoutException e) {
                 SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&c&lERROR &7오류 발생 : 오류코드 DB-D02 (시스템시간:" + SystemUtils.getDate(System.currentTimeMillis()) + ")");
                 e.printStackTrace();
             }
         }).start();
 
+    }
+
+    private static void run(String UUID, CompletableFuture<Boolean> FutureValidCheck, String[] args) throws ExecutionException, InterruptedException, TimeoutException {
+        if (FactionUtils.getPlayerRank(UUID).equalsIgnoreCase("nomad")) {
+            if (FutureValidCheck.get(40, TimeUnit.MILLISECONDS)) {
+                if (args[1].length() <= 12) {
+                    String newFactionUUID = FactionUtils.newFactionUUID();
+                    if (SQL.getDatabase().TryClaimName(args[1], newFactionUUID).get()) {//try creating a faction name) {
+                        //Main.econ.withdrawPlayer(op, Config.FactionCreateBalance);
+                        CreateFactionUtils.CreateFaction(UUID, newFactionUUID, args[1]);
+                    } else {
+                        SystemUtils.SendMoney(UUID, Config.FactionCreateBalance);
+                        SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f해당 국가가 이미 존재합니다");
+                    }
+                } else {
+                    SystemUtils.SendMoney(UUID, Config.FactionCreateBalance);
+                    SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f국가 이름의 길이는 12자를 초과할수 없습니다");
+                }
+            } else {
+                SystemUtils.SendMoney(UUID, Config.FactionCreateBalance);
+                SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f해당 문자/단어는 국가 이름에 들어갈수 없습니다");
+            }
+        } else {
+            SystemUtils.SendMoney(UUID, Config.FactionCreateBalance);
+            SystemUtils.UUID_BASED_MSG_SENDER(UUID, SystemUtils.getPrefix() + "&r&f당신은 이미 다른 국가에 소속되어 있습니다. 기존 국가를 나간후에 다시 시도해 주십시오");
+        }
     }
 }

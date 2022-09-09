@@ -1,14 +1,12 @@
 package com.itndev.FactionCore.Database.Redis;
 
 import com.itndev.FactionCore.Dump.RedisDump;
-import com.itndev.FactionCore.Factions.FactionStorage;
+import com.itndev.FactionCore.Factions.Storage.FactionStorage;
 import com.itndev.FactionCore.Server;
 import com.itndev.FactionCore.Transaction.Processor;
 import com.itndev.FactionCore.Factions.UserInfoStorage;
 import com.itndev.FactionCore.Utils.Cache.CachedStorage;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
-
-import java.util.UUID;
 
 public class CmdExecute {
 
@@ -76,7 +74,7 @@ public class CmdExecute {
         }
     }
 
-    public void updatehashmap(String k) {
+    public static synchronized void updatehashmap(String k) {
         if(k.equalsIgnoreCase("-buffer-")) {
             return;
         }

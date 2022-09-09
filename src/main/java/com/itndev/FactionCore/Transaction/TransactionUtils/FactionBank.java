@@ -2,6 +2,7 @@ package com.itndev.FactionCore.Transaction.TransactionUtils;
 
 import com.itndev.FactionCore.Database.MySQL.SQL;
 import com.itndev.FactionCore.Factions.Config;
+import com.itndev.FactionCore.Factions.Storage.FactionSync;
 import com.itndev.FactionCore.Utils.Factions.FactionUtils;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 import com.itndev.FactionCore.Utils.Factions.ValidChecker;
@@ -17,7 +18,7 @@ public class FactionBank {
         new Thread( () -> {
             try {
                 if (FactionUtils.isInFaction(UUID)) {
-                    if(FactionUtils.isInWar(FactionUtils.getPlayerFactionUUID(UUID))) {
+                    if (FactionUtils.isInWar(FactionUtils.getPlayerFactionUUID(UUID))) {
                         SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f전쟁 도중에는 국가 금고를 사용할수 없습니다");
                         return;
                     }
@@ -44,7 +45,7 @@ public class FactionBank {
 
                     if (!FactionUtils.HigherThenorSameRank(UUID, Config.VipMember)) {
                         SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f권한이 없습니다. &r&c" + Config.VipMember_Lang + " &r&f등급 이상부터 사용이 가능합니다");
-                        if(!Take) {
+                        if (!Take) {
                             SystemUtils.SendMoney(UUID, amount);
                         }
                         return;
@@ -57,34 +58,21 @@ public class FactionBank {
                     } else {
                         if (bal + amount > 9000000000000D) {
                             SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f출금시 최대 금액 한도를 초과하므로 자동으로 해당 출금요청을 취소합니다\n");
-                            Take = null;
-                            amount = null;
-                            bal = null;
                             return;
                         }
                     }
-
                     String FactionUUID = FactionUtils.getPlayerFactionUUID(UUID);
-
                     CompletableFuture<Double> futurebank = SQL.getDatabase().AddFactionBank(FactionUUID, amount);
 
                     Double finalbank = futurebank.get();
                     if (finalbank < 0) {
                         SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f국가 금고에서 해당 금액만큼을 출금하기에는 돈이 부족합니다\n");
-                        if(!Take) {
+                        if (!Take) {
                             SystemUtils.SendMoney(UUID, amount);
                         }
-                        Take = null;
-                        amount = null;
-                        bal = null;
-                        FactionUUID = null;
-                        futurebank = null;
-                        finalbank = null;
                         return;
                     }
-
-                    String TakeorGet = null;
-
+                    String TakeorGet;
                     if (Take) {
                         TakeorGet = "&a출금";
                         //Main.econ.depositPlayer(op, amount);
@@ -92,16 +80,8 @@ public class FactionBank {
                     } else {
                         TakeorGet = "&a입금";
                     }
-
                     SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f성공적으로 해당 금액만큼을 국가 금고에서 " + TakeorGet + " &r했습니다. \n" +
                             "&r&7(남은금액 : " + df.format(finalbank) + "원)");
-                    Take = null;
-                    amount = null;
-                    bal = null;
-                    FactionUUID = null;
-                    futurebank = null;
-                    finalbank = null;
-                    TakeorGet = null;
 
                 } else {
                     SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f당신은 소속된 국가가 없습니다");
@@ -111,6 +91,5 @@ public class FactionBank {
                 e.printStackTrace();
             }
         }).start();
-
     }
 }

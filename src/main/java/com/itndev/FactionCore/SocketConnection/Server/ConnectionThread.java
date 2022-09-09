@@ -76,18 +76,18 @@ public class ConnectionThread extends Thread {
         }).start();*/
         while (true) {
 
-            if(socket.isClosed() || !Server.Streamable) {
+            if(socket.isClosed()) {
                 break;
             }
             try {
                 HashMap<Integer, String> map = (HashMap<Integer, String>) input.readObject();
-                if (map == null || map.isEmpty()) {
+                if (map.isEmpty()) {
                     this.closeAll();
-                    SystemUtils.error_logger("Connection Broken... Plase Reconnect");
+                    SystemUtils.error_logger("Connection Broken... Please Reconnect");
                     break;
                 }
                 //System.out.println(line);
-                new Thread(() -> ProcessList.run(map));
+                ProcessList.run(map);
                 //HashMap<String, String> map = Read.String2HashMap(line);
                 //.add(map);
             } catch (IOException | ClassNotFoundException e) {
@@ -100,7 +100,7 @@ public class ConnectionThread extends Thread {
             this.closeAll();
         } catch (IOException e) {
             SystemUtils.error_logger(Arrays.toString(e.getStackTrace()));
-            SystemUtils.error_logger("Connection Broken... Plase Reconnect");
+            SystemUtils.error_logger("Connection Broken... Please Reconnect");
         }
         isClosed = true;
         ResponseList.get().remove(this);

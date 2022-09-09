@@ -31,6 +31,8 @@ public class Server {
                 ConnectionThread ServerThread = new ConnectionThread(serverSocket.accept());
                 ServerThread.start();
                 ResponseList.get().add(ServerThread);
+                SystemUtils.logger("New Connection From Client");
+                SystemUtils.logger(ServerThread.toString());
             }
 
             //Socket socket = serverSocket.accept();

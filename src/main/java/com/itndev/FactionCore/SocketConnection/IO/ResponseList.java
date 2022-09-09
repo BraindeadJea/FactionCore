@@ -1,6 +1,7 @@
 package com.itndev.FactionCore.SocketConnection.IO;
 
 import com.itndev.FactionCore.SocketConnection.Server.ConnectionThread;
+import org.eclipse.jetty.util.IO;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class ResponseList {
         });
     }
 
-    private ArrayList<ConnectionThread> Threads = new ArrayList<>();
+    private final ArrayList<ConnectionThread> Threads = new ArrayList<>();
 
     public void add(ConnectionThread serverThread) {
         Threads.add(serverThread);
@@ -39,16 +40,22 @@ public class ResponseList {
         Threads.remove(serverThread);
     }
 
-    public synchronized void response(HashMap<Integer, String> map) {
-        Threads.forEach(serverThread ->
-                    new Thread(() -> {
-                        try {
-                            serverThread.send(map);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }).start()
-                );
+    public void response(HashMap<Integer, String> map) {
+        new Thread(() -> {Threads.forEach(serverThread -> {
+            try {
+                serverThread.send(map);
+            } catch (IOException e) {
+                this.Threads.remove(serverThread);
+                try {
+                    serverThread.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                e.printStackTrace();
+            }
+        });
+        }).start();
+
     }
 
     public void closeAll() {

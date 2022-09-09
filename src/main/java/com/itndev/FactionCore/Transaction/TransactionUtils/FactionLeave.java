@@ -2,6 +2,8 @@ package com.itndev.FactionCore.Transaction.TransactionUtils;
 
 import com.itndev.FactionCore.Database.Redis.Obj.Storage;
 import com.itndev.FactionCore.Factions.Config;
+import com.itndev.FactionCore.Factions.Storage.FactionSync;
+import com.itndev.FactionCore.Lock.Lock;
 import com.itndev.FactionCore.Utils.Factions.FactionUtils;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 import com.itndev.FactionCore.Utils.Factions.UserInfoUtils;
@@ -12,15 +14,54 @@ import java.util.List;
 public class FactionLeave {
 
     public static void FactionLeave(String UUID, String[] args) {
-        if(!FactionUtils.isInFaction(UUID)) {
+        if(Lock.CachedhasLock(UUID)) {
+            synchronized (Lock.getLock(UUID).getLock()) {
+                lock(UUID);
+            }
+        } else {
+            if (Lock.hasLock(UUID)) {
+                synchronized (Lock.getLock(UUID).getLock()) {
+                    lock(UUID);
+                    Lock.AckLock(UUID);
+                }
+            } else {
+                synchronized (Lock.getPublicLock()) {
+                    lock(UUID);
+                }
+            }
+        }
+    }
+
+    private static void lock(String UUID) {
+        if (!FactionUtils.isInFaction(UUID)) {
             SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f당신은 소속된 국가가 없습니다");
             return;
         }
-        if(FactionUtils.isInWar(FactionUtils.getPlayerFactionUUID(UUID))) {
+        String FactionUUID = FactionUtils.getPlayerFactionUUID(UUID);
+        if(Lock.CachedhasLock(FactionUUID)) {
+            synchronized (Lock.getLock(FactionUUID).getLock()) {
+                run(UUID);
+            }
+        } else {
+            if (Lock.hasLock(FactionUUID)) {
+                synchronized (Lock.getLock(FactionUUID).getLock()) {
+                    run(UUID);
+                    Lock.AckLock(FactionUUID);
+                }
+            } else {
+                synchronized (Lock.getPublicLock()) {
+                    run(UUID);
+                }
+            }
+        }
+    }
+
+    private static void run(String UUID) {
+        if (FactionUtils.isInWar(FactionUtils.getPlayerFactionUUID(UUID))) {
             SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f전쟁 중에는 국가에서 나갈수 없습니다");
             return;
         }
-        if(FactionUtils.getPlayerRank(UUID).equalsIgnoreCase(Config.Leader)) {
+        if (FactionUtils.getPlayerRank(UUID).equalsIgnoreCase(Config.Leader)) {
             SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f국가의 " + Config.Leader_Lang + " 은 국가를 나갈 수 없습니다. 국가의 소유권을 양도하거나 해체해야 합니다.\n" +
                     "&f(&7/국가 양도 (이름)&8, &7/국가 해체&f)");
             return;

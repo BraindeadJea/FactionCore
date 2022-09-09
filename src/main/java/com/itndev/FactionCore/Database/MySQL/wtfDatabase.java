@@ -1,9 +1,8 @@
 package com.itndev.FactionCore.Database.MySQL;
 
-import com.itndev.FactionCore.Factions.FactionStorage;
+import com.itndev.FactionCore.Factions.Storage.FactionStorage;
 import com.itndev.FactionCore.Utils.Factions.CacheUtils;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

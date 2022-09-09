@@ -1,5 +1,6 @@
-package com.itndev.FactionCore.Factions;
+package com.itndev.FactionCore.Factions.Storage;
 
+import com.itndev.FactionCore.Factions.FactionTimeOut;
 import com.itndev.FactionCore.Server;
 
 import java.util.ArrayList;

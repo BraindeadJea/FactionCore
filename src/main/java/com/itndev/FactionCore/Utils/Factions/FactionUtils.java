@@ -2,8 +2,9 @@ package com.itndev.FactionCore.Utils.Factions;
 
 import com.itndev.FactionCore.Database.Redis.Obj.Storage;
 import com.itndev.FactionCore.Factions.Config;
-import com.itndev.FactionCore.Factions.FactionStorage;
+import com.itndev.FactionCore.Factions.Storage.FactionStorage;
 import com.itndev.FactionCore.Factions.Lang;
+import com.itndev.FactionCore.Lock.Lock;
 import com.itndev.FactionCore.Server;
 
 import java.util.*;
@@ -157,12 +158,7 @@ public class FactionUtils {
         BulkCMD.add("update:=:FactionNameToFactionUUID:=:remove:=:" + FactionName + ":=:add:=:" + "nothing");
         BulkCMD.add("update:=:FactionNameToFactionName:=:remove:=:" + FactionName + ":=:add:=:" + "nothing");
         BulkCMD.add("update:=:FactionUUIDToFactionName:=:remove:=:" + FactionUUID + ":=:add:=:" + "nothing");
-        if(FactionStorage.FactionMember.containsKey(FactionUUID)) {
-            for(String PlayerUUID : FactionStorage.FactionMember.get(FactionUUID)) {
-                BulkCMD.add("update:=:FactionRank:=:add:=:" + PlayerUUID + ":=:add:=:" + Config.Nomad);
-                BulkCMD.add("update:=:PlayerFaction:=:remove:=:" + PlayerUUID + ":=:add:=:ddd");
-            }
-        }
+        List<String> Members = FactionStorage.FactionMember.get(FactionUUID);
         if(FactionStorage.FactionToLand.containsKey(FactionUUID)) {
             for(String Chunkkey : FactionStorage.FactionToLand.get(FactionUUID)) {
                 BulkCMD.add("update:=:LandToFaction:=:remove:=:" + Chunkkey + ":=:remove:=:" + FactionUUID);
@@ -187,8 +183,80 @@ public class FactionUtils {
         BulkCMD.add("update:=:FactionOutPost:=:remove:=:" + FactionUUID + ":=:add:=:" + "nothing");
         BulkCMD.add("update:=:FactionWarpLocations:=:remove:=:" + FactionUUID + ":=:add:=:" + "nothing");
         Storage.AddBulkCommandToQueue(BulkCMD);
-        FactionName = null;
-        BulkCMD = null;
+        new Thread(() -> {
+            for(String PlayerUUID : Members) {
+                if(Lock.CachedhasLock(PlayerUUID)) {
+                    synchronized (Lock.getLock(PlayerUUID).getLock()) {
+                        removePlayerFactionLock(PlayerUUID, FactionUUID);
+                    }
+                } else {
+                    if (Lock.hasLock(PlayerUUID)) {
+                        synchronized (Lock.getLock(PlayerUUID).getLock()) {
+                            removePlayerFactionLock(PlayerUUID, FactionUUID);
+                            Lock.AckLock(PlayerUUID);
+                        }
+                    } else {
+                        synchronized (Lock.getPublicLock()) {
+                            removePlayerFactionLock(PlayerUUID, FactionUUID);
+                        }
+                    }
+                }
+            }
+        }).start();
+    }
+
+
+    public static Boolean isUsedFactionUUID(String FactionUUID) {
+        return (FactionStorage.FactionUUIDToFactionName.containsKey(FactionUUID));
+    }
+    public static void AsyncRemovePlayerFromFaction(String UUID, String FactionUUID) {
+        new Thread(() -> {
+            if(Lock.CachedhasLock(UUID)) {
+                synchronized (Lock.getLock(UUID).getLock()) {
+                    removePlayerFactionLock(UUID, FactionUUID);
+                }
+            } else {
+                if (Lock.hasLock(UUID)) {
+                    synchronized (Lock.getLock(UUID).getLock()) {
+                        removePlayerFactionLock(UUID, FactionUUID);
+                        Lock.AckLock(UUID);
+                    }
+                } else {
+                    synchronized (Lock.getPublicLock()) {
+                        removePlayerFactionLock(UUID, FactionUUID);
+                    }
+                }
+            }
+        }).start();
+    }
+
+    private static void removePlayerFactionLock(String PlayerUUID, String FromFactionUUID) {
+        if(Lock.CachedhasLock(FromFactionUUID)) {
+            synchronized (Lock.getLock(FromFactionUUID).getLock()) {
+                makePlayerLeaveFaction(PlayerUUID, FromFactionUUID);
+            }
+        } else {
+            if (Lock.hasLock(FromFactionUUID)) {
+                synchronized (Lock.getLock(FromFactionUUID).getLock()) {
+                    makePlayerLeaveFaction(PlayerUUID, FromFactionUUID);
+                    Lock.AckLock(FromFactionUUID);
+                }
+            } else {
+                synchronized (Lock.getPublicLock()) {
+                    makePlayerLeaveFaction(PlayerUUID, FromFactionUUID);
+                }
+            }
+        }
+    }
+
+    private static void makePlayerLeaveFaction(String UUID, String FromFactionUUID) {
+        List<String> BulkCMD = new ArrayList<>();
+        BulkCMD.add("update:=:FactionMember:=:add:=:" + FromFactionUUID + ":=:remove:=:" + UUID);
+        if(FactionStorage.PlayerFaction.containsKey(UUID) && FactionStorage.PlayerFaction.get(UUID).equals(FromFactionUUID)) {
+            BulkCMD.add("update:=:FactionRank:=:add:=:" + UUID + ":=:add:=:" + Config.Nomad);
+            BulkCMD.add("update:=:PlayerFaction:=:remove:=:" + UUID + ":=:add:=:ddd");
+        }
+        Storage.AddBulkCommandToQueue(BulkCMD);
     }
 
     public static Boolean isExistingOutPost(String FactionUUID, String OutPostName) {
