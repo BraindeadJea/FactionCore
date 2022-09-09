@@ -28,18 +28,15 @@ public class ProcessList {
 
      */
     public static void run(HashMap<Integer, String> update) {
+        new Thread(() -> {
+            for (int c = 1; c <= update.size() - 2; c++) {
+                CmdExecute.get().CMD_READ(update.get(c));
+            }
+        }).start();
         if (!update.isEmpty() && update.containsKey(StaticVal.getDataTypeArgs())) {
             String DataType = update.get(StaticVal.getDataTypeArgs());
-            if (DataType.equalsIgnoreCase("FrontEnd-Output")) {
-                for (int c = 1; c <= update.size() - 2; c++) {
-                    CmdExecute.get().CMD_READ(update.get(c));
-                }
-            } else {
-                if (DataType.equalsIgnoreCase("FrontEnd-Interconnect")) {
-                    for (int c = 1; c <= update.size() - 2; c++) {
-                        CmdExecute.get().CMD_READ(update.get(c));
-                    }
-                } else if (DataType.equalsIgnoreCase("BungeeCord-Forward")) {
+            if (!DataType.equals("FrontEnd-Output")) {
+                if (DataType.equals("BungeeCord-Forward")) {
                     for (int c = 1; c <= update.size() - 2; c++) {
                         BungeeStorage.READ_Bungee_command(update.get(c));
                     }

@@ -1,13 +1,17 @@
+com\itndev\FactionCore\Factions\Storage\FactionSync.class
 com\itndev\FactionCore\Discord\DiscordListener.class
+com\itndev\FactionCore\Lock\LockObject.class
 com\itndev\FactionCore\Transaction\TransactionUtils\FactionCD\DeleteFactionUtils.class
 com\itndev\HttpAPI\Jetty.class
 com\itndev\FactionCore\SocketConnection\IO\ResponseList.class
 com\itndev\FactionCore\SocketConnection\IO\ProcessList.class
 com\itndev\FactionCore\Dump\MySQLDump.class
 com\itndev\FactionCore\Database\Redis\StreamIO.class
-com\itndev\FactionCore\Factions\TransactionManager.class
 com\itndev\PlayerPower\Loader.class
+com\itndev\FactionCore\Lock\LocalLock.class
 com\itndev\FactionCore\Factions\Config.class
+com\itndev\FaxLib\Utils\UtilLoader.class
+com\itndev\FactionCore\Factions\Storage\FactionStorage.class
 com\itndev\FactionCore\Server.class
 com\itndev\FactionCore\SocketConnection\Main.class
 com\itndev\FactionCore\SocketConnection\Client\Client.class
@@ -18,6 +22,7 @@ com\itndev\FactionCore\Transaction\TransactionUtils\FactionInvite.class
 com\itndev\EloSystem\API\EloUpdater.class
 com\itndev\FactionCore\Database\MySQL\SQL.class
 com\itndev\FactionCore\Database\Redis\BungeeAPI\BungeeAPI.class
+com\itndev\FaxLib\Utils\File\Yaml.class
 com\itndev\FactionCore\Factions\Faction.class
 com\itndev\FactionCore\Dump\RedisDump.class
 com\itndev\EloSystem\Package\Pair.class
@@ -25,7 +30,9 @@ com\itndev\FactionCore\Transaction\TransactionUtils\CreateFaction.class
 com\itndev\FactionCore\Transaction\TransactionUtils\FactionCD\CreateFactionUtils.class
 com\itndev\FactionCore\Database\Redis\BungeeAPI\BungeeStreamReader.class
 com\itndev\FactionCore\Transaction\Processor.class
+com\itndev\FaxLib\Utils\Data\Queue.class
 com\itndev\HttpAPI\AsyncAPI$1.class
+com\itndev\FactionCore\Factions\Transaction.class
 com\itndev\FactionCore\Database\Redis\Obj\StreamConfig.class
 com\itndev\FactionCore\Utils\Database\Redis\StaticVal.class
 com\itndev\EloSystem\Package\EloResult.class
@@ -35,6 +42,7 @@ com\itndev\HttpAPI\FactionAPI.class
 com\itndev\FactionCore\Utils\Factions\CacheUtils.class
 com\itndev\EloSystem\Storage\SQLite.class
 com\itndev\FactionCore\Transaction\TransactionUtils\FactionKick.class
+com\itndev\FaxLib\FaxLib.class
 com\itndev\HttpAPI\RestAPI.class
 com\itndev\FactionCore\Database\Redis\Connect.class
 com\itndev\FactionCore\Transaction\TransactionUtils\FactionWar.class
@@ -50,6 +58,7 @@ com\itndev\FactionCore\Database\IOManager.class
 com\itndev\FactionCore\Utils\Factions\SystemUtils.class
 com\itndev\FactionCore\Transaction\TransactionUtils\FactionLeaderPromote.class
 com\itndev\FactionCore\SocketConnection\Server\ConnectionThread.class
+com\itndev\FaxLib\Utils\Database\SQL.class
 com\itndev\FactionCore\SocketConnection\Socket.class
 com\itndev\FactionCore\Database\Redis\Obj\Storage.class
 com\itndev\FactionCore\Transaction\TransactionUtils\FactionBank.class
@@ -59,8 +68,9 @@ com\itndev\EloSystem\Utils\EloUtils.class
 com\itndev\FactionCore\Database\Redis\RedisTRIM.class
 com\itndev\EloSystem\Storage\EloPlayer.class
 com\itndev\PlayerPower\PlayerPower.class
-com\itndev\FactionCore\DataFixer\MapFixer.class
+com\itndev\FactionCore\Lock\Lock.class
 com\itndev\EloSystem\API\Loader.class
+com\itndev\FaxLib\Utils\Data\MapFixer.class
 com\itndev\FactionCore\Transaction\TransactionUtils\FactionHelp.class
 com\itndev\HttpAPI\AsyncAPI.class
 com\itndev\FactionCore\Factions\Lang.class
@@ -69,7 +79,6 @@ com\itndev\FactionCore\SocketConnection\kurumi.class
 com\itndev\FactionCore\Database\Redis\CmdExecute.class
 com\itndev\FactionCore\Database\Redis\StreamListener.class
 com\itndev\FactionCore\Database\Gui\LoadMySQLListener.class
-com\itndev\FactionCore\Factions\FactionStorage.class
 com\itndev\FactionCore\Utils\Factions\FactionUtils.class
 com\itndev\FactionCore\Database\Gui\ExitListener.class
 com\itndev\FactionCore\Database\MySQL\wtfDatabase.class

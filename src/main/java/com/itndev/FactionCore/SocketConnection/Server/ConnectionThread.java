@@ -87,7 +87,7 @@ public class ConnectionThread extends Thread {
                     break;
                 }
                 //System.out.println(line);
-                ProcessList.run(map);
+                new Thread(() -> ProcessList.run(map));
                 //HashMap<String, String> map = Read.String2HashMap(line);
                 //.add(map);
             } catch (IOException | ClassNotFoundException e) {

@@ -134,8 +134,6 @@ public class CmdExecute {
             }
         } else if(args[0].equalsIgnoreCase("syncandclose")) {
             Server.Close = true;
-        } else {
-            System.out.println("[WARNING (REDIS)] WRONG COMMAND USAGE FROM REDIS" + " ( '" + k + "' )");
         }
         args = null;
 
