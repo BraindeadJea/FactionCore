@@ -10,6 +10,9 @@ import com.itndev.FactionCore.Utils.Factions.UserInfoUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class FactionTimeOut {
 
@@ -177,7 +180,17 @@ public class FactionTimeOut {
     }
 
     public static void InvitePlayer(String FactionUUID, String UUID) {
-        if(Lock.CachedhasLock(UUID)) {
+        try {
+            synchronized (Lock.tryOptainLock(UUID).get(Lock.Timeout, TimeUnit.MILLISECONDS).getLock()) {
+                synchronized (Lock.tryOptainLock(FactionUUID).get(Lock.Timeout, TimeUnit.MILLISECONDS).getLock()) {
+                    InvitePlayer_run(FactionUUID, UUID);
+                }
+            }
+        } catch (TimeoutException | ExecutionException | InterruptedException e) {
+            SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&c&lERROR &7오류 발생 : 오류코드 TIMEOUT_LOCK_002 (시스템시간:" + SystemUtils.getDate(System.currentTimeMillis()) + ")");
+            e.printStackTrace();
+        }
+        /*if(Lock.CachedhasLock(UUID)) {
             synchronized (Lock.getLock(UUID).getLock()) {
                 InvitePlayer_lock(UUID, FactionUUID);
             }
@@ -192,11 +205,11 @@ public class FactionTimeOut {
                     InvitePlayer_lock(UUID, FactionUUID);
                 }
             }
-        }
+        }*/
 
     }
 
-    private static void InvitePlayer_lock(String FactionUUID, String UUID) {
+    /*private static void InvitePlayer_lock(String FactionUUID, String UUID) {
         if(Lock.CachedhasLock(UUID)) {
             synchronized (Lock.getLock(UUID).getLock()) {
                 InvitePlayer_run(UUID, FactionUUID);
@@ -213,7 +226,7 @@ public class FactionTimeOut {
                 }
             }
         }
-    }
+    }*/
 
     private static void InvitePlayer_run(String FactionUUID, String UUID) {
         if(FactionUtils.isUsedFactionUUID(FactionUUID)) {
@@ -226,7 +239,7 @@ public class FactionTimeOut {
     }
 
 
-    public static void AcceptInvite(String UUID, String FactionUUID) {
+    /*public static void AcceptInvite(String UUID, String FactionUUID) {
         if(Lock.CachedhasLock(UUID)) {
             synchronized (Lock.getLock(UUID).getLock()) {
                 AcceptInvite_lock(UUID, FactionUUID);
@@ -262,9 +275,9 @@ public class FactionTimeOut {
                 }
             }
         }
-    }
+    }*/
 
-    private static void AcceptInvite_run(String UUID, String FactionUUID) {
+    public static void AcceptInvite(String UUID, String FactionUUID) {
         if (Timeout2.containsKey(UUID + "%" + FactionUUID) && Timeout2info.get(UUID).contains(FactionUUID)) {
             Storage.AddCommandToQueue("update:=:Timeout2:=:remove:=:" + UUID + "%" + FactionUUID + ":=:add:=:" + 30);
             Storage.AddCommandToQueue("update:=:Timeout2info:=:remove:=:" + UUID + ":=:add:=:" + 30);

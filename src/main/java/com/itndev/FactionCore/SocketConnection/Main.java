@@ -7,6 +7,7 @@ import com.itndev.FactionCore.SocketConnection.IO.ResponseList;
 import com.itndev.FactionCore.SocketConnection.Server.Server;
 import com.itndev.FactionCore.Utils.Database.Redis.Read;
 import com.itndev.FactionCore.Utils.Database.Redis.StaticVal;
+import com.itndev.FaxLib.Utils.Data.DataStream;
 
 import java.util.HashMap;
 
@@ -24,15 +25,13 @@ public class Main {
         new Thread(() -> {
             try {
                 while (true) {
-                    HashMap<Integer, String> map;
+                    DataStream stream;
                     synchronized (Storage.TempCommandQueue) {
-                        map = new HashMap<>(Storage.TempCommandQueue);
+                        stream = new DataStream("BackEnd", "BackEnd-Responce", Storage.TempCommandQueue);
                         Storage.TempCommandQueue.clear();
                     }
-                    if(!map.isEmpty()) {
-                        map.put(StaticVal.getServerNameArgs(), "BackEnd");
-                        map.put(StaticVal.getDataTypeArgs(), "BackEnd-Responce");
-                        ResponseList.get().response(map);
+                    if(!stream.getStream().isEmpty()) {
+                        ResponseList.get().response(stream);
                     }
                     Thread.sleep(2);
                 }

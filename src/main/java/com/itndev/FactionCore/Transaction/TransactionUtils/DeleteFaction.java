@@ -7,6 +7,10 @@ import com.itndev.FactionCore.Transaction.TransactionUtils.FactionCD.DeleteFacti
 import com.itndev.FactionCore.Utils.Factions.FactionUtils;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 public class DeleteFaction {
     public static void DeleteFactionQueue(String UUID, String[] args) {
         if (FactionUtils.getPlayerRank(UUID).equalsIgnoreCase("leader")) {
@@ -26,7 +30,18 @@ public class DeleteFaction {
 
 
     public static void DeleteFaction(String UUID, String[] args) {
-        if(Lock.CachedhasLock(UUID)) {
+        try {
+            synchronized (Lock.tryOptainLock(UUID).get(Lock.Timeout, TimeUnit.MILLISECONDS).getLock()) {
+                String FactionUUID = FactionUtils.getPlayerFactionUUID(UUID);
+                synchronized (Lock.tryOptainLock(FactionUUID).get(Lock.Timeout, TimeUnit.MILLISECONDS).getLock()) {
+                    run(UUID);
+                }
+            }
+        } catch (TimeoutException | ExecutionException | InterruptedException e) {
+            SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&c&lERROR &7오류 발생 : 오류코드 DB-D02 (시스템시간:" + SystemUtils.getDate(System.currentTimeMillis()) + ")");
+            e.printStackTrace();
+        }
+        /*if(Lock.CachedhasLock(UUID)) {
             synchronized (Lock.getLock(UUID).getLock()) {
                 DeleteFaction_lock_2(UUID);
             }
@@ -41,11 +56,11 @@ public class DeleteFaction {
                     DeleteFaction_lock_2(UUID);
                 }
             }
-        }
+        }*/
     }
 
-    private static void DeleteFaction_lock_2(String UUID) {
-        String FactionUUID = FactionUtils.getPlayerFactionUUID(UUID);
+    /*private static void DeleteFaction_lock_2(String UUID) {
+
         if(Lock.CachedhasLock(FactionUUID)) {
             synchronized (Lock.getLock(FactionUUID).getLock()) {
                 run(UUID);
@@ -62,7 +77,7 @@ public class DeleteFaction {
                 }
             }
         }
-    }
+    }*/
 
     private static void run(String UUID) {
         if (FactionUtils.getPlayerRank(UUID).equalsIgnoreCase("leader")) {

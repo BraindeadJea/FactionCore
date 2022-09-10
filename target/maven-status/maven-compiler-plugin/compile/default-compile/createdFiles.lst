@@ -12,6 +12,7 @@ com\itndev\FactionCore\Lock\LocalLock.class
 com\itndev\FactionCore\Factions\Config.class
 com\itndev\FaxLib\Utils\UtilLoader.class
 com\itndev\FactionCore\Factions\Storage\FactionStorage.class
+com\itndev\FaxLib\Utils\Global.class
 com\itndev\FactionCore\Server.class
 com\itndev\FactionCore\SocketConnection\Main.class
 com\itndev\FactionCore\SocketConnection\Client\Client.class
@@ -78,6 +79,7 @@ com\itndev\FactionCore\Factions\UserInfoStorage.class
 com\itndev\FactionCore\SocketConnection\kurumi.class
 com\itndev\FactionCore\Database\Redis\CmdExecute.class
 com\itndev\FactionCore\Database\Redis\StreamListener.class
+com\itndev\FaxLib\Utils\Data\DataStream.class
 com\itndev\FactionCore\Database\Gui\LoadMySQLListener.class
 com\itndev\FactionCore\Utils\Factions\FactionUtils.class
 com\itndev\FactionCore\Database\Gui\ExitListener.class

@@ -23,9 +23,12 @@ public class CreateFaction {
                     return;
                 }
                 CompletableFuture<Boolean> FutureValidCheck = ValidChecker.ValidCheck(args[1]);
-                if(Lock.CachedhasLock(UUID)) {
+                synchronized (Lock.tryOptainLock(UUID).get(Lock.Timeout, TimeUnit.MILLISECONDS).getLock()) {
+                    run(UUID, FutureValidCheck, args);
+                }
+                /*if(Lock.CachedhasLock(UUID)) {
                     synchronized (Lock.getLock(UUID).getLock()) {
-                        run(UUID, FutureValidCheck, args);
+
                     }
                 } else {
                     if (Lock.hasLock(UUID)) {
@@ -38,8 +41,8 @@ public class CreateFaction {
                             run(UUID, FutureValidCheck, args);
                         }
                     }
-                }
-            } catch (ExecutionException | InterruptedException | TimeoutException e) {
+                }*/
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&c&lERROR &7오류 발생 : 오류코드 DB-D02 (시스템시간:" + SystemUtils.getDate(System.currentTimeMillis()) + ")");
                 e.printStackTrace();
             }

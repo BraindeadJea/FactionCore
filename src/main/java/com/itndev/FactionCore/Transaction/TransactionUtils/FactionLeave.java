@@ -10,11 +10,29 @@ import com.itndev.FactionCore.Utils.Factions.UserInfoUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class FactionLeave {
 
     public static void FactionLeave(String UUID, String[] args) {
-        if(Lock.CachedhasLock(UUID)) {
+        try {
+            synchronized (Lock.tryOptainLock(UUID).get(Lock.Timeout, TimeUnit.MILLISECONDS).getLock()) {
+                if (!FactionUtils.isInFaction(UUID)) {
+                    SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f당신은 소속된 국가가 없습니다");
+                    return;
+                }
+                String FacitonUUID = FactionUtils.getPlayerFactionUUID(UUID);
+                synchronized (Lock.tryOptainLock(FacitonUUID).get(Lock.Timeout, TimeUnit.MILLISECONDS).getLock()) {
+                    run(UUID);
+                }
+            }
+        } catch (TimeoutException | ExecutionException | InterruptedException e) {
+            SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&c&lERROR &7오류 발생 : 오류코드 TIMEOUT_LOCK_002 (시스템시간:" + SystemUtils.getDate(System.currentTimeMillis()) + ")");
+            e.printStackTrace();
+        }
+        /*if(Lock.CachedhasLock(UUID)) {
             synchronized (Lock.getLock(UUID).getLock()) {
                 lock(UUID);
             }
@@ -29,10 +47,10 @@ public class FactionLeave {
                     lock(UUID);
                 }
             }
-        }
+        }*/
     }
 
-    private static void lock(String UUID) {
+    /*private static void lock(String UUID) {
         if (!FactionUtils.isInFaction(UUID)) {
             SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f당신은 소속된 국가가 없습니다");
             return;
@@ -54,7 +72,7 @@ public class FactionLeave {
                 }
             }
         }
-    }
+    }*/
 
     private static void run(String UUID) {
         if (FactionUtils.isInWar(FactionUtils.getPlayerFactionUUID(UUID))) {

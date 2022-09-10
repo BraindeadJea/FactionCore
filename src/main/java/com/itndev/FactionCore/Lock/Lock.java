@@ -2,26 +2,48 @@ package com.itndev.FactionCore.Lock;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.CompletableFuture;
 
 public class Lock {
 
     public static ArrayList<String> list = new ArrayList<>();
     private static HashMap<String, LocalLock> map = new HashMap<>();
-    private final static LocalLock sync = new LocalLock("public");
+    private final static Object privatelock = new Object();
 
     private final static Object publiclock = new Object();
+
+    public final static Long Timeout = 10L;
 
     public static LocalLock getLock(String key) {
         if(!map.containsKey(key)) {
             map.put(key, new LocalLock(key));
-            return sync;
         }
         return map.get(key);
     }
 
-    public static Object getPublicLock() {
-        return publiclock;
+    public static CompletableFuture<LocalLock> tryOptainLock(String key) {
+        CompletableFuture<LocalLock> lock = new CompletableFuture<>();
+        new Thread(() -> {
+            if(list.contains(key)) {
+                lock.complete(map.get(key));
+            } else {
+                synchronized (privatelock) {
+                    if(!map.containsKey(key)) {
+                        map.put(key, new LocalLock(key));
+                    }
+                    lock.complete(map.get(key));
+                    if(!list.contains(key)) {
+                        list.add(key);
+                    }
+                }
+            }
+        }).start();
+        return lock;
     }
+
+    /*public static Object getPublicLock() {
+        return publiclock;
+    }*/
 
 
     public static Boolean hasLock(String key) {

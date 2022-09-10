@@ -74,7 +74,7 @@ public class CmdExecute {
         }
     }
 
-    public static synchronized void updatehashmap(String k) {
+    public synchronized void updatehashmap(String k) {
         if(k.equalsIgnoreCase("-buffer-")) {
             return;
         }

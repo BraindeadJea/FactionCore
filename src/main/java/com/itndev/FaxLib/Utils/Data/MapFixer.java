@@ -1,6 +1,6 @@
 package com.itndev.FaxLib.Utils.Data;
 
-import com.itndev.FactionCore.Utils.Factions.SystemUtils;
+import com.itndev.FaxLib.Utils.Global;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +38,7 @@ public class MapFixer {
         HashMap<String, ArrayList<String>> finalmap = new HashMap<>();
         if(!map.isEmpty()) {
             for(String key : map.keySet()) {
-                finalmap.put(key, SystemUtils.string2list(map.get(key)));
+                finalmap.put(key, Global.string2list(map.get(key)));
             }
         }
         return finalmap;
@@ -48,7 +48,7 @@ public class MapFixer {
         HashMap finalMap = new HashMap<String, String>();
         if(!map.isEmpty()) {
             for(String key : map.keySet()) {
-                finalMap.put(key, SystemUtils.list2string(map.get(key)));
+                finalMap.put(key, Global.list2string(map.get(key)));
             }
         }
         return finalMap;
@@ -58,7 +58,7 @@ public class MapFixer {
         ConcurrentHashMap<String, ArrayList<String>> finalmap = new ConcurrentHashMap<>();
         if(!map.isEmpty()) {
             for(String key : map.keySet()) {
-                finalmap.put(key, SystemUtils.string2list(map.get(key)));
+                finalmap.put(key, Global.string2list(map.get(key)));
             }
         }
         return finalmap;
@@ -69,7 +69,7 @@ public class MapFixer {
             HashMap finalMap = new HashMap<String, String>();
             if(!map.isEmpty()) {
                 for(String key : map.keySet()) {
-                    finalMap.put(key, SystemUtils.list2string(map.get(key)));
+                    finalMap.put(key, Global.list2string(map.get(key)));
                 }
             }
             return finalMap;

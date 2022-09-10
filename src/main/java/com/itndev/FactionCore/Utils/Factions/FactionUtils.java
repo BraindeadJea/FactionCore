@@ -8,6 +8,9 @@ import com.itndev.FactionCore.Lock.Lock;
 import com.itndev.FactionCore.Server;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class FactionUtils {
     public static String newFactionUUID() {
@@ -185,21 +188,15 @@ public class FactionUtils {
         Storage.AddBulkCommandToQueue(BulkCMD);
         new Thread(() -> {
             for(String PlayerUUID : Members) {
-                if(Lock.CachedhasLock(PlayerUUID)) {
-                    synchronized (Lock.getLock(PlayerUUID).getLock()) {
-                        removePlayerFactionLock(PlayerUUID, FactionUUID);
-                    }
-                } else {
-                    if (Lock.hasLock(PlayerUUID)) {
-                        synchronized (Lock.getLock(PlayerUUID).getLock()) {
-                            removePlayerFactionLock(PlayerUUID, FactionUUID);
-                            Lock.AckLock(PlayerUUID);
-                        }
-                    } else {
-                        synchronized (Lock.getPublicLock()) {
-                            removePlayerFactionLock(PlayerUUID, FactionUUID);
+                try {
+                    synchronized (Lock.tryOptainLock(PlayerUUID).get(Lock.Timeout, TimeUnit.MILLISECONDS).getLock()) {
+                        synchronized (Lock.tryOptainLock(FactionUUID).get(Lock.Timeout, TimeUnit.MILLISECONDS).getLock()) {
+                            makePlayerLeaveFaction(PlayerUUID, FactionUUID);
                         }
                     }
+                } catch (TimeoutException | ExecutionException | InterruptedException e) {
+                    SystemUtils.UUID_BASED_MSG_SENDER(PlayerUUID, "&c&lERROR &7오류 발생 : 오류코드 TIMEOUT_LOCK_002 (시스템시간:" + SystemUtils.getDate(System.currentTimeMillis()) + ")");
+                    e.printStackTrace();
                 }
             }
         }).start();
@@ -211,7 +208,17 @@ public class FactionUtils {
     }
     public static void AsyncRemovePlayerFromFaction(String UUID, String FactionUUID) {
         new Thread(() -> {
-            if(Lock.CachedhasLock(UUID)) {
+            try {
+                synchronized (Lock.tryOptainLock(UUID).get(Lock.Timeout, TimeUnit.MILLISECONDS).getLock()) {
+                    synchronized (Lock.tryOptainLock(FactionUUID).get(Lock.Timeout, TimeUnit.MILLISECONDS).getLock()) {
+                        makePlayerLeaveFaction(UUID, FactionUUID);
+                    }
+                }
+            } catch (TimeoutException | ExecutionException | InterruptedException e) {
+                SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&c&lERROR &7오류 발생 : 오류코드 TIMEOUT_LOCK_002 (시스템시간:" + SystemUtils.getDate(System.currentTimeMillis()) + ")");
+                e.printStackTrace();
+            }
+            /*if(Lock.CachedhasLock(UUID)) {
                 synchronized (Lock.getLock(UUID).getLock()) {
                     removePlayerFactionLock(UUID, FactionUUID);
                 }
@@ -226,11 +233,11 @@ public class FactionUtils {
                         removePlayerFactionLock(UUID, FactionUUID);
                     }
                 }
-            }
+            }*/
         }).start();
     }
 
-    private static void removePlayerFactionLock(String PlayerUUID, String FromFactionUUID) {
+    /*private static void removePlayerFactionLock(String PlayerUUID, String FromFactionUUID) {
         if(Lock.CachedhasLock(FromFactionUUID)) {
             synchronized (Lock.getLock(FromFactionUUID).getLock()) {
                 makePlayerLeaveFaction(PlayerUUID, FromFactionUUID);
@@ -247,7 +254,7 @@ public class FactionUtils {
                 }
             }
         }
-    }
+    }*/
 
     private static void makePlayerLeaveFaction(String UUID, String FromFactionUUID) {
         List<String> BulkCMD = new ArrayList<>();

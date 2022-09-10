@@ -1,7 +1,7 @@
 package com.itndev.FactionCore.SocketConnection.IO;
 
 import com.itndev.FactionCore.SocketConnection.Server.ConnectionThread;
-import org.eclipse.jetty.util.IO;
+import com.itndev.FaxLib.Utils.Data.DataStream;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,10 +40,10 @@ public class ResponseList {
         Threads.remove(serverThread);
     }
 
-    public void response(HashMap<Integer, String> map) {
+    public void response(DataStream stream) {
         new Thread(() -> {Threads.forEach(serverThread -> {
             try {
-                serverThread.send(map);
+                serverThread.send(stream);
             } catch (IOException e) {
                 this.Threads.remove(serverThread);
                 try {
@@ -59,7 +59,7 @@ public class ResponseList {
     }
 
     public void closeAll() {
-        response(new HashMap<Integer, String>());
+        response(new DataStream());
         Threads.forEach(serverThread -> {
             try {
                 serverThread.close();

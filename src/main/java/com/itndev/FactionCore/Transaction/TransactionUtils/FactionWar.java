@@ -14,6 +14,9 @@ import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 import com.itndev.FactionCore.Utils.Factions.UserInfoUtils;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class FactionWar {
 
@@ -27,7 +30,17 @@ public class FactionWar {
         //long wf = Long.parseLong(LoserFaction.split("=")[0]);
         UUID winner = java.util.UUID.fromString(WinnerFaction.split("=")[1]);
         if(loser.compareTo(winner) > 0) {
-            if(Lock.CachedhasLock(WinnerFaction)) {
+            try {
+                synchronized (Lock.tryOptainLock(WinnerFaction).get(Lock.Timeout, TimeUnit.MILLISECONDS).getLock()) {
+                    synchronized (Lock.tryOptainLock(LoserFaction).get(Lock.Timeout, TimeUnit.MILLISECONDS).getLock()) {
+                        FactionWarProcess_run(UUID, args);
+                    }
+                }
+            } catch (TimeoutException | ExecutionException | InterruptedException e) {
+                SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&c&lERROR &7오류 발생 : 오류코드 TIMEOUT_LOCK_002 (시스템시간:" + SystemUtils.getDate(System.currentTimeMillis()) + ")");
+                e.printStackTrace();
+            }
+            /*if(Lock.CachedhasLock(WinnerFaction)) {
                 synchronized (Lock.getLock(WinnerFaction).getLock()) {
                     FactionWarProcess_lock(UUID, args, LoserFaction);
                 }
@@ -42,9 +55,19 @@ public class FactionWar {
                         FactionWarProcess_lock(UUID, args, LoserFaction);
                     }
                 }
-            }
+            }*/
         } else if (loser.compareTo(winner) < 0) {
-            if(Lock.CachedhasLock(LoserFaction)) {
+            try {
+                synchronized (Lock.tryOptainLock(LoserFaction).get(Lock.Timeout, TimeUnit.MILLISECONDS).getLock()) {
+                    synchronized (Lock.tryOptainLock(WinnerFaction).get(Lock.Timeout, TimeUnit.MILLISECONDS).getLock()) {
+                        FactionWarProcess_run(UUID, args);
+                    }
+                }
+            } catch (TimeoutException | ExecutionException | InterruptedException e) {
+                SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&c&lERROR &7오류 발생 : 오류코드 TIMEOUT_LOCK_002 (시스템시간:" + SystemUtils.getDate(System.currentTimeMillis()) + ")");
+                e.printStackTrace();
+            }
+            /*if(Lock.CachedhasLock(LoserFaction)) {
                 synchronized (Lock.getLock(LoserFaction).getLock()) {
                     FactionWarProcess_lock(UUID, args, WinnerFaction);
                 }
@@ -59,10 +82,10 @@ public class FactionWar {
                         FactionWarProcess_lock(UUID, args, WinnerFaction);
                     }
                 }
-            }
+            }*/
         }
     }
-    private static void FactionWarProcess_lock(String UUID, String[] args, String secondlock) {
+    /*private static void FactionWarProcess_lock(String UUID, String[] args, String secondlock) {
         if(Lock.CachedhasLock(secondlock)) {
             synchronized (Lock.getLock(secondlock).getLock()) {
                 FactionWarProcess_run(UUID, args);
@@ -79,7 +102,7 @@ public class FactionWar {
                 }
             }
         }
-    }
+    }*/
 
     private static void FactionWarProcess_run(String UUID, String[] args) {
         String LoserFaction = FactionUtils.getPlayerFactionUUID(UUID);
@@ -101,7 +124,22 @@ public class FactionWar {
             SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f명령어 사용법 : &f/국가 전쟁 &f(&7신청&8, &7수락&f) &7(국가이름))");
             return;
         }
-        if(Lock.CachedhasLock(UUID)) {
+        try {
+            synchronized (Lock.tryOptainLock(UUID).get(Lock.Timeout, TimeUnit.MILLISECONDS).getLock()) {
+                if (!FactionUtils.isInFaction(UUID)) {
+                    SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f당신은 소속된 국가가 없습니다");
+                    return;
+                }
+                String FacitonUUID = FactionUtils.getPlayerFactionUUID(UUID);
+                synchronized (Lock.tryOptainLock(FacitonUUID).get(Lock.Timeout, TimeUnit.MILLISECONDS).getLock()) {
+                    FactionWarCMD_run(UUID, args);
+                }
+            }
+        } catch (TimeoutException | ExecutionException | InterruptedException e) {
+            SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&c&lERROR &7오류 발생 : 오류코드 TIMEOUT_LOCK_002 (시스템시간:" + SystemUtils.getDate(System.currentTimeMillis()) + ")");
+            e.printStackTrace();
+        }
+        /*if(Lock.CachedhasLock(UUID)) {
             synchronized (Lock.getLock(UUID).getLock()) {
                 FactionWarCMD_lock(UUID, args);
             }
@@ -116,10 +154,10 @@ public class FactionWar {
                     FactionWarCMD_lock(UUID, args);
                 }
             }
-        }
+        }*/
     }
 
-    private static void FactionWarCMD_lock(String UUID, String[] args) {
+    /*private static void FactionWarCMD_lock(String UUID, String[] args) {
         if (!FactionUtils.isInFaction(UUID)) {
             SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f당신은 소속된 국가가 없습니다");
             return;
@@ -141,7 +179,7 @@ public class FactionWar {
                 }
             }
         }
-    }
+    }*/
 
     private static void FactionWarCMD_run(String UUID, String[] args) {
         if (!FactionUtils.HigherThenorSameRank(UUID, Config.Leader)) {
@@ -191,7 +229,15 @@ public class FactionWar {
 
     public static void NomoreinWar(String FactionUUID) {
         synchronized (WarSync) {
-            if(Lock.CachedhasLock(FactionUUID)) {
+            try {
+                synchronized (Lock.tryOptainLock(FactionUUID).get(Lock.Timeout, TimeUnit.MILLISECONDS).getLock()) {
+                    NomoreinWar_run(FactionUUID);
+                }
+            } catch (TimeoutException | ExecutionException | InterruptedException e) {
+                //SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&c&lERROR &7오류 발생 : 오류코드 TIMEOUT_LOCK_002 (시스템시간:" + SystemUtils.getDate(System.currentTimeMillis()) + ")");
+                e.printStackTrace();
+            }
+            /*if(Lock.CachedhasLock(FactionUUID)) {
                 synchronized (Lock.getLock(FactionUUID).getLock()) {
                     NomoreinWar_run(FactionUUID);
                 }
@@ -203,10 +249,10 @@ public class FactionWar {
                     }
                 } else {
                     synchronized (Lock.getPublicLock()) {
-                        NomoreinWar_run(FactionUUID);
+
                     }
                 }
-            }
+            }*/
 
         }
     }

@@ -5,6 +5,7 @@ import com.itndev.FactionCore.SocketConnection.IO.ProcessList;
 import com.itndev.FactionCore.SocketConnection.IO.ResponseList;
 import com.itndev.FactionCore.Utils.Database.Redis.Read;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
+import com.itndev.FaxLib.Utils.Data.DataStream;
 
 import java.io.*;
 import java.net.Socket;
@@ -29,17 +30,13 @@ public class ConnectionThread extends Thread {
         this.socket = clientSocket;
     }
 
-    public void send(HashMap<Integer, String> map) throws IOException {
-        if(map != null) {
-            if(output == null) {
-                System.out.println("OutputStream is Null");
-                return;
-            }
-            output.writeObject(map);
-            output.flush();
-        } else {
-            System.out.println("null on map");
+    public void send(DataStream stream) throws IOException {
+        if(output == null) {
+            System.out.println("OutputStream is Null");
+            return;
         }
+        output.writeObject(stream);
+        output.flush();
     }
 
     public void close() throws IOException {
@@ -80,14 +77,15 @@ public class ConnectionThread extends Thread {
                 break;
             }
             try {
-                HashMap<Integer, String> map = (HashMap<Integer, String>) input.readObject();
-                if (map.isEmpty()) {
+                DataStream stream = (DataStream) input.readObject();
+                //HashMap<Integer, String> map = (HashMap<Integer, String>) input.readObject();
+                if (stream.isEmpty()) {
                     this.closeAll();
                     SystemUtils.error_logger("Connection Broken... Please Reconnect");
                     break;
                 }
                 //System.out.println(line);
-                new Thread(() -> ProcessList.run(map)).start();
+                new Thread(() -> ProcessList.run(stream)).start();
                 //HashMap<String, String> map = Read.String2HashMap(line);
                 //.add(map);
             } catch (IOException | ClassNotFoundException e) {
