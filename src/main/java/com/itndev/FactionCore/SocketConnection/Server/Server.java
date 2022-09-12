@@ -30,7 +30,7 @@ public class Server {
             while (true) {
                 ConnectionThread ServerThread = new ConnectionThread(serverSocket.accept());
                 ServerThread.start();
-                ResponseList.get().add(ServerThread);
+                ResponseList.add(ServerThread);
                 SystemUtils.logger("New Connection From Client");
                 SystemUtils.logger(ServerThread.toString());
             }

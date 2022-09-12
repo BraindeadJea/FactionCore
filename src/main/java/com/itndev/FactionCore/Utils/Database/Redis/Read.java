@@ -12,7 +12,7 @@ public class Read {
         if (!map.isEmpty()) {
             for(int c = 1; c <= Integer.parseInt(map.get(StaticVal.getMaxAmount())); c++) {
                 //JedisManager.updatehashmap(map.get(String.valueOf(c)), clientname);
-                CmdExecute.get().CMD_READ(map.get(String.valueOf(c)));
+                //CmdExecute.CMD_READ(map.get(String.valueOf(c)));
             }
         }
         map = null;

@@ -30,7 +30,7 @@ public class ConnectionThread extends Thread {
         this.socket = clientSocket;
     }
 
-    public void send(DataStream stream) throws IOException {
+    public void send(HashMap<Integer, Object> stream) throws IOException {
         if(output == null) {
             System.out.println("OutputStream is Null");
             return;
@@ -39,9 +39,15 @@ public class ConnectionThread extends Thread {
         output.flush();
     }
 
-    public void close() throws IOException {
-        this.closeAll();
-        ResponseList.get().remove(this);
+    public void close() {
+        new Thread(() -> {
+            try {
+                this.closeAll();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            ResponseList.remove(this);
+        }).start();
     }
 
     public void run() {
@@ -77,19 +83,21 @@ public class ConnectionThread extends Thread {
                 break;
             }
             try {
-                DataStream stream = (DataStream) input.readObject();
+                HashMap<Integer, Object> stream = (HashMap<Integer, Object>) input.readObject();
+                //DataStream stream = (DataStream) input.readObject();
                 //HashMap<Integer, String> map = (HashMap<Integer, String>) input.readObject();
                 if (stream.isEmpty()) {
                     this.closeAll();
                     SystemUtils.error_logger("Connection Broken... Please Reconnect");
                     break;
                 }
+                //System.out.println(this.getClass().getCanonicalName());
                 //System.out.println(line);
                 new Thread(() -> ProcessList.run(stream)).start();
                 //HashMap<String, String> map = Read.String2HashMap(line);
                 //.add(map);
             } catch (IOException | ClassNotFoundException e) {
-                SystemUtils.error_logger(Arrays.toString(e.getStackTrace()));
+                e.printStackTrace();
                 SystemUtils.error_logger("Connection Broken... Please Reconnect");
                 break;
             }
@@ -101,8 +109,8 @@ public class ConnectionThread extends Thread {
             SystemUtils.error_logger("Connection Broken... Please Reconnect");
         }
         isClosed = true;
-        ResponseList.get().remove(this);
-        ResponseList.get().removeOldConnections();
+        ResponseList.remove(this);
+        ResponseList.removeOldConnections();
     }
 
     public void closeAll() throws IOException {

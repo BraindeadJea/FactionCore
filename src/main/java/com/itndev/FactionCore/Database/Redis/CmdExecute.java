@@ -1,33 +1,27 @@
 package com.itndev.FactionCore.Database.Redis;
 
+import com.itndev.FactionCore.Database.Redis.Obj.Storage;
 import com.itndev.FactionCore.Dump.RedisDump;
 import com.itndev.FactionCore.Factions.Storage.FactionStorage;
 import com.itndev.FactionCore.Server;
+import com.itndev.FactionCore.SocketConnection.BackLog.StorageSyncTask;
 import com.itndev.FactionCore.Transaction.Processor;
 import com.itndev.FactionCore.Factions.UserInfoStorage;
 import com.itndev.FactionCore.Utils.Cache.CachedStorage;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 
+import java.util.Locale;
+
 public class CmdExecute {
 
-    private static CmdExecute instance = null;
-    public static CmdExecute get() {
-        if (instance == null) {
-            instance = new CmdExecute();
-        }
-        return instance;
-    }
-
-    private CmdExecute() {
-    }
-    public void CMD_READ(String CMD) {
+    public static void CMD_READ(String CMD, String ServerName2) {
         try {
             String CMD_SPLITTER = "<CMD>&%CMD_12%<CMD>";
-            String CMD_Announce = "<&@CMD>";
-            String ADD_Announce = "<&@ADD>";
-            String USER_Announce = "<&@USER>";
-            String CMD_ARGS_SPLITTER = ":=:";
             if(CMD.startsWith(CMD_SPLITTER)) {
+                String CMD_Announce = "<&@CMD>";
+                String ADD_Announce = "<&@ADD>";
+                String USER_Announce = "<&@USER>";
+                String CMD_ARGS_SPLITTER = ":=:";
                 CMD = CMD.replaceFirst(CMD_SPLITTER, "");
                 if(CMD.contains(CMD_SPLITTER)) {
                     String[] CMD_TEMP_ARGS = CMD.split(CMD_SPLITTER);
@@ -67,18 +61,85 @@ public class CmdExecute {
                     Additional = null;
                 }
             } else {
-                updatehashmap(CMD);
+                updatehashmap(CMD, ServerName2);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public synchronized void updatehashmap(String k) {
+    public static StorageSyncTask task;
+
+    public static void updatehashmap(String k, String ServerName) {
         if(k.equalsIgnoreCase("-buffer-")) {
             return;
         }
         String[] args = k.split(":=:");
+        /*switch (args[0].toLowerCase(Locale.ROOT)) {
+            case "update":
+                if (args[1].equalsIgnoreCase("FactionToLand")
+                        || args[1].equalsIgnoreCase("LandToFaction")
+                        || args[1].equalsIgnoreCase("FactionRank")
+                        || args[1].equalsIgnoreCase("PlayerFaction")
+                        || args[1].equalsIgnoreCase("FactionMember")
+                        || args[1].equalsIgnoreCase("FactionNameToFactionName")
+                        || args[1].equalsIgnoreCase("FactionNameToFactionUUID")
+                        || args[1].equalsIgnoreCase("FactionUUIDToFactionName")
+                        || args[1].equalsIgnoreCase("FactionInviteQueue")
+                        || args[1].equalsIgnoreCase("FactionDTR")
+                        || args[1].equalsIgnoreCase("FactionInfo")
+                        || args[1].equalsIgnoreCase("FactionInfoList")
+                        || args[1].equalsIgnoreCase("Timeout2")
+                        || args[1].equalsIgnoreCase("Timeout2info")
+                        || args[1].equalsIgnoreCase("FactionOutPost")
+                        || args[1].equalsIgnoreCase("FactionOutPostList")
+                        || args[1].equalsIgnoreCase("FactionToOutPost")
+                        || args[1].equalsIgnoreCase("OutPostToFaction")
+                        || args[1].equalsIgnoreCase("DESTORYED_FactionToLand")
+                        || args[1].equalsIgnoreCase("DESTORYED_LandToFaction")
+                        || args[1].equalsIgnoreCase("DESTROYED_FactionUUIDToFactionName")) {
+                    FactionStorage.FactionStorageUpdateHandler(args, "");
+                } else if (args[1].equalsIgnoreCase("namename")
+                        || args[1].equalsIgnoreCase("nameuuid")
+                        || args[1].equalsIgnoreCase("uuidname")) {
+                    UserInfoStorage.UserInfoStorageUpdateHandler(args);
+                } else if (args[1].equalsIgnoreCase("cachedDTR")
+                        || args[1].equalsIgnoreCase("cachedBank")) {
+                    CachedStorage.JedisCacheSync(args);
+                }
+                break;
+            case "reloadstorage":
+                if(args.length == 2) {
+                    RedisDump.ReloadStorageFromRemoteServer(args[1]);
+                    SystemUtils.logger("Reloaded Storage From Redis With The Key \"" + args[1] + "\"");
+                } else if(args.length == 1) {
+                    RedisDump.ReloadStorageFromRemoteServer(null);
+                    SystemUtils.logger("Reloaded Storage From Redis Without A Key");
+                }
+                break;
+            case "uploadstorage":
+                if(args.length == 2) {
+                    RedisDump.UploadStorageToRedis(args[1]);
+                    SystemUtils.logger("Uploaded Storage To Redis With The Key \"" + args[1] + "\"");
+                } else if(args.length == 1) {
+                    RedisDump.UploadStorageToRedis(null);
+                    SystemUtils.logger("Uploaded Storage To Redis Without A Key");
+                }
+                break;
+            case "syncandclose":
+                Server.Close = true;
+                break;
+            case "syncstorage":
+                task = new StorageSyncTask(ServerName);
+                task.run();
+                //ServerName;
+            case "synccomplete":
+                task.finish();
+            case "notify":
+            case "eco":
+            case "discord":
+                break;
+        }*/
         if (args[0].equalsIgnoreCase("update")) {
             if (args[1].equalsIgnoreCase("FactionToLand")
                     || args[1].equalsIgnoreCase("LandToFaction")
@@ -111,11 +172,13 @@ public class CmdExecute {
                 CachedStorage.JedisCacheSync(args);
             }
         } else if(args[0].equalsIgnoreCase("notify")) {
-
         } else if(args[0].equalsIgnoreCase("eco")) {
-
         } else if(args[0].equalsIgnoreCase("discord")) {
-
+        } else if(args[0].equalsIgnoreCase("syncstorage")) {
+            task = new StorageSyncTask(ServerName);
+            task.run();
+        } else if(args[0].equalsIgnoreCase("synccomplete")) {
+            task.finish();
         } else if(args[0].equalsIgnoreCase("reloadstorage")) {
             if(args.length == 2) {
                 RedisDump.ReloadStorageFromRemoteServer(args[1]);

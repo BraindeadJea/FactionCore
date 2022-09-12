@@ -10,6 +10,7 @@ import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 import com.itndev.FaxLib.Utils.Data.DataStream;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Queue;
 
 public class ProcessList {
@@ -28,19 +29,36 @@ public class ProcessList {
     }
 
      */
-    public static void run(DataStream stream) {
-        switch (stream.getDataType()) {
-            case "FrontEnd-Output":
-                stream.getStream().forEach(CmdExecute.get()::CMD_READ);
-            case "FrontEnd-Chat":
-                ResponseList.get().response(stream);
-            case "FrontEnd-Interconnect":
-                stream.getStream().forEach(CmdExecute.get()::CMD_READ);
-                ResponseList.get().response(stream);
-            case "BungeeCord-Forward":
-                stream.getStream().forEach(BungeeStorage::READ_Bungee_command);
-                ResponseList.get().response(stream);
+    public static void run(HashMap<Integer, Object> stream) {
+        //System.out.println(ProcessList.class.getCanonicalName() + " - " + stream);
+        String ServerName = (String) stream.get(StaticVal.getServerNameArgs());
+        String DataType = (String) stream.get(StaticVal.getDataTypeArgs());
+        if(DataType.equalsIgnoreCase("FrontEnd-Output")) {
+            ((List<String>)stream.get(1)).forEach(key -> CmdExecute.CMD_READ(key, ServerName));
+        } else if(DataType.equalsIgnoreCase("FrontEnd-Interconnect")) {
+            ((List<String>)stream.get(1)).forEach(key -> CmdExecute.CMD_READ(key, ServerName));
+            ResponseList.response(stream);
+        } else if(DataType.equalsIgnoreCase("FrontEnd-Chat")) {
+            ResponseList.response(stream);
+        } else if(DataType.equalsIgnoreCase("BungeeCord-Forward")) {
+            ((List<String>)stream.get(1)).forEach(BungeeStorage::READ_Bungee_command);
+            ResponseList.response(stream);
         }
+
+
+        /*String ServerName = (String) stream.get(StaticVal.getServerNameArgs());
+        switch ((String)stream.get(StaticVal.getDataTypeArgs())) {
+            case "FrontEnd-Output":
+                ((List<String>)stream.get(1)).forEach(key -> new Thread(() -> CmdExecute.CMD_READ(key, ServerName)).start());
+            case "FrontEnd-Chat":
+                ResponseList.response(stream);
+            case "FrontEnd-Interconnect":
+                ((List<String>)stream.get(1)).forEach(key -> new Thread(() -> CmdExecute.CMD_READ(key, ServerName)).start());
+                ResponseList.response(stream);
+            case "BungeeCord-Forward":
+                ((List<String>)stream.get(1)).forEach(BungeeStorage::READ_Bungee_command);
+                ResponseList.response(stream);
+        }*/
         /*new Thread(() -> {
             stream.getStream().forEach(CmdExecute.get()::CMD_READ);
         }).start();

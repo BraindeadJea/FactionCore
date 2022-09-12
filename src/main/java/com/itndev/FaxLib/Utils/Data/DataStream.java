@@ -1,8 +1,9 @@
 package com.itndev.FaxLib.Utils.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class DataStream {
+public class DataStream implements Serializable {
 
     private List<String> Stream;
     private String ServerName;
@@ -14,6 +15,13 @@ public class DataStream {
         this.ServerName = ServerName;
         this.DataType = DataType;
         this.Stream = Stream;
+        this.isEmpty = false;
+    }
+
+    public DataStream(Object obj) {
+        this.ServerName = ((DataStream)obj).getServerName();
+        this.DataType = ((DataStream)obj).getDataType();
+        this.Stream = ((DataStream)obj).getStream();
         this.isEmpty = false;
     }
 

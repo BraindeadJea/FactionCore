@@ -9,7 +9,9 @@ import com.itndev.FactionCore.Utils.Database.Redis.Read;
 import com.itndev.FactionCore.Utils.Database.Redis.StaticVal;
 import com.itndev.FaxLib.Utils.Data.DataStream;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Main {
 
@@ -25,14 +27,20 @@ public class Main {
         new Thread(() -> {
             try {
                 while (true) {
-                    DataStream stream;
+                    HashMap<Integer, Object> map = new HashMap<>();
                     synchronized (Storage.TempCommandQueue) {
-                        stream = new DataStream("BackEnd", "BackEnd-Responce", Storage.TempCommandQueue);
-                        Storage.TempCommandQueue.clear();
+                        if (!Storage.TempCommandQueue.isEmpty()) {
+                            map.put(StaticVal.getServerNameArgs(), "BackEnd");
+                            map.put(StaticVal.getDataTypeArgs(), "BackEnd-Responce");
+                            List<String> temp = new ArrayList<>(Storage.TempCommandQueue.stream().toList());
+                            map.put(1, temp);
+                            Storage.TempCommandQueue.clear();
+                            ResponseList.response(map);
+                        }
+                        //stream = new DataStream("BackEnd", "BackEnd-Responce", Storage.TempCommandQueue);
+
                     }
-                    if(!stream.getStream().isEmpty()) {
-                        ResponseList.get().response(stream);
-                    }
+
                     Thread.sleep(2);
                 }
             } catch (InterruptedException e) {
@@ -43,6 +51,6 @@ public class Main {
     }
 
     public static void close() {
-        ResponseList.get().closeAll();
+        ResponseList.closeAll();
     }
 }

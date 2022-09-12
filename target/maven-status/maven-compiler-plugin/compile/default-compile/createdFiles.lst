@@ -14,6 +14,7 @@ com\itndev\FaxLib\Utils\UtilLoader.class
 com\itndev\FactionCore\Factions\Storage\FactionStorage.class
 com\itndev\FaxLib\Utils\Global.class
 com\itndev\FactionCore\Server.class
+com\itndev\FactionCore\SocketConnection\BackLog\StorageSyncTask.class
 com\itndev\FactionCore\SocketConnection\Main.class
 com\itndev\FactionCore\SocketConnection\Client\Client.class
 com\itndev\FactionCore\Database\MySQL\ConnectSQL.class

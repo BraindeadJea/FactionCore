@@ -141,26 +141,31 @@ public class Server {
         new Thread(() -> {
             new Client("hostname", 9999);
         }).start();
+        int c = 0;
         while (true) {
+            c++;
             try {
-                Thread.sleep(10000);
-                try {
-                    new Thread(() -> {
-                        //RedisDump.deleteandupload("DUMP");
-                        //TryDumpYaml();
-                        try {
-                            MySQLDump.DumpToMySQL();
+                Thread.sleep(100);
+                if(c >= 100) {
+                    try {
+                        new Thread(() -> {
+                            //RedisDump.deleteandupload("DUMP");
+                            //TryDumpYaml();
+                            try {
+                                MySQLDump.DumpToMySQL();
 
-                        } catch (Exception ex) {
-                            System.out.println("[ERROR/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + ex.getMessage());
-                            //Connect.RedisConnect();
-                            SQL.connect();
-                        }
-                    }).start();
-                } catch (Exception ex) {
-                    System.out.println("[ERROR/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + ex.getMessage());
+                            } catch (Exception ex) {
+                                System.out.println("[ERROR/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + ex.getMessage());
+                                //Connect.RedisConnect();
+                                SQL.connect();
+                            }
+                        }).start();
+                    } catch (Exception ex) {
+                        System.out.println("[ERROR/" + SystemUtils.getDate(System.currentTimeMillis()) + "] " + ex.getMessage());
+                    }
+                    System.out.println("[SYSTEM/" + SystemUtils.getDate(System.currentTimeMillis()) + "] BACKUP DONE TO MYSQL");
+                    c = 0;
                 }
-                System.out.println("[SYSTEM/" + SystemUtils.getDate(System.currentTimeMillis()) + "] BACKUP DONE TO MYSQL");
                 if(Close) {
 
 

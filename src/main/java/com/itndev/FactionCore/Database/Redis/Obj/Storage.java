@@ -12,8 +12,8 @@ public class Storage {
     public static final List<String> TempCommandQueue = new ArrayList<>();
 
     public static void AddCommandToQueue(String command) {
+        CmdExecute.updatehashmap(command, "BackEnd");
         synchronized (TempCommandQueue) {
-            CmdExecute.get().updatehashmap(command);
             TempCommandQueue.add(command);
         }
     }
@@ -26,14 +26,14 @@ public class Storage {
 
     public static void AddCommandToQueueFix(String command, String nothing) {
         synchronized (TempCommandQueue) {
-            CmdExecute.get().updatehashmap(command);
+            CmdExecute.updatehashmap(command, "BackEnd");
             TempCommandQueue.add(command);
         }
     }
 
     public static void AddBulkCommandToQueue(List<String> BulkCMD) {
+        BulkCMD.forEach(key -> CmdExecute.updatehashmap(key, "BackEnd"));
         synchronized (TempCommandQueue) {
-            BulkCMD.forEach(CmdExecute.get()::updatehashmap);
             TempCommandQueue.addAll(BulkCMD);
         }
     }
