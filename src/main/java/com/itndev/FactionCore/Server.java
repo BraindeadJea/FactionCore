@@ -20,6 +20,8 @@ import com.itndev.FactionCore.Utils.Factions.ValidChecker;
 import com.itndev.HttpAPI.Jetty;
 import com.itndev.PlayerPower.PlayerPower;
 
+import javax.net.ssl.SSLException;
+import java.security.cert.CertificateException;
 import java.sql.SQLException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -83,7 +85,14 @@ public class Server {
                 TryLoadYaml();
             }
         }).start();
-        Main.launch();
+        new Thread(() -> {
+            try {
+                Main.launch();
+            } catch (CertificateException | InterruptedException | SSLException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
+
         Jetty jetty = new Jetty();
         try {
             jetty.start();
@@ -138,9 +147,9 @@ public class Server {
             loader.connect();
             new PlayerPower(loader);
         }).start();
-        new Thread(() -> {
+        /*new Thread(() -> {
             new Client("hostname", 9999);
-        }).start();
+        }).start();*/
         int c = 0;
         while (true) {
             c++;

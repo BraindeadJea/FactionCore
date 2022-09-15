@@ -1,11 +1,10 @@
-package com.itndev.FactionCore.SocketConnection.Server;
+package com.itndev.FactionCore.SocketConnection.Server.Old;
 
 import com.itndev.FactionCore.SocketConnection.IO.ResponseList;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 
 import java.io.*;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.Arrays;
 
 public class Server {

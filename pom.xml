@@ -57,7 +57,7 @@
     </build>
     <groupId>com.itndev.FBTM</groupId>
     <artifactId>FactionCore</artifactId>
-    <version>0.8.9</version>
+    <version>0.9.0</version>
 
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
@@ -83,6 +83,11 @@
         </repository>
     </repositories>
     <dependencies>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.82.Final</version>
+        </dependency>
         <dependency>
             <groupId>io.lettuce</groupId>
             <artifactId>lettuce-core</artifactId>
@@ -143,6 +148,11 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
             <version>${jetty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk15on</artifactId>
+            <version>1.65</version>
         </dependency>
     </dependencies>
 </project>

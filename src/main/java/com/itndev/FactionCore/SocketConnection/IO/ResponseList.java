@@ -1,7 +1,7 @@
 package com.itndev.FactionCore.SocketConnection.IO;
 
-import com.itndev.FactionCore.SocketConnection.Server.ConnectionThread;
-import com.itndev.FaxLib.Utils.Data.DataStream;
+import com.itndev.FactionCore.SocketConnection.Server.Old.ConnectionThread;
+import com.itndev.FactionCore.SocketConnection.Server.PacketHandler;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,29 +33,14 @@ public class ResponseList {
 
     public static void response(HashMap<Integer, Object> stream) {
         new Thread(() -> {
-            synchronized (Threads) {
-                //System.out.println(ResponseList.class.getCanonicalName());
-                Threads.forEach(serverThread -> {
-                    try {
-                        serverThread.send(stream);
-                    } catch (IOException e) {
-                        serverThread.close();
-                        e.printStackTrace();
-                    }
-                });
-            }
+            PacketHandler.getChannels().writeAndFlush(stream);
         }).start();
 
     }
 
-    public static void closeAll() {
+    public static void closeAll() throws InterruptedException {
         response(new HashMap<Integer, Object>());
-        Threads.forEach(serverThread -> {
-            try {
-                serverThread.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        PacketHandler.getChannels().close().sync();
+        //Threads.forEach(ConnectionThread::close);
     }
 }

@@ -1,4 +1,4 @@
-package com.itndev.FactionCore.SocketConnection.BackLog;
+package com.itndev.FactionCore.SocketConnection.PastCachedStream;
 
 import com.itndev.FactionCore.Database.MySQL.SQL;
 import com.itndev.FactionCore.Database.Redis.Obj.Storage;
@@ -11,7 +11,7 @@ import java.util.List;
 public class StorageSyncTask {
 
     private String TargetServer;
-    private Boolean finish = false;
+    private volatile Boolean finish = false;
 
     public StorageSyncTask(String TargetServer) {
         this.TargetServer = TargetServer;
@@ -33,12 +33,8 @@ public class StorageSyncTask {
                 }
                 List<String> stream = new ArrayList<>();
                 stream.add("sync:=:" + this.TargetServer);
-                while(!finish) {
-                    try {
-                        Thread.sleep(2);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                while (!finish) {
+                    Thread.onSpinWait();
                 }
             }
         }).start();

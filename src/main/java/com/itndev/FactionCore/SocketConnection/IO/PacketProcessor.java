@@ -1,19 +1,13 @@
 package com.itndev.FactionCore.SocketConnection.IO;
 
-import com.itndev.FactionCore.Database.Redis.BungeeAPI.BungeeAPI;
 import com.itndev.FactionCore.Database.Redis.BungeeAPI.BungeeStorage;
-import com.itndev.FactionCore.Database.Redis.BungeeAPI.BungeeStreamReader;
 import com.itndev.FactionCore.Database.Redis.CmdExecute;
-import com.itndev.FactionCore.Server;
 import com.itndev.FactionCore.Utils.Database.Redis.StaticVal;
-import com.itndev.FactionCore.Utils.Factions.SystemUtils;
-import com.itndev.FaxLib.Utils.Data.DataStream;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Queue;
 
-public class ProcessList {
+public class PacketProcessor {
 
 
     private static final Object sync = new Object();

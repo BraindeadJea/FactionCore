@@ -1,11 +1,8 @@
-package com.itndev.FactionCore.SocketConnection.Server;
+package com.itndev.FactionCore.SocketConnection.Server.Old;
 
-import com.itndev.FactionCore.Server;
-import com.itndev.FactionCore.SocketConnection.IO.ProcessList;
+import com.itndev.FactionCore.SocketConnection.IO.PacketProcessor;
 import com.itndev.FactionCore.SocketConnection.IO.ResponseList;
-import com.itndev.FactionCore.Utils.Database.Redis.Read;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
-import com.itndev.FaxLib.Utils.Data.DataStream;
 
 import java.io.*;
 import java.net.Socket;
@@ -93,7 +90,7 @@ public class ConnectionThread extends Thread {
                 }
                 //System.out.println(this.getClass().getCanonicalName());
                 //System.out.println(line);
-                new Thread(() -> ProcessList.run(stream)).start();
+                new Thread(() -> PacketProcessor.run(stream)).start();
                 //HashMap<String, String> map = Read.String2HashMap(line);
                 //.add(map);
             } catch (IOException | ClassNotFoundException e) {

@@ -1,14 +1,13 @@
 package com.itndev.FactionCore.SocketConnection;
 
-import com.itndev.FactionCore.Database.Redis.Connect;
 import com.itndev.FactionCore.Database.Redis.Obj.Storage;
-import com.itndev.FactionCore.SocketConnection.IO.ProcessList;
 import com.itndev.FactionCore.SocketConnection.IO.ResponseList;
-import com.itndev.FactionCore.SocketConnection.Server.Server;
-import com.itndev.FactionCore.Utils.Database.Redis.Read;
+import com.itndev.FactionCore.SocketConnection.Server.NettyServer;
+import com.itndev.FactionCore.SocketConnection.Server.Old.Server;
 import com.itndev.FactionCore.Utils.Database.Redis.StaticVal;
-import com.itndev.FaxLib.Utils.Data.DataStream;
 
+import javax.net.ssl.SSLException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,10 +16,15 @@ public class Main {
 
     private static Server server;
 
-    public static void launch() {
-        server = new Server();
-        new Thread(() -> server.run()).start();
+    public static void launch() throws CertificateException, InterruptedException, SSLException {
+
+        NettyServer server = new NettyServer(9999);
+        server.run();
         output();
+
+        /*server = new Server();
+        new Thread(() -> server.run()).start();
+        output();*/
     }
 
     private static void output() {
@@ -50,7 +54,7 @@ public class Main {
 
     }
 
-    public static void close() {
+    public static void close() throws InterruptedException {
         ResponseList.closeAll();
     }
 }
