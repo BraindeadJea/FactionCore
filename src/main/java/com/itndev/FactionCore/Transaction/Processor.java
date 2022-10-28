@@ -1,17 +1,12 @@
 package com.itndev.FactionCore.Transaction;
 
-import com.itndev.EloSystem.API.EloUpdater;
-import com.itndev.EloSystem.Package.EloResult;
 import com.itndev.FactionCore.Discord.AuthStorage;
 import com.itndev.FactionCore.Factions.Config;
 import com.itndev.FactionCore.Transaction.TransactionUtils.*;
-import com.itndev.FactionCore.Transaction.TransactionUtils.FactionCD.DeleteFactionUtils;
 import com.itndev.FactionCore.Utils.Factions.FactionUtils;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 import com.itndev.FactionCore.Utils.Factions.UserInfoUtils;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class Processor {

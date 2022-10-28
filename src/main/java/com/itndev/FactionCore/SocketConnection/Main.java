@@ -18,8 +18,14 @@ public class Main {
 
     public static void launch() throws CertificateException, InterruptedException, SSLException {
 
-        NettyServer server = new NettyServer(9999);
-        server.run();
+        new Thread(() -> {
+            NettyServer server = new NettyServer(9999);
+            try {
+                server.run();
+            } catch (InterruptedException | CertificateException | SSLException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
         output();
 
         /*server = new Server();
