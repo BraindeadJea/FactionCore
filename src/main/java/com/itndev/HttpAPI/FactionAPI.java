@@ -4,6 +4,7 @@ package com.itndev.HttpAPI;
 import com.itndev.FactionCore.Factions.Config;
 import com.itndev.FactionCore.Factions.Faction;
 import com.itndev.FactionCore.Utils.Factions.FactionUtils;
+import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 import com.itndev.FactionCore.Utils.Factions.UserInfoUtils;
 import org.json.JSONObject;
 
@@ -12,9 +13,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 public class FactionAPI extends HttpServlet {
 
+    private static DecimalFormat df = new DecimalFormat("0.00");
     protected void doGet(
             HttpServletRequest request,
             HttpServletResponse response)
@@ -44,8 +47,15 @@ public class FactionAPI extends HttpServlet {
                 String json = "{\n";
                 json += "\"FactionName\": " + JSONObject.quote(FactionRealName) + ",\n";
                 json += "\"FactionUUID\": " + JSONObject.quote(FactionUUID) + ",\n";
+                json += "\"CreationDate\": " + JSONObject.quote(SystemUtils.FactionUUIDToDate(FactionUUID)) + ",\n";
+                json += "\"Desc\": " + JSONObject.quote(faction.getFactionDesc()) + ",\n";
+                json += "\"Claims\": " + JSONObject.quote(faction.getClaimLand() + "/100") + ",\n";
+                json += "\"Bank\": " + JSONObject.quote(df.format(faction.getBank())) + ",\n";
                 json += "\"Leader\": " + faction.getFactionMembers(Config.Leader) + "\n";
-                json += "\"Members\": " + "" + "\n";
+                json += "\"CoLeader\": " + faction.getFactionMembers(Config.CoLeader) + "\n";
+                json += "\"VipMember\": " + faction.getFactionMembers(Config.VipMember) + "\n";
+                json += "\"Warrior\": " + faction.getFactionMembers(Config.Warrior) + "\n";
+                json += "\"Member\": " + faction.getFactionMembers(Config.Member) + "\n";
                 json += "}";
                 response.setContentType("application/json");
                 response.setStatus(HttpServletResponse.SC_OK);
@@ -58,9 +68,9 @@ public class FactionAPI extends HttpServlet {
                 response.getWriter().println("{}");
             }
         }
-        response.setContentType("application/json");
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().println("{ \"status\": \"ok\"}");
+        //response.setContentType("application/json");
+        //response.setStatus(HttpServletResponse.SC_OK);
+        //response.getWriter().println("{ \"status\": \"ok\"}");
     }
     /*@GET
     @Path("/{id}")

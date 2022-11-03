@@ -1,5 +1,6 @@
 package com.itndev.FactionCore.SocketConnection.Server;
 
+import com.itndev.FactionCore.Discord.DiscordUtils;
 import com.itndev.FactionCore.SocketConnection.IO.PacketProcessor;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 import io.netty.channel.Channel;
@@ -29,6 +30,12 @@ public class PacketHandler extends SimpleChannelInboundHandler<Object> {
                 (GenericFutureListener<Future<Channel>>) future -> {
                     SystemUtils.logger("New Connection From Client");
                     SystemUtils.logger(channelHandlerContext.channel().toString());
+
+                    //DISCORD
+                    DiscordUtils.info_logger("New Connection From Client");
+                    DiscordUtils.info_logger(channelHandlerContext.channel().toString());
+
+
                     /*ctx.writeAndFlush(
                             "Welcome to " + InetAddress.getLocalHost().getHostName() + " secure chat service!\n");
                     ctx.writeAndFlush(

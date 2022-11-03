@@ -29,6 +29,25 @@ public class AuthStorage {
         return false;
     }
 
+    public static Boolean hasAuth_discordID(String DiscordID) {
+        if(DISCORDID_TO_UUID.containsKey(DiscordID)) {
+            if(!UUID_TO_DISCORDID.containsKey(DISCORDID_TO_UUID.get(DiscordID))) {
+                DiscordUtils.error_logger("BAD DATA IN DISCORD AUTH STORAGE\nUSERINFO : DiscordID=" + DiscordID + ", UUID=" + DISCORDID_TO_UUID.get(DiscordID) + "\n" +
+                "EXTRA INFO : DiscordID->UUID IS " + DiscordID + "->" + DISCORDID_TO_UUID.get(DiscordID) + " BUT\n" +
+                "UUID->DiscordID IS " + DISCORDID_TO_UUID.get(DiscordID) + "->NULL");
+                return false;
+            }
+            if(UUID_TO_DISCORDID.get(DISCORDID_TO_UUID.get(DiscordID)).equals(DiscordID)) {
+                return true;
+            } else {
+                DiscordUtils.error_logger("BAD DATA IN DISCORD AUTH STORAGE\nUSERINFO : DiscordID=" + DiscordID + ", UUID=" + DISCORDID_TO_UUID.get(DiscordID) + "\n" +
+                "EXTRA INFO : DiscordID->UUID IS " + DiscordID + "->" + DISCORDID_TO_UUID.get(DiscordID) + " BUT\n" +
+                "UUID->DiscordID IS " + DISCORDID_TO_UUID.get(DiscordID) + "->" + UUID_TO_DISCORDID.get(DISCORDID_TO_UUID.get(DiscordID)));
+            }
+        }
+        return false;
+    }
+
     public static void RemoveAuth(String UUID) {
         if(UUID_TO_DISCORDID.containsKey(UUID)) {
             String DiscordID = UUID_TO_DISCORDID.get(UUID);

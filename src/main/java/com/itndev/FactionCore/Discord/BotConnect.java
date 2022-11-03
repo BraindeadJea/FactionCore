@@ -13,6 +13,7 @@ public class BotConnect {
     public static JDA bot = null;
 
     public static MessageChannel mainchannel;
+    public static MessageChannel loggerchannel;
 
     public static Guild mainguild;
 
@@ -28,6 +29,7 @@ public class BotConnect {
                 bot.awaitReady();
                 System.out.println("Logged in as " + bot.getSelfUser().getName() + "#" + bot.getSelfUser().getDiscriminator() + "!");
                 mainchannel = bot.getTextChannelById(967482907579011142L);
+                loggerchannel = bot.getTextChannelById(1037720539059466291L);
                 mainguild = bot.getGuildById(934429946565234758L);
                 mainchannel.sendMessage("인증봇 작동중").queue();
             } catch (LoginException | InterruptedException e) {

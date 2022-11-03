@@ -121,11 +121,48 @@ public class DiscordListener extends ListenerAdapter {
         } else if(args[0].equalsIgnoreCase("연동정보")) {
             if(!channel.equals(BotConnect.mainchannel)) {
                 channel.sendMessage("[" + user.getAsMention() + "]\n 해당 명령어는 " + ((TextChannel)BotConnect.mainchannel).getAsMention() + " 에서만 사용 가능합니다").queue();
+                return;
             }
             if(args.length != 2) {
                 BotConnect.mainchannel.sendMessage("[" + user.getAsMention() + "]\n 잘못된 명령어. `!연동정보 <닉네임/유저태그>`").queue();
+                return;
+            }
+            if(args[1].contains("#")) {
+                String Tag = args[1];
+                Member member = BotConnect.mainguild.getMemberByTag(Tag);
+                if(member == null) {
+                    BotConnect.mainchannel.sendMessage("[" + user.getAsMention() + "]\n 해당 유저 `" + Tag + "` (은)는 존재하지 않습니다").queue();
+                    return;
+                }
+                String ID = member.getId();
+                if(!AuthStorage.DISCORDID_TO_UUID.containsKey(ID)) {
+                    BotConnect.mainchannel.sendMessage("[" + user.getAsMention() + "]\n 해당 유저 `" + Tag + "` (은)는 계정을 아직 연동하지 않았습니다").queue();
+                    return;
+                }
+                String UUID = AuthStorage.DISCORDID_TO_UUID.get(ID);
+                String Name = UserInfoUtils.getPlayerUUIDOriginName(UUID);
+                BotConnect.mainchannel.sendMessage("[" + user.getAsMention() + "]\n 해당 유저 `" + Tag + "` 의 디스코드 계정은 마인크래프트 계정 `" + Name + "(UUID : " + UUID + ")` 와 연동되어 있습니다").queue();
+            } else {
+                String Name = args[1];
+                if(!UserInfoUtils.hasJoined(Name.toLowerCase())) {
+                    BotConnect.mainchannel.sendMessage("[" + user.getAsMention() + "]\n 해당 유저 `" + Name + "` (은)는 서버에 접속한적이 없습니다").queue();
+                    return;
+                }
+                String UUID = UserInfoUtils.getPlayerUUID(Name.toLowerCase());
+                String RName = UserInfoUtils.getPlayerUUIDOriginName(UUID);
+                if(!AuthStorage.hasAuth(UUID)) {
+                    BotConnect.mainchannel.sendMessage("[" + user.getAsMention() + "]\n 해당 유저 `" + RName + "` (은)는 계정을 아직 연동하지 않았습니다").queue();
+                    return;
+                }
+                String DiscordID = AuthStorage.getID_FROM_UUID(UUID);
+                Member member = BotConnect.mainguild.getMemberById(DiscordID);
+                if(member == null) {
+                    BotConnect.mainchannel.sendMessage("[" + user.getAsMention() + "]\n 해당 유저 `" + RName + "` (은)는 계정을 아직 연동하지 않았습니다").queue();
+                    return;
+                }
+                String Tag = member.getUser().getAsTag();
+                BotConnect.mainchannel.sendMessage("[" + user.getAsMention() + "]\n 해당 유저 `" + RName + "` 의 마인크래프트 계정은 디스코드 계정 `" + Tag + "` 와 연동되어 있습니다").queue();
             }
         }
-        return;
     }
 }
