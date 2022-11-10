@@ -26,14 +26,18 @@ public class PacketHandler extends SimpleChannelInboundHandler<Object> {
 
     @Override
     public void channelActive(final ChannelHandlerContext channelHandlerContext) {
-        channelHandlerContext.pipeline().get(SslHandler.class).handshakeFuture().addListener(
-                (GenericFutureListener<Future<Channel>>) future -> {
-                    SystemUtils.logger("New Connection From Client");
-                    SystemUtils.logger(channelHandlerContext.channel().toString());
+        try {
+            channelHandlerContext.pipeline().get(SslHandler.class).handshakeFuture().addListener(
+                    (GenericFutureListener<Future<Channel>>) future -> {
+                        SystemUtils.logger("New Connection From Client");
+                        SystemUtils.logger(channelHandlerContext.channel().toString());
 
-                    //DISCORD
-                    DiscordUtils.info_logger("New Connection From Client");
-                    DiscordUtils.info_logger(channelHandlerContext.channel().toString());
+                        //DISCORD
+                        new Thread(() -> {
+                            DiscordUtils.info_logger("New Connection From Client");
+                            DiscordUtils.info_logger(channelHandlerContext.channel().toString());
+                        }).start();
+
 
 
                     /*ctx.writeAndFlush(
@@ -42,8 +46,13 @@ public class PacketHandler extends SimpleChannelInboundHandler<Object> {
                             "Your session is protected by " +
                                     ctx.pipeline().get(SslHandler.class).engine().getSession().getCipherSuite() +
                                     " cipher suite.\n");*/
-                    channels.add(channelHandlerContext.channel());
-                });
+                        channels.add(channelHandlerContext.channel());
+                    });
+        } catch (Exception e) {
+            SystemUtils.error_logger(e.getMessage());
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -61,15 +70,21 @@ public class PacketHandler extends SimpleChannelInboundHandler<Object> {
         /*if ("bye".equals(msg.toLowerCase())) {
             ctx.close();
         }*/
-        HashMap<Integer, Object> stream = (HashMap<Integer, Object>) o;
-
-        if(!stream.isEmpty()) {
-            PacketProcessor.run(stream);
-        } else {
-            Channel channel = channelHandlerContext.channel();
-            channel.close().sync();
-            channels.remove(channel);
+        try {
+            HashMap<Integer, Object> stream = (HashMap<Integer, Object>) o;
+            if(!stream.isEmpty()) {
+                PacketProcessor.run(stream);
+            } else {
+                Channel channel = channelHandlerContext.channel();
+                channel.close().sync();
+                channels.remove(channel);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+
+
     }
 
     @Override

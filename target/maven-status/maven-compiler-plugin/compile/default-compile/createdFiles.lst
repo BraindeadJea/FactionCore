@@ -84,6 +84,7 @@ com\itndev\FactionCore\SocketConnection\kurumi.class
 com\itndev\FactionCore\Database\Redis\CmdExecute.class
 com\itndev\FactionCore\Database\Redis\StreamListener.class
 com\itndev\FaxLib\Utils\Data\DataStream.class
+com\itndev\FactionCore\Discord\DiscordUtils.class
 com\itndev\FactionCore\Database\Gui\LoadMySQLListener.class
 com\itndev\FactionCore\Utils\Factions\FactionUtils.class
 com\itndev\FactionCore\Database\Gui\ExitListener.class

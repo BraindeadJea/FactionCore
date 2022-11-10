@@ -1,5 +1,6 @@
 package com.itndev.FactionCore.Transaction.TransactionUtils;
 
+import com.itndev.FactionCore.Database.Redis.BungeeAPI.BungeeAPI;
 import com.itndev.FactionCore.Factions.Config;
 import com.itndev.FactionCore.Factions.FactionTimeOut;
 import com.itndev.FactionCore.Factions.Storage.FactionStorage;
@@ -84,11 +85,21 @@ public class FactionInvite {
                 String InviteUUID = UserInfoUtils.getPlayerUUID(args[1].toLowerCase(Locale.ROOT));
                 String CasedName = UserInfoUtils.getPlayerOrginName(UserInfoUtils.getPlayerName(InviteUUID));
                 if (!FactionUtils.isInFaction(InviteUUID)) {
-                    SystemUtils.UUID_BASED_MSG_SENDER(InviteUUID, "&r&f해당 유저 " + UserInfoUtils.getPlayerOrginName(UserInfoUtils.getPlayerName(UUID)) + " 을 당신의 국가에 초대하였습니다");
-                    String FactionUUID = FactionUtils.getPlayerFactionUUID(UUID);
-                    new Thread(() -> {
-                        FactionTimeOut.InvitePlayer(FactionUUID, InviteUUID);
-                    }).start();
+                    if(BungeeAPI.isOnline(InviteUUID)) {
+                        SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f해당 유저 " + UserInfoUtils.getPlayerOrginName(UserInfoUtils.getPlayerName(InviteUUID)) + " 을 당신의 국가에 초대하였습니다");
+                        String FactionUUID = FactionUtils.getPlayerFactionUUID(UUID);
+                        new Thread(() -> {
+                            try {
+                                Thread.sleep(10);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                            FactionTimeOut.InvitePlayer(FactionUUID, InviteUUID);
+                        }).start();
+                    } else {
+                        SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&c" + CasedName + "&r&f(은)는 오프라인입니다");
+                    }
+
                 } else {
                     SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&c" + CasedName + "&r&f(은)는 이미 다른 국가에 소속되어 있습니다");
                 }
