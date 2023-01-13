@@ -14,6 +14,8 @@ import io.netty.util.concurrent.GenericFutureListener;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
 import java.net.InetAddress;
+import java.net.SocketAddress;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PacketHandler extends SimpleChannelInboundHandler<Object> {
@@ -24,21 +26,36 @@ public class PacketHandler extends SimpleChannelInboundHandler<Object> {
         return channels;
     }
 
+    private static String toIP(String address) {
+        return address.split("/")[1].split(":")[0];
+    }
+
+    private static ArrayList<String> Whitelist = new ArrayList<>();
+
+    private static Boolean isWhitelisted(SocketAddress ip) {
+        String onlyIP = toIP(ip.toString());
+        return Whitelist.contains(onlyIP);
+    }
+
     @Override
     public void channelActive(final ChannelHandlerContext channelHandlerContext) {
         try {
             channelHandlerContext.pipeline().get(SslHandler.class).handshakeFuture().addListener(
                     (GenericFutureListener<Future<Channel>>) future -> {
-                        SystemUtils.logger("New Connection From Client");
-                        SystemUtils.logger(channelHandlerContext.channel().toString());
+                        if(channelHandlerContext.channel().remoteAddress().toString() == null) {
+                            channelHandlerContext.close();
+                        } else {
+                            SystemUtils.logger("New Connection From Client");
+                            SystemUtils.logger(channelHandlerContext.channel().toString());
+                            SystemUtils.logger("REMOTE=[" + toIP(channelHandlerContext.channel().remoteAddress().toString()) + "]");
 
-                        //DISCORD
-                        new Thread(() -> {
-                            DiscordUtils.info_logger("New Connection From Client");
-                            DiscordUtils.info_logger(channelHandlerContext.channel().toString());
-                        }).start();
-
-
+                            //DISCORD
+                            new Thread(() -> {
+                                DiscordUtils.info_logger("New Connection From Client");
+                                DiscordUtils.info_logger(channelHandlerContext.channel().toString());
+                            }).start();
+                            channels.add(channelHandlerContext.channel());
+                        }
 
                     /*ctx.writeAndFlush(
                             "Welcome to " + InetAddress.getLocalHost().getHostName() + " secure chat service!\n");
@@ -46,7 +63,7 @@ public class PacketHandler extends SimpleChannelInboundHandler<Object> {
                             "Your session is protected by " +
                                     ctx.pipeline().get(SslHandler.class).engine().getSession().getCipherSuite() +
                                     " cipher suite.\n");*/
-                        channels.add(channelHandlerContext.channel());
+
                     });
         } catch (Exception e) {
             SystemUtils.error_logger(e.getMessage());

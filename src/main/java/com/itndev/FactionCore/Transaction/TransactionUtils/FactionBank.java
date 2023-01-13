@@ -68,7 +68,7 @@ public class FactionBank {
                     if (finalbank < 0) {
                         SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f국가 금고에서 해당 금액만큼을 출금하기에는 돈이 부족합니다\n");
                         if (!Take) {
-                            SystemUtils.SendMoney(UUID, amount);
+                            SystemUtils.SendMoney(UUID, amount*-1);
                         }
                         return;
                     }

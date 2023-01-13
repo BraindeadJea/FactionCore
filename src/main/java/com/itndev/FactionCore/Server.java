@@ -108,7 +108,7 @@ public class Server {
         }
         ValidChecker.setvalid();
         FactionTimeOut.TimeoutManager();
-        BotConnect.ConnectBot("OTY3NDcyNzQ2OTU3MjYyODg4.YmQzNQ.IMfgHmqwJDfbRAk64k6b97giWUE");
+        BotConnect.ConnectBot("OTEzODI3MTA1OTg3NTE4NDg0.YaEJ0A.Z_CROZxSSVpDGOFQKgnlAIVwfro");
         System.out.println("[TASK] RUNNING TASK MANAGER");
 
 
