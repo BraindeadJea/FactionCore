@@ -4,6 +4,7 @@ package com.itndev.FactionCore.Database.Redis.BungeeAPI;
 import com.itndev.FactionCore.Database.Redis.Connect;
 import com.itndev.FactionCore.Database.Redis.Obj.Storage;
 import com.itndev.FactionCore.Factions.UserInfoStorage;
+import com.itndev.FactionCore.Utils.CommonUtils;
 import com.itndev.FactionCore.Utils.Factions.SystemUtils;
 
 import java.util.ArrayList;
@@ -51,28 +52,28 @@ public class BungeeStorage {
         if(command.contains(":=:")) {
             String[] cmd_args = command.split(":=:");
             if(cmd_args[0].equalsIgnoreCase("PROXY-JOIN")) {
-                String[] TEMP = cmd_args[1].replace("{", "").replace("}", "").split(",");
-                String UUID = TEMP[0];
-                String NAME = TEMP[1];
+                String[] TEMP = cmd_args[1].replace("{", "").replace("}", "").split(" ");
+                String UUID = CommonUtils.Byte2String(TEMP[0]);
+                String NAME = CommonUtils.Byte2String(TEMP[1]);
                 UPDATE_USERINFO(UUID, NAME);
                 UUID = null;
                 NAME = null;
                 TEMP = null;
                 //FactionUtils.FactionNotify(UUID, "TeamChat", "&r&7" + FactionUtils.getPlayerLangRank(UUID) + " &c" + NAME + "&f 님이 서버에 접속했습니다", "true");
             } else if(cmd_args[0].equalsIgnoreCase("PROXY-LEAVE")) {
-                String[] TEMP = cmd_args[1].replace("{", "").replace("}", "").split(",");
-                String UUID = TEMP[0];
-                String NAME = TEMP[1];
+                String[] TEMP = cmd_args[1].replace("{", "").replace("}", "").split(" ");
+                String UUID = CommonUtils.Byte2String(TEMP[0]);
+                String NAME = CommonUtils.Byte2String(TEMP[1]);
                 //FactionUtils.FactionNotify(UUID, "TeamChat", "&r&7" + FactionUtils.getPlayerLangRank(UUID) + " &c" + NAME + "&f 님이 서버에서 나갔습니다", "true");
                 removePlayer(UUID);
                 UUID = null;
                 NAME = null;
                 TEMP = null;
             } else if(cmd_args[0].equalsIgnoreCase("PROXY-PLAYERINFO")) {
-                String[] TEMP = cmd_args[1].replace("{", "").replace("}", "").split(",");
-                String UUID = TEMP[0];
-                String NAME = TEMP[1];
-                String ServerName = TEMP[2];
+                String[] TEMP = cmd_args[1].replace("{", "").replace("}", "").split(" ");
+                String UUID = CommonUtils.Byte2String(TEMP[0]);
+                String NAME = CommonUtils.Byte2String(TEMP[1]);
+                String ServerName = CommonUtils.Byte2String(TEMP[2]);
                 addPlayer(UUID, ServerName);
                 UPDATE_USERINFO(UUID, NAME);
                 UUID = null;
@@ -80,10 +81,10 @@ public class BungeeStorage {
                 TEMP = null;
                 ServerName = null;
             } else if(cmd_args[0].equalsIgnoreCase("PROXY-CONNECTSERVER")) {
-                String[] TEMP = cmd_args[1].replace("{", "").replace("}", "").split(",");
-                String UUID = TEMP[0];
-                String NAME = TEMP[1];
-                String ServerName = TEMP[2];
+                String[] TEMP = cmd_args[1].replace("{", "").replace("}", "").split(" ");
+                String UUID = CommonUtils.Byte2String(TEMP[0]);
+                String NAME = CommonUtils.Byte2String(TEMP[1]);
+                String ServerName = CommonUtils.Byte2String(TEMP[2]);
                 //UPDATE_USERINFO(UUID, NAME);
                 addPlayer(UUID, ServerName);
                 UUID = null;
@@ -103,18 +104,18 @@ public class BungeeStorage {
         if(UserInfoStorage.uuidname.containsKey(UUID)) {
             if(!UserInfoStorage.namename.get(UserInfoStorage.uuidname.get(UUID)).equals(Name)) {
                 String OriginalName = UserInfoStorage.uuidname.get(UUID);
-                bulkcmd.add("update:=:nameuuid:=:remove:=:" + OriginalName + ":=:add:=:" + UUID);
-                bulkcmd.add("update:=:namename:=:remove:=:" + OriginalName + ":=:add:=:" + Name);
-                bulkcmd.add("update:=:uuidname:=:remove:=:" + UUID + ":=:add:=:" + Name.toLowerCase(Locale.ROOT));
-                bulkcmd.add("update:=:uuidname:=:add:=:" + UUID + ":=:add:=:" + Name.toLowerCase(Locale.ROOT));
-                bulkcmd.add("update:=:nameuuid:=:add:=:" + Name.toLowerCase(Locale.ROOT) + ":=:add:=:" + UUID);
-                bulkcmd.add("update:=:namename:=:add:=:" + Name.toLowerCase(Locale.ROOT) + ":=:add:=:" + Name);
+                bulkcmd.add("update:=:nameuuid:=:remove:=:" + CommonUtils.String2Byte(OriginalName) + ":=:add:=:" + CommonUtils.String2Byte(UUID));
+                bulkcmd.add("update:=:namename:=:remove:=:" + CommonUtils.String2Byte(OriginalName) + ":=:add:=:" + CommonUtils.String2Byte(Name));
+                bulkcmd.add("update:=:uuidname:=:remove:=:" + CommonUtils.String2Byte(UUID) + ":=:add:=:" + CommonUtils.String2Byte(Name.toLowerCase(Locale.ROOT)));
+                bulkcmd.add("update:=:uuidname:=:add:=:" + CommonUtils.String2Byte(UUID) + ":=:add:=:" + CommonUtils.String2Byte(Name.toLowerCase(Locale.ROOT)));
+                bulkcmd.add("update:=:nameuuid:=:add:=:" + CommonUtils.String2Byte(Name.toLowerCase(Locale.ROOT)) + ":=:add:=:" + CommonUtils.String2Byte(UUID));
+                bulkcmd.add("update:=:namename:=:add:=:" + CommonUtils.String2Byte(Name.toLowerCase(Locale.ROOT)) + ":=:add:=:" + CommonUtils.String2Byte(Name));
                 OriginalName = null;
             }
         } else {
-            bulkcmd.add("update:=:uuidname:=:add:=:" + UUID + ":=:add:=:" + Name.toLowerCase(Locale.ROOT));
-            bulkcmd.add("update:=:nameuuid:=:add:=:" + Name.toLowerCase(Locale.ROOT) + ":=:add:=:" + UUID);
-            bulkcmd.add("update:=:namename:=:add:=:" + Name.toLowerCase(Locale.ROOT) + ":=:add:=:" + Name);
+            bulkcmd.add("update:=:uuidname:=:add:=:" + CommonUtils.String2Byte(UUID) + ":=:add:=:" + CommonUtils.String2Byte(Name.toLowerCase(Locale.ROOT)));
+            bulkcmd.add("update:=:nameuuid:=:add:=:" + CommonUtils.String2Byte(Name.toLowerCase(Locale.ROOT)) + ":=:add:=:" + CommonUtils.String2Byte(UUID));
+            bulkcmd.add("update:=:namename:=:add:=:" + CommonUtils.String2Byte(Name.toLowerCase(Locale.ROOT)) + ":=:add:=:" + CommonUtils.String2Byte(Name));
         }
         Storage.AddBulkCommandToQueue(bulkcmd);
         bulkcmd = null;

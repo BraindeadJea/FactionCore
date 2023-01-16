@@ -16,7 +16,7 @@ public class SystemUtils {
     private static DecimalFormat df = new DecimalFormat("0.00");
 
     public static void SendMoney(String UUID, Double Amount) {
-        Storage.AddCommandToQueue("eco:=:give:=:" + UUID + ":=:" + df.format(Amount));
+        Storage.AddCommandToQueue("eco:=:give:=:" + CommonUtils.String2Byte(UUID) + ":=:" + CommonUtils.String2Byte(df.format(Amount)));
     }
 
     public static SimpleDateFormat timeformat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
@@ -87,17 +87,17 @@ public class SystemUtils {
     }
 
     public static void UUID_BASED_MSG_SENDER(String UUID, String Message) {
-        Storage.AddCommandToQueue("notify:=:" + UUID + ":=:" + UUID + ":=:" + Message + ":=:" + "false");
+        Storage.AddCommandToQueue("notify:=:" + CommonUtils.String2Byte(UUID) + ":=:" + CommonUtils.String2Byte(UUID) + ":=:" + CommonUtils.String2Byte(Message) + ":=:" + CommonUtils.String2Byte("false"));
     }
 
     public static String KeepAlive() {
         String UUID = java.util.UUID.randomUUID().toString();
-        Storage.ignoreUpdate_AddCommandToQueue("keepalive:=:" + UUID);
+        Storage.ignoreUpdate_AddCommandToQueue("keepalive:=:" + CommonUtils.String2Byte(UUID));
         return UUID;
     }
 
     public static void UUID_BASED_PURE_MSG_SENDER(String UUID, String Message) {
         //FactionUtils.SendFactionMessage(UUID, "puremessagesendoptiontrue", "single", "");
-        Storage.AddCommandToQueue("notify:=:" + UUID + ":=:" + "puremessagesendoptiontrue" + ":=:" + Message + ":=:" + "false");
+        Storage.AddCommandToQueue("notify:=:" + CommonUtils.String2Byte(UUID) + ":=:" + CommonUtils.String2Byte("puremessagesendoptiontrue") + ":=:" + CommonUtils.String2Byte(Message) + ":=:" + CommonUtils.String2Byte("false"));
     }
 }

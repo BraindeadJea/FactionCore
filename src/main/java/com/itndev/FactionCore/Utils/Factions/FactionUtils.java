@@ -280,9 +280,9 @@ public class FactionUtils {
     public static void SendFactionMessage(String playeruuid, String targetuuid, String type, String message) {
         if(type.equalsIgnoreCase("single")) {
             //type : SIBAL, TeamChat, all
-            Storage.AddCommandToQueue("notify:=:" + CommonUtils.String2Byte(playeruuid) + ":=:" + CommonUtils.String2Byte(targetuuid) + ":=:" + CommonUtils.String2Byte(message) + ":=:" + "false");
+            Storage.AddCommandToQueue("notify:=:" + CommonUtils.String2Byte(playeruuid) + ":=:" + CommonUtils.String2Byte(targetuuid) + ":=:" + CommonUtils.String2Byte(message) + ":=:" + CommonUtils.String2Byte("false"));
         } else {
-            Storage.AddCommandToQueue("notify:=:" + CommonUtils.String2Byte(playeruuid) + ":=:" + CommonUtils.String2Byte(type) + ":=:" + CommonUtils.String2Byte(message) + ":=:" + "true");
+            Storage.AddCommandToQueue("notify:=:" + CommonUtils.String2Byte(playeruuid) + ":=:" + CommonUtils.String2Byte(type) + ":=:" + CommonUtils.String2Byte(message) + ":=:" + CommonUtils.String2Byte("true"));
         }
     }
 

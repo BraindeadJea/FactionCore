@@ -6,6 +6,7 @@ com\itndev\HttpAPI\Jetty.class
 com\itndev\FactionCore\SocketConnection\IO\ResponseList.class
 com\itndev\FactionCore\Dump\MySQLDump.class
 com\itndev\FactionCore\Database\Redis\StreamIO.class
+com\itndev\FactionCore\Utils\CommonUtils.class
 com\itndev\PlayerPower\Loader.class
 com\itndev\FactionCore\Lock\LocalLock.class
 com\itndev\FactionCore\Factions\Config.class
