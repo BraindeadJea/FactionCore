@@ -16,6 +16,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="FactionBackEnd" options="-parameters" />
       <module name="FactionBackEndTransactionManagement" options="-parameters" />
+      <module name="FactionCore" options="-parameters" />
     </option>
   </component>
 </project>

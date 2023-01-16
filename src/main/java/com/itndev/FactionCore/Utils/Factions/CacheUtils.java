@@ -4,18 +4,19 @@ import com.itndev.FactionCore.Database.MySQL.SQL;
 import com.itndev.FactionCore.Database.Redis.Obj.Storage;
 import com.itndev.FactionCore.Server;
 import com.itndev.FactionCore.Utils.Cache.CachedStorage;
+import com.itndev.FactionCore.Utils.CommonUtils;
 
 import java.util.concurrent.CompletableFuture;
 
 public class CacheUtils {
 
     public static void UpdateCachedDTR(String FactionUUID, Double DTR) {
-        Storage.AddCommandToQueue("update:=:CachedDTR:=:add:=:" + FactionUUID + ":=:add:=:" + String.valueOf(DTR) + ":=:" + Server.getServerName());
+        Storage.AddCommandToQueue("update:=:CachedDTR:=:add:=:" + CommonUtils.String2Byte(FactionUUID) + ":=:add:=:" + CommonUtils.String2Byte(String.valueOf(DTR)) + ":=:" + Server.getServerName());
         CachedStorage.CachedDTR.put(FactionUUID, DTR);
     }
 
     public static void UpdateCachedBank(String FactionUUID, Double Bank) {
-        Storage.AddCommandToQueue("update:=:CachedBank:=:add:=:" + FactionUUID + ":=:add:=:" + String.valueOf(Bank) + ":=:" + Server.getServerName());
+        Storage.AddCommandToQueue("update:=:CachedBank:=:add:=:" + CommonUtils.String2Byte(FactionUUID) + ":=:add:=:" + CommonUtils.String2Byte(String.valueOf(Bank)) + ":=:" + Server.getServerName());
         CachedStorage.CachedBank.put(FactionUUID, Bank);
     }
 
@@ -25,12 +26,12 @@ public class CacheUtils {
     }
 
     public static void removeCachedDTR(String FactionUUID) {
-        Storage.AddCommandToQueue("update:=:CachedDTR:=:remove:=:" + FactionUUID + ":=:add:=:" + String.valueOf(0) + ":=:" + Server.getServerName());
+        Storage.AddCommandToQueue("update:=:CachedDTR:=:remove:=:" + CommonUtils.String2Byte(FactionUUID) + ":=:add:=:" + CommonUtils.String2Byte(String.valueOf(0)) + ":=:" + Server.getServerName());
         CachedStorage.CachedDTR.remove(FactionUUID);
     }
 
     public static void removeCachedBank(String FactionUUID) {
-        Storage.AddCommandToQueue("update:=:CachedBank:=:remove:=:" + FactionUUID + ":=:add:=:" + String.valueOf(0) + ":=:" + Server.getServerName());
+        Storage.AddCommandToQueue("update:=:CachedBank:=:remove:=:" + CommonUtils.String2Byte(FactionUUID) + ":=:add:=:" + CommonUtils.String2Byte(String.valueOf(0)) + ":=:" + Server.getServerName());
         CachedStorage.CachedBank.remove(FactionUUID);
     }
 

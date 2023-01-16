@@ -2,11 +2,21 @@ package com.itndev.FactionCore.Utils.Database.Redis;
 
 public class StaticVal {
 
+    private static String CMD_ANNOUNCER = "RUNCOMMANDS";
+    private static String STORAGE_UPDATE_ANNOUNCER = "UPDATESTORAGE";
     private static String MaxAmount = "MAXAMOUNT";
 
     private static String splitter = "/=&C&:&G&:&1&=/";
     private static String buffer = "-buffer-";
     private static String command = "commands";
+
+    public static String getCmdAnnouncer() {
+        return CMD_ANNOUNCER;
+    }
+
+    public static String getStorageUpdateAnnouncer() {
+        return STORAGE_UPDATE_ANNOUNCER;
+    }
 
     private static Integer ServerNameArgs = -1;
 

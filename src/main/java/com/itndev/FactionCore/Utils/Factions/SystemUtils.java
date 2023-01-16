@@ -1,6 +1,7 @@
 package com.itndev.FactionCore.Utils.Factions;
 
 import com.itndev.FactionCore.Database.Redis.Obj.Storage;
+import com.itndev.FactionCore.Utils.CommonUtils;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -34,34 +35,30 @@ public class SystemUtils {
     }
 
     public static ArrayList string2list(String k) {
-        if(k.contains("<%&LISTSPLITTER&%>")) {
-            String[] parts = k.split("<%&LISTSPLITTER&%>");
+        if(k.contains(" ")) {
+            String[] parts = k.split(" ");
             ArrayList<String> memlist = new ArrayList<>();
             for(String d : parts) {
-                memlist.add(d);
+                memlist.add(CommonUtils.Byte2String(d));
             }
-            parts = null;
             return memlist;
         } else {
             ArrayList<String> memlist = new ArrayList<>();
-            memlist.add(k);
+            memlist.add(CommonUtils.Byte2String(k));
             return memlist;
         }
     }
     public static String list2string(ArrayList<String> list) {
         String k = "";
-        Integer i = 0;
+        int i = 0;
         for(String c : list) {
             i = i + 1;
             if(list.size() > i) {
-                k = k + c + "<%&LISTSPLITTER&%>";
+                k = k + CommonUtils.String2Byte(c) + " ";
             } else {
-                k = k + c;
+                k = k + CommonUtils.String2Byte(c);
             }
-
-            c = null;
         }
-        i = null;
         return k;
     }
 

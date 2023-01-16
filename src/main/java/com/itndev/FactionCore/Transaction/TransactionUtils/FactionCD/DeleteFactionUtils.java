@@ -11,8 +11,10 @@ public class DeleteFactionUtils {
         String FactionName = FactionUtils.getFactionName(FactionUUID);
         String OriginFactionName = FactionUtils.getCappedFactionName(FactionName);
         SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&a&o&l[ &r&f국가 &a&o&l] &r&f국가 &c" + OriginFactionName + " 을(를) 해체했습니다");
-        Storage.AddCommandToQueue("notify:=:" + UUID + ":=:" + "SIBAL" + ":=:" + "&r&f당신의 국가가 &c몰락&f했습니다" + ":=:" + "true");
-        Storage.AddCommandToQueue("notify:=:" + UUID + ":=:" + "all" + ":=:" + "&a&o&l[ &r&f국가 &a&o&l] &r&f국가 &c" + OriginFactionName + " &r(이)가 &c몰락&r&f했습니다" + ":=:" + "true");
+        FactionUtils.SendFactionMessage(UUID, "SIBAL", "SIBAL", "&r&f당신의 국가가 &c몰락&f했습니다");
+        //Storage.AddCommandToQueue("notify:=:" + UUID + ":=:" + "SIBAL" + ":=:" + "&r&f당신의 국가가 &c몰락&f했습니다" + ":=:" + "true");
+        FactionUtils.SendFactionMessage(UUID, "all", "all", "&a&o&l[ &r&f국가 &a&o&l] &r&f국가 &c" + OriginFactionName + " &r(이)가 &c몰락&r&f했습니다");
+        //Storage.AddCommandToQueue("notify:=:" + UUID + ":=:" + "all" + ":=:" + "&a&o&l[ &r&f국가 &a&o&l] &r&f국가 &c" + OriginFactionName + " &r(이)가 &c몰락&r&f했습니다" + ":=:" + "true");
         FactionUtils.DeleteFaction(FactionUUID);
         SQL.getDatabase().DeleteFactionName(FactionUUID);
         SQL.getDatabase().DeleteFactionBank(FactionUUID);
@@ -26,8 +28,10 @@ public class DeleteFactionUtils {
         String FactionName = FactionUtils.getFactionName(FactionUUID);
         String OriginFactionName = FactionUtils.getCappedFactionName(FactionName);
         SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&a&o&l[ &r&f국가 &a&o&l] &r&f국가 &c" + OriginFactionName + " (이)가 멸망했습니다");
-        Storage.AddCommandToQueue("notify:=:" + UUID + ":=:" + "SIBAL" + ":=:" + "&r&f당신의 국가가 &c멸망&f했습니다" + ":=:" + "true");
-        Storage.AddCommandToQueue("notify:=:" + UUID + ":=:" + "all" + ":=:" + "&a&o&l[ &r&f국가 &a&o&l] &r&f국가 &c" + OriginFactionName + " &r(이)가 &c멸망&r&f했습니다" + ":=:" + "true");
+        FactionUtils.SendFactionMessage(UUID, "SIBAL", "SIBAL", "&r&f당신의 국가가 &c멸망&f했습니다");
+        //Storage.AddCommandToQueue("notify:=:" + UUID + ":=:" + "SIBAL" + ":=:" + "&r&f당신의 국가가 &c멸망&f했습니다" + ":=:" + "true");
+        FactionUtils.SendFactionMessage(UUID, "all", "all", "&a&o&l[ &r&f국가 &a&o&l] &r&f국가 &c" + OriginFactionName + " &r(이)가 &c멸망&r&f했습니다");
+        //CommonUtils.String2Byte(playeruuid)Storage.AddCommandToQueue("notify:=:" + UUID + ":=:" + "all" + ":=:" + "&a&o&l[ &r&f국가 &a&o&l] &r&f국가 &c" + OriginFactionName + " &r(이)가 &c멸망&r&f했습니다" + ":=:" + "true");
         FactionUtils.DeleteFaction(FactionUUID);
         SQL.getDatabase().DeleteFactionName(FactionUUID);
         SQL.getDatabase().DeleteFactionBank(FactionUUID);
