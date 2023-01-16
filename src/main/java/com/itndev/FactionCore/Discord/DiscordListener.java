@@ -1,6 +1,7 @@
 package com.itndev.FactionCore.Discord;
 
 import com.itndev.FactionCore.Database.Redis.Obj.Storage;
+import com.itndev.FactionCore.Utils.CommonUtils;
 import com.itndev.FactionCore.Utils.Factions.FactionUtils;
 import com.itndev.FactionCore.Utils.Factions.UserInfoUtils;
 import net.dv8tion.jda.api.entities.*;
@@ -58,7 +59,7 @@ public class DiscordListener extends ListenerAdapter {
         String UUID = AuthStorage.DISCORDID_TO_UUID.get(DiscordID);
         AuthStorage.DISCORDID_TO_UUID.remove(DiscordID);
         AuthStorage.UUID_TO_DISCORDID.remove(UUID);
-        Storage.AddCommandToQueue("discord:=:auth:=:" + UUID + ":=:" + "NULL");
+        Storage.AddCommandToQueue("discord:=:auth:=:" + CommonUtils.String2Byte(UUID) + ":=:" + CommonUtils.String2Byte("NULL"));
         FactionUtils.SendFactionMessage(UUID, "puremessagesendoptiontrue", "single", "[디스코드]" + " 계정 인증이 풀렸습니다");
         UUID = null;
     }
@@ -109,7 +110,7 @@ public class DiscordListener extends ListenerAdapter {
             String UUID = AuthStorage.DISCORDID_TO_UUID.get(user.getId());
             AuthStorage.DISCORDID_TO_UUID.remove(user.getId());
             AuthStorage.UUID_TO_DISCORDID.remove(UUID);
-            Storage.AddCommandToQueue("discord:=:auth:=:" + UUID + ":=:" + "NULL");
+            Storage.AddCommandToQueue("discord:=:auth:=:" + CommonUtils.String2Byte(UUID) + ":=:" + CommonUtils.String2Byte("NULL"));
             FactionUtils.SendFactionMessage(UUID, "puremessagesendoptiontrue", "single", "[디스코드]" + " 계정 인증이 풀렸습니다");
             BotConnect.mainchannel.sendMessage( "[" + user.getAsMention() + "]\n"
                     + "해당 계정 `" + UserInfoUtils.getPlayerUUIDOriginName(UUID) + "` 와의 연동을 해제했습니다").queue();

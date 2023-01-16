@@ -146,11 +146,11 @@ public class CmdExecute {
                 break;
         }*/
         if (args[0].equalsIgnoreCase("update")) {
-            if(args.length > 6) {
+            if(args.length >= 6) {
                 args[3] = CommonUtils.Byte2String(args[3]);
                 args[5] = CommonUtils.Byte2String(args[5]);
                 update(args);
-            } else if(args.length > 4) {
+            } else if(args.length >= 4) {
                 args[3] = CommonUtils.Byte2String(args[3]);
                 update(args);
             } else  {

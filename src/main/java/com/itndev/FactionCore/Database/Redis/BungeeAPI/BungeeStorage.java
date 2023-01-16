@@ -102,6 +102,13 @@ public class BungeeStorage {
         //SystemUtils.logger("Player NAME:" + Name + ", UUID:" + UUID + " has connected to server");
         List<String> bulkcmd = new ArrayList<>();
         if(UserInfoStorage.uuidname.containsKey(UUID)) {
+            if(!UserInfoStorage.namename.containsKey(UserInfoStorage.uuidname.get(UUID)) || !UserInfoStorage.nameuuid.containsKey(UserInfoStorage.uuidname.get(UUID))) {
+                bulkcmd.add("update:=:nameuuid:=:remove:=:" + CommonUtils.String2Byte(UserInfoStorage.uuidname.get(UUID)) + ":=:add:=:" + CommonUtils.String2Byte(UUID));
+                bulkcmd.add("update:=:namename:=:remove:=:" + CommonUtils.String2Byte(UserInfoStorage.uuidname.get(UUID)) + ":=:add:=:" + CommonUtils.String2Byte(UUID));
+                bulkcmd.add("update:=:uuidname:=:add:=:" + CommonUtils.String2Byte(UUID) + ":=:add:=:" + CommonUtils.String2Byte(Name.toLowerCase(Locale.ROOT)));
+                bulkcmd.add("update:=:nameuuid:=:add:=:" + CommonUtils.String2Byte(Name.toLowerCase(Locale.ROOT)) + ":=:add:=:" + CommonUtils.String2Byte(UUID));
+                bulkcmd.add("update:=:namename:=:add:=:" + CommonUtils.String2Byte(Name.toLowerCase(Locale.ROOT)) + ":=:add:=:" + CommonUtils.String2Byte(Name));
+            } else
             if(!UserInfoStorage.namename.get(UserInfoStorage.uuidname.get(UUID)).equals(Name)) {
                 String OriginalName = UserInfoStorage.uuidname.get(UUID);
                 bulkcmd.add("update:=:nameuuid:=:remove:=:" + CommonUtils.String2Byte(OriginalName) + ":=:add:=:" + CommonUtils.String2Byte(UUID));
