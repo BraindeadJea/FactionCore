@@ -108,7 +108,7 @@ public class Server {
         }
         ValidChecker.setvalid();
         FactionTimeOut.TimeoutManager();
-        BotConnect.ConnectBot("OTEzODI3MTA1OTg3NTE4NDg0.YaEJ0A.Z_CROZxSSVpDGOFQKgnlAIVwfro");
+        BotConnect.ConnectBot("OTEzODI3MTA1OTg3NTE4NDg0.GJNtYY.QFrSq0LA80jrFzZgH_SIFze5K7p0wZLjG08Cxo");
         System.out.println("[TASK] RUNNING TASK MANAGER");
 
 
@@ -155,7 +155,7 @@ public class Server {
             c++;
             try {
                 Thread.sleep(100);
-                if(c >= 100) {
+                if(c >= 10000) {
                     try {
                         new Thread(() -> {
                             //RedisDump.deleteandupload("DUMP");

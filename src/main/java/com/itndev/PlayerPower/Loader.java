@@ -19,10 +19,10 @@ public class Loader {
 
     public void setupConnectionInfo() {
         host = "db.itndev.com";
-        port = "5567";
+        port = "3306";
         database = "PlayerStats";
-        username = "Skadi";
-        password = "l80oKGTFA#@fCRH75v5w6fefw";
+        username = "Gherbo426";
+        password = "%#72Y20$3HT^N2fq#%0@$tG53h(D35$CE";
         useSSL = true;
     }
     //com.mysql.jdbc.jdbc2.optional.MysqlDataSource

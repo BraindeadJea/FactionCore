@@ -89,11 +89,6 @@ public class FactionInvite {
                         SystemUtils.UUID_BASED_MSG_SENDER(UUID, "&r&f해당 유저 " + UserInfoUtils.getPlayerOrginName(UserInfoUtils.getPlayerName(InviteUUID)) + " 을 당신의 국가에 초대하였습니다");
                         String FactionUUID = FactionUtils.getPlayerFactionUUID(UUID);
                         new Thread(() -> {
-                            try {
-                                Thread.sleep(10);
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
                             FactionTimeOut.InvitePlayer(FactionUUID, InviteUUID);
                         }).start();
                     } else {

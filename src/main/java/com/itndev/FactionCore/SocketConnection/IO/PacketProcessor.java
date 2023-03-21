@@ -30,12 +30,12 @@ public class PacketProcessor {
         if(DataType.equalsIgnoreCase("FrontEnd-Output")) {
             ((List<String>)stream.get(1)).forEach(key -> new Thread(() ->CmdExecute.CMD_READ(key, ServerName)).start());
         } else if(DataType.equalsIgnoreCase("FrontEnd-Interconnect")) {
-            ((List<String>)stream.get(1)).forEach(key -> new Thread(() ->CmdExecute.CMD_READ(key, ServerName)).start());
+            ((List<String>)stream.get(1)).forEach(key -> CmdExecute.CMD_READ(key, ServerName));
             ResponseList.response(stream);
         } else if(DataType.equalsIgnoreCase("FrontEnd-Chat")) {
             ResponseList.response(stream);
         } else if(DataType.equalsIgnoreCase("BungeeCord-Forward")) {
-            ((List<String>)stream.get(1)).forEach(key -> new Thread(() ->BungeeStorage.READ_Bungee_command(key)).start());
+            ((List<String>)stream.get(1)).forEach(BungeeStorage::READ_Bungee_command);
             ResponseList.response(stream);
         }
 

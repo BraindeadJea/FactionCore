@@ -192,7 +192,7 @@ public class FactionUtils {
                 try {
                     synchronized (Lock.tryOptainLock(PlayerUUID).get(Lock.Timeout, TimeUnit.MILLISECONDS).getLock()) {
                         synchronized (Lock.tryOptainLock(FactionUUID).get(Lock.Timeout, TimeUnit.MILLISECONDS).getLock()) {
-                            makePlayerLeaveFaction(PlayerUUID, FactionUUID);
+                            forcePlayerLeaveFaction(PlayerUUID, FactionUUID);
                         }
                     }
                 } catch (TimeoutException | ExecutionException | InterruptedException e) {
@@ -264,6 +264,14 @@ public class FactionUtils {
             BulkCMD.add("update:=:FactionRank:=:add:=:" + CommonUtils.String2Byte(UUID) + ":=:add:=:" + CommonUtils.String2Byte(Config.Nomad));
             BulkCMD.add("update:=:PlayerFaction:=:remove:=:" + CommonUtils.String2Byte(UUID) + ":=:add:=:" + CommonUtils.String2Byte("ddd"));
         }
+        Storage.AddBulkCommandToQueue(BulkCMD);
+    }
+
+    private static void forcePlayerLeaveFaction(String UUID, String FromFactionUUID) {
+        List<String> BulkCMD = new ArrayList<>();
+        BulkCMD.add("update:=:FactionMember:=:add:=:" + CommonUtils.String2Byte(FromFactionUUID) + ":=:remove:=:" + CommonUtils.String2Byte(UUID));
+        BulkCMD.add("update:=:FactionRank:=:add:=:" + CommonUtils.String2Byte(UUID) + ":=:add:=:" + CommonUtils.String2Byte(Config.Nomad));
+        BulkCMD.add("update:=:PlayerFaction:=:remove:=:" + CommonUtils.String2Byte(UUID) + ":=:add:=:" + CommonUtils.String2Byte("ddd"));
         Storage.AddBulkCommandToQueue(BulkCMD);
     }
 
